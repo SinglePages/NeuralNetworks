@@ -47,6 +47,12 @@ Some text
 
 Some text
 
-<div class="diff-example"><pre>
-gendiff(Code/Python/1.py, Code/Python/2.py)
-</pre></div>
+<div class="diff-example">
+<pre>
+</pre>
+</div>
+
+Need to show
+
+- optimization/learning
+- vectorizing
