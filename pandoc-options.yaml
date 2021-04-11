@@ -1,0 +1,84 @@
+from: markdown
+to: html5
+
+# template: letter
+standalone: true
+self-contained: false
+
+# # turn on built-in citation processing.  Note that if you need
+# # control over when the citeproc processing is done relative
+# # to other filters, you should instead use `citeproc` in the
+# # list of `filters` (see below).
+# citeproc: true
+# csl: ieee
+# bibliography:
+# - foobar.bib
+# - barbaz.json
+# citation-abbreviations: abbrevs.json
+
+filters:
+- pandoc-crossref
+
+table-of-contents: true
+toc-depth: 1
+
+number-sections: true
+section-divs: true
+
+strip-empty-paragraphs: true
+strip-comments: false
+
+# # either a style name of a style definition file:
+# highlight-style: pygments
+# syntax-definitions:
+# - c.xml
+# # or you may use syntax-definition: with a single value
+# listings: false
+
+# reference-doc: myref.docx
+
+# # method is plain, webtex, gladtex, mathml, mathjax, katex
+# # you may specify a url with webtex, mathjax, katex
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+
+# # none, references, or javascript
+# email-obfuscation: javascript
+
+# tab-stop: 8
+# preserve-tabs: true
+
+# incremental: false
+# slide-level: 2
+
+# epub-subdirectory: EPUB
+# epub-metadata: meta.xml
+# epub-fonts:
+# - foobar.otf
+# epub-chapter-level: 1
+# epub-cover-image: cover.jpg
+
+# reference-links: true
+# # block, section, or document
+# reference-location: block
+# markdown-headings: setext
+
+# # accept, reject, or all
+# track-changes: accept
+
+# html-q-tags: false
+# css:
+# - site.css
+
+# # none, all, or best
+# ipynb-output: best
+
+# # A list of two-element lists
+# request-headers:
+# - ["User-Agent", "Mozilla/5.0"]
+
+# fail-if-warnings: false
+# dump-args: false
+# ignore-args: false
+# trace: false

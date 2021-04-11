@@ -1,0 +1,51 @@
+graph SingleNeuron
+{
+    rankdir = LR
+    splines = line
+    nodesep = 0.2
+    node [fixedsize=true]
+
+    subgraph cluster_input
+    {
+        color = white
+        label = "Input Features"
+        node [style=solid, color=lightgray, shape=circle]
+        x1 [label="&x_1"]
+        x2 [label="&x_2"]
+        e1 [shape=point, color=black, fillcolor=black]
+        e2 [shape=point, color=black, fillcolor=black]
+        e3 [shape=point, color=black, fillcolor=black]
+        xn [label="&x_{n_x}", class="needsmath"]
+    }
+
+    subgraph cluster_linear
+    {
+        color = white
+        label = "Linear"
+        node [style=solid, color=red2, shape=circle]
+        z [label="&z"]
+        b [label="&1", color=lightgray]
+    }
+
+    subgraph cluster_activation
+    {
+        color = white
+        label = "Activation"
+        node [style=solid, color=green, shape=circle]
+        a [label="&a"]
+    }
+
+    subgraph cluster_output
+    {
+        color = white
+        node [shape=plaintext]
+        yhat [label="&ŷ"]
+    }
+
+    x1 -- z [label="&w_1"]
+    x2 -- z [label="&w_2"]
+    xn -- z [label="&w_{n_x}"]
+    z -- a
+    z -- b [label="&b", constraint=false]
+    a -- yhat
+}

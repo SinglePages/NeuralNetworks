@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Anthony J. Clark" />
+  <title>Neural Networks</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Neural Networks</h1>
+<p class="subtitle">A terse neural network walk-through</p>
+<p class="author">Anthony J. Clark</p>
+</header>
+<h1 id="sec:intro">Introduction</h1>
+<p>Goal: provide a concise walk through of all fundamental neural network (including modern deep learning) techniques.</p>
+<p>I will not discuss every possible analogy, angle, or topic here. Instead, I will provide links to external resources so that you can choose which topics you want to investigate more closely.</p>
+<p><strong>Useful prior knowledge:</strong></p>
+<ul>
+<li>matrix calculus (see <a href="https://explained.ai/matrix-calculus/">The Matrix Calculus You Need For Deep Learning</a> by Terence Parr and Jeremy Howard)</li>
+<li>programming skills (I will show examples in Python, but many languages will work)</li>
+<li>familiarity with computing tools (using a server, cloud-based services, the command line interface (CLI))</li>
+</ul>
+<p>TODO: background</p>
+<ul>
+<li>AI/ML/NN</li>
+<li>applications</li>
+<li>terminology (nn, ann, mlp)</li>
+<li>ethics</li>
+<li>non-ml example</li>
+</ul>
+<h2 id="notation">Notation</h2>
+<p>For the sake of making this concrete, I am going to introduce a reference example: <strong>predicting a person’s location on Earth (latitude, longitude, and elevation) by looking at the temperature, illuminance, time of day, and day of year.</strong></p>
+<p>Starting at the top,</p>
+<p><span class="math display">\[
+\mathcal{D} = \{X, Y\}
+\]</span></p>
+<p>is a dataset comprising input <em>features</em> <span class="math inline">\(X\)</span> and output <em>targets</em> <span class="math inline">\(Y\)</span>. Although <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> can come in many shapes, I am going to be opinionated here and force a specific convention. For the supervised learning case, we will always have the same number of input feature and output target sets. Let’s use <span class="math inline">\(N\)</span> to denote the size of the paired dataset.</p>
+<p><span class="math inline">\(X\)</span> is a matrix (indicated by the capitalization) containing all features of all input examples. A single input example <span class="math inline">\(\mathbf{x}^{(i)}\)</span> (<span class="math inline">\(\mathbf{x}\)</span> is <strong>bold</strong> to indicate that it is a vector) is often represented as a <em>column</em> vector:</p>
+<p><span class="math display">\[
+\mathbf{x}^{(i)} =
+\begin{bmatrix}
+x^{(i)}_{1} \\
+x^{(i)}_{2} \\
+\vdots \\
+x^{(i)}_{n_x-1} \\
+x^{(i)}_{n_x} \\
+\end{bmatrix}
+\]</span></p>
+<p>where <span class="math inline">\(n_x\)</span> is the number of input features (<span class="math inline">\(n_x = 4\)</span> in our reference example). For example, <span class="math inline">\(\mathbf{x}^{(1)}\)</span> would contain the temperature, illuminance, time of day, and day of year for the first person in our dataset. We do not always put the input features into a column vector, but it is a good starting place (see <span class="citation" data-cites="sec:cnns">[@sec:cnns]</span> for more information).</p>
+<p>Each row in <span class="math inline">\(X\)</span> is a single input example (also referred to as an instance or sample), and when you stack all <span class="math inline">\(N\)</span> examples side-by-side, you end up with</p>
+<p><span class="math display">\[
+X =
+\begin{bmatrix}
+\mathbf{x}^{(1)T}\\
+\mathbf{x}^{(2)T}\\
+\vdots\\
+\mathbf{x}^{(N)T}
+\end{bmatrix}
+=
+\begin{bmatrix}
+x^{(1)}_{1} &amp; x^{(1)}_{2} &amp; \cdots &amp; x^{(1)}_{n_x-1} &amp; x^{(1)}_{n_x}\\
+x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp; x^{(2)}_{n_x-1} &amp; x^{(2)}_{n_x}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\
+x^{(N-1)}_{1} &amp; x^{(N-1)}_{2} &amp; \cdots &amp; x^{(N-1)}_{n_x-1} &amp; x^{(N-1)}_{n_x}\\
+x^{(N)}_{1} &amp; x^{(N)}_{2} &amp; \cdots &amp; x^{(N)}_{n_x-1} &amp; x^{(N)}_{n_x}\\
+\end{bmatrix}
+\]</span></p>
+<!-- TODO: insert equations using m4 -->
+<p>where we need to transpose each example column vector to make it fit correctly in the matrix as a row.</p>
+<p>We say that <span class="math inline">\(\mathbf{x}^{(i)} \in \mathcal{R}^{n_x}\)</span> (each input example is <span class="math inline">\(n_x\)</span> real values) and <span class="math inline">\(X \in \mathcal{R}^{N \times n_x}\)</span> (the entire input is a <span class="math inline">\((N, n_x)\)</span> matrix).</p>
+<p><span class="math inline">\(Y\)</span> contains the targets (also referred to as labels). Using our example, targets comprise the latitude, longitude, and elevation of a person.</p>
+<p><span class="math display">\[
+Y =
+\begin{bmatrix}
+\mathbf{y}^{(1)T}\\
+\mathbf{y}^{(2)T}\\
+\vdots\\
+\mathbf{y}^{(N)T}
+\end{bmatrix}
+=
+\begin{bmatrix}
+y^{(1)}_{1} &amp; y^{(1)}_{2} &amp; \cdots &amp; y^{(1)}_{n_y-1} &amp; y^{(1)}_{n_y}\\
+y^{(2)}_{1} &amp; y^{(2)}_{2} &amp; \cdots &amp; y^{(2)}_{n_y-1} &amp; y^{(2)}_{n_y}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\
+y^{(N-1)}_{1} &amp; y^{(N-1)}_{2} &amp; \cdots &amp; y^{(N-1)}_{n_y-1} &amp; y^{(N-1)}_{n_y}\\
+y^{(N)}_{1} &amp; y^{(N)}_{2} &amp; \cdots &amp; y^{(N)}_{n_y-1} &amp; y^{(N)}_{n_y}\\
+\end{bmatrix}
+\]</span></p>
+<p>Each <span class="math inline">\(y^{(i)} \in \mathcal{R}^{n_y}\)</span> (each target is <span class="math inline">\(n_y\)</span> real values, 3 in our example) and <span class="math inline">\(Y \in \mathcal{R}^{N \times n_y}\)</span> (the entire input is a <span class="math inline">\((N, n_y)\)</span> matrix).</p>
+</body>
+</html>
