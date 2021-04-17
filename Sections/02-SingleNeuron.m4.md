@@ -63,7 +63,7 @@ gendiff(Code/Python/SingleNeuronLoop1.py Code/Python/SingleNeuronLoop2.py)
 
 <!-- TODO: why can we start b at 0 by not w? -->
 
-# The Role of an Activation Function
+## The Role of an Activation Function
 
 - hidden neurons
     + default to relu
@@ -73,4 +73,4 @@ gendiff(Code/Python/SingleNeuronLoop1.py Code/Python/SingleNeuronLoop2.py)
     + default to softmax for multi-class classification
     + default to no activation for regression
 
-# Vectorization with PyTorch
+## Vectorization with PyTorch

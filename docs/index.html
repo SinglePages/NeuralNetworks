@@ -222,14 +222,12 @@
 <ul>
 <li><a href="#sec:intro"><span class="toc-section-number">1</span> Introduction</a></li>
 <li><a href="#single-neuron"><span class="toc-section-number">2</span> Single Neuron</a></li>
-<li><a href="#the-role-of-an-activation-function"><span class="toc-section-number">3</span> The Role of an Activation Function</a></li>
-<li><a href="#vectorization-with-pytorch"><span class="toc-section-number">4</span> Vectorization with PyTorch</a></li>
-<li><a href="#multi-layer-networks"><span class="toc-section-number">5</span> Multi-Layer Networks</a></li>
-<li><a href="#gradient-descent"><span class="toc-section-number">6</span> Gradient Descent</a></li>
-<li><a href="#optimization-techniques"><span class="toc-section-number">7</span> Optimization Techniques</a></li>
-<li><a href="#overfitting-and-generalization"><span class="toc-section-number">8</span> Overfitting and Generalization</a></li>
-<li><a href="#sec:cnns"><span class="toc-section-number">9</span> Convolutional Neural Networks</a></li>
-<li><a href="#recurrent-neural-networks"><span class="toc-section-number">10</span> Recurrent Neural Networks</a></li>
+<li><a href="#multi-layer-networks"><span class="toc-section-number">3</span> Multi-Layer Networks</a></li>
+<li><a href="#gradient-descent"><span class="toc-section-number">4</span> Gradient Descent</a></li>
+<li><a href="#optimization-techniques"><span class="toc-section-number">5</span> Optimization Techniques</a></li>
+<li><a href="#overfitting-and-generalization"><span class="toc-section-number">6</span> Overfitting and Generalization</a></li>
+<li><a href="#sec:cnns"><span class="toc-section-number">7</span> Convolutional Neural Networks</a></li>
+<li><a href="#recurrent-neural-networks"><span class="toc-section-number">8</span> Recurrent Neural Networks</a></li>
 </ul>
 </nav>
 <section id="sec:intro" class="level1" data-number="1">
@@ -283,7 +281,7 @@ x^{(i)}_{n_x-1} \\
 x^{(i)}_{n_x} \\
 \end{bmatrix}
 \]</span></p>
-<p>where <span class="math inline">\(n_x\)</span> is the number of input features. We do not always put the input features into a column vector (see sec. <a href="#sec:cnns">9</a> for more information), but it is a useful convention to remember.</p>
+<p>where <span class="math inline">\(n_x\)</span> is the number of input features. We do not always put the input features into a column vector (see sec. <a href="#sec:cnns">7</a> for more information), but it is a useful convention to remember.</p>
 <p>Each row in <span class="math inline">\(X\)</span> is a single input example (also referred to as an instance or sample), and when you stack all <span class="math inline">\(N\)</span> examples side-by-side, you end up with</p>
 <p><span class="math display">\[
 X =
@@ -510,9 +508,8 @@ a^{(i)} &amp;= g(z^{(i)})
 <h2 data-number="2.5"><span class="header-section-number">2.5</span> Parameter Initialization</h2>
 <!-- TODO: why can we start b at 0 by not w? -->
 </section>
-</section>
-<section id="the-role-of-an-activation-function" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> The Role of an Activation Function</h1>
+<section id="the-role-of-an-activation-function" class="level2" data-number="2.6">
+<h2 data-number="2.6"><span class="header-section-number">2.6</span> The Role of an Activation Function</h2>
 <ul>
 <li>hidden neurons
 <ul>
@@ -527,43 +524,44 @@ a^{(i)} &amp;= g(z^{(i)})
 </ul></li>
 </ul>
 </section>
-<section id="vectorization-with-pytorch" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Vectorization with PyTorch</h1>
+<section id="vectorization-with-pytorch" class="level2" data-number="2.7">
+<h2 data-number="2.7"><span class="header-section-number">2.7</span> Vectorization with PyTorch</h2>
 </section>
-<section id="multi-layer-networks" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Multi-Layer Networks</h1>
+</section>
+<section id="multi-layer-networks" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Multi-Layer Networks</h1>
 <ul>
 <li>mlp</li>
 <li>deep networks</li>
 </ul>
 </section>
-<section id="gradient-descent" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Gradient Descent</h1>
-<section id="batch-gradient-descent" class="level2" data-number="6.1">
-<h2 data-number="6.1"><span class="header-section-number">6.1</span> Batch Gradient Descent</h2>
+<section id="gradient-descent" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Gradient Descent</h1>
+<section id="batch-gradient-descent" class="level2" data-number="4.1">
+<h2 data-number="4.1"><span class="header-section-number">4.1</span> Batch Gradient Descent</h2>
 </section>
-<section id="stochastic-gradient-descent" class="level2" data-number="6.2">
-<h2 data-number="6.2"><span class="header-section-number">6.2</span> Stochastic Gradient Descent</h2>
+<section id="stochastic-gradient-descent" class="level2" data-number="4.2">
+<h2 data-number="4.2"><span class="header-section-number">4.2</span> Stochastic Gradient Descent</h2>
 </section>
-<section id="mini-batch-stochastic-gradient-descent" class="level2" data-number="6.3">
-<h2 data-number="6.3"><span class="header-section-number">6.3</span> Mini-Batch Stochastic Gradient Descent</h2>
+<section id="mini-batch-stochastic-gradient-descent" class="level2" data-number="4.3">
+<h2 data-number="4.3"><span class="header-section-number">4.3</span> Mini-Batch Stochastic Gradient Descent</h2>
 <ul>
 <li>SGD</li>
 <li>Mini-Batch Stochastic Gradient Descent</li>
 </ul>
 </section>
 </section>
-<section id="optimization-techniques" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Optimization Techniques</h1>
+<section id="optimization-techniques" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Optimization Techniques</h1>
 </section>
-<section id="overfitting-and-generalization" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Overfitting and Generalization</h1>
+<section id="overfitting-and-generalization" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Overfitting and Generalization</h1>
 </section>
-<section id="sec:cnns" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> Convolutional Neural Networks</h1>
+<section id="sec:cnns" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Convolutional Neural Networks</h1>
 </section>
-<section id="recurrent-neural-networks" class="level1" data-number="10">
-<h1 data-number="10"><span class="header-section-number">10</span> Recurrent Neural Networks</h1>
+<section id="recurrent-neural-networks" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Recurrent Neural Networks</h1>
 <p>recursive</p>
 <p>TODO: Advanced topics</p>
 <ol start="8" type="1">
