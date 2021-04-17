@@ -1,3 +1,9 @@
+# add code and diagram dependencies
+# update all rule
+# cat all css together (and js)
+# symlink unprocessed stuff? (probably just if uploading to server where rsync can follow)
+
+
 UTIL_DIR = Utilitites
 
 OUTPUT_DIR = docs

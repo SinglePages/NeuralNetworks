@@ -152,34 +152,46 @@
 <body>
 <header id="title-block-header">
 <h1 class="title">Neural Networks</h1>
-<p class="subtitle">A terse neural network walk-through</p>
+<p class="subtitle">A concise neural network walk-through</p>
 <p class="author">Anthony J. Clark</p>
 </header>
 <h1 id="sec:intro">Introduction</h1>
-<p>Goal: provide a concise walk through of all fundamental neural network (including modern deep learning) techniques.</p>
-<p>I will not discuss every possible analogy, angle, or topic here. Instead, I will provide links to external resources so that you can choose which topics you want to investigate more closely.</p>
+<p>Goal: provide a concise walk-through of all fundamental neural network (including modern deep learning) techniques.</p>
+<p>I will not discuss every possible analogy, angle, or topic here. Instead, I will provide links to external resources so that you can choose which topics you want to investigate more closely. I will provide minimal code examples when appropriate.</p>
 <p><strong>Useful prior knowledge:</strong></p>
 <ul>
-<li>matrix calculus (see <a href="https://explained.ai/matrix-calculus/">The Matrix Calculus You Need For Deep Learning</a> by Terence Parr and Jeremy Howard)</li>
-<li>programming skills (I will show examples in Python, but many languages will work)</li>
-<li>familiarity with computing tools (using a server, cloud-based services, the command line interface (CLI))</li>
+<li>matrix calculus
+<ul>
+<li>see <a href="https://explained.ai/matrix-calculus/">The Matrix Calculus You Need For Deep Learning</a> by Terence Parr and Jeremy Howard</li>
+</ul></li>
+<li>programming skills
+<ul>
+<li>I will show examples in Python, but many languages will work</li>
+</ul></li>
+<li>familiarity with computing tools
+<ul>
+<li>using a server, cloud-based services, the command line interface (CLI)</li>
+</ul></li>
 </ul>
+<h2 id="background">Background</h2>
 <p>TODO: background</p>
 <ul>
 <li>AI/ML/NN</li>
+<li>automatic features</li>
+<li>supervised/unsupervised/rl</li>
 <li>applications</li>
 <li>terminology (nn, ann, mlp)</li>
 <li>ethics</li>
 <li>non-ml example</li>
 </ul>
 <h2 id="notation">Notation</h2>
-<p>For the sake of making this concrete, I am going to introduce a reference example: <strong>predicting a person’s location on Earth (latitude, longitude, and elevation) by looking at the temperature, illuminance, time of day, and day of year.</strong></p>
-<p>Starting at the top,</p>
+<p>Starting with the most important piece,</p>
 <p><span class="math display">\[
 \mathcal{D} = \{X, Y\}
 \]</span></p>
-<p>is a dataset comprising input <em>features</em> <span class="math inline">\(X\)</span> and output <em>targets</em> <span class="math inline">\(Y\)</span>. Although <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> can come in many shapes, I am going to be opinionated here and force a specific convention. For the supervised learning case, we will always have the same number of input feature and output target sets. Let’s use <span class="math inline">\(N\)</span> to denote the size of the paired dataset.</p>
-<p><span class="math inline">\(X\)</span> is a matrix (indicated by the capitalization) containing all features of all input examples. A single input example <span class="math inline">\(\mathbf{x}^{(i)}\)</span> (<span class="math inline">\(\mathbf{x}\)</span> is <strong>bold</strong> to indicate that it is a vector) is often represented as a <em>column</em> vector:</p>
+<!-- TODO: address training/validation/test sets -->
+<p>is a dataset comprising input <em>features</em> <span class="math inline">\(X\)</span> and output <em>targets</em> <span class="math inline">\(Y\)</span>. Although <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> can come in many shapes, I am going to be opinionated here and use a specific (and consistent) convention. Let’s use <span class="math inline">\(N\)</span> to denote the size of the paired dataset. (Note, not all problems have output targets, but herein I am talking about supervised learning unless otherwise specified.)</p>
+<p><span class="math inline">\(X\)</span> is a matrix (indicated by capitalization) containing all features of all input examples. A single input example <span class="math inline">\(\mathbf{x}^{(i)}\)</span> is often represented as a <em>column</em> vector (indicated by boldface).</p>
 <p><span class="math display">\[
 \mathbf{x}^{(i)} =
 \begin{bmatrix}
@@ -190,7 +202,7 @@ x^{(i)}_{n_x-1} \\
 x^{(i)}_{n_x} \\
 \end{bmatrix}
 \]</span></p>
-<p>where <span class="math inline">\(n_x\)</span> is the number of input features (<span class="math inline">\(n_x = 4\)</span> in our reference example). For example, <span class="math inline">\(\mathbf{x}^{(1)}\)</span> would contain the temperature, illuminance, time of day, and day of year for the first person in our dataset. We do not always put the input features into a column vector, but it is a good starting place (see <span class="citation" data-cites="sec:cnns">[@sec:cnns]</span> for more information).</p>
+<p>where <span class="math inline">\(n_x\)</span> is the number of input features. We do not always put the input features into a column vector (see <span class="citation" data-cites="sec:cnns">[@sec:cnns]</span> for more information), but it is a useful convention to remember.</p>
 <p>Each row in <span class="math inline">\(X\)</span> is a single input example (also referred to as an instance or sample), and when you stack all <span class="math inline">\(N\)</span> examples side-by-side, you end up with</p>
 <p><span class="math display">\[
 X =
@@ -207,12 +219,12 @@ x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp; x^{(2)}_{n_x-1} &amp; x^{(2)}_{
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\
 x^{(N-1)}_{1} &amp; x^{(N-1)}_{2} &amp; \cdots &amp; x^{(N-1)}_{n_x-1} &amp; x^{(N-1)}_{n_x}\\
 x^{(N)}_{1} &amp; x^{(N)}_{2} &amp; \cdots &amp; x^{(N)}_{n_x-1} &amp; x^{(N)}_{n_x}\\
-\end{bmatrix}
+\end{bmatrix}.
 \]</span></p>
 <!-- TODO: insert equations using m4 -->
-<p>where we need to transpose each example column vector to make it fit correctly in the matrix as a row.</p>
+<p>We need to transpose each example column vector (i.e., <span class="math inline">\(\mathbf{x}^{(1)T}\)</span>) into a row vector so that the first dimension of <span class="math inline">\(X\)</span> is the number of examples <span class="math inline">\(N\)</span> and the second dimension is the number of features <span class="math inline">\(n_{n_x}\)</span>. (This is not required, but it is the convention I will use for <span class="math inline">\(X\)</span>.)</p>
 <p>We say that <span class="math inline">\(\mathbf{x}^{(i)} \in \mathcal{R}^{n_x}\)</span> (each input example is <span class="math inline">\(n_x\)</span> real values) and <span class="math inline">\(X \in \mathcal{R}^{N \times n_x}\)</span> (the entire input is a <span class="math inline">\((N, n_x)\)</span> matrix).</p>
-<p><span class="math inline">\(Y\)</span> contains the targets (also referred to as labels). Using our example, targets comprise the latitude, longitude, and elevation of a person.</p>
+<p><span class="math inline">\(Y\)</span> contains the targets (also referred to as labels or the true/correct/expected output values).</p>
 <p><span class="math display">\[
 Y =
 \begin{bmatrix}
@@ -230,6 +242,7 @@ y^{(N-1)}_{1} &amp; y^{(N-1)}_{2} &amp; \cdots &amp; y^{(N-1)}_{n_y-1} &amp; y^{
 y^{(N)}_{1} &amp; y^{(N)}_{2} &amp; \cdots &amp; y^{(N)}_{n_y-1} &amp; y^{(N)}_{n_y}\\
 \end{bmatrix}
 \]</span></p>
-<p>Each <span class="math inline">\(y^{(i)} \in \mathcal{R}^{n_y}\)</span> (each target is <span class="math inline">\(n_y\)</span> real values, 3 in our example) and <span class="math inline">\(Y \in \mathcal{R}^{N \times n_y}\)</span> (the entire input is a <span class="math inline">\((N, n_y)\)</span> matrix).</p>
+<p>Each <span class="math inline">\(y^{(i)} \in \mathcal{R}^{n_y}\)</span> (each target is <span class="math inline">\(n_y\)</span> real values) and <span class="math inline">\(Y \in \mathcal{R}^{N \times n_y}\)</span> (the entire input is a <span class="math inline">\((N, n_y)\)</span> matrix).</p>
+<p>For example, we might <strong>predict a person’s location on Earth in latitude, longitude, and altitude by looking at the temperature, illuminance, time of day, and day of year at their location</strong>. In this example, <span class="math inline">\(n_x\)</span> and <span class="math inline">\(n_y\)</span> are <span class="math inline">\(4\)</span> (temperature, illuminance, time of day, and day of year) and <span class="math inline">\(3\)</span> (latitude, longitude, and altitude), respectively. And if we have <span class="math inline">\(N=785\)</span> example pairs, then <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are <span class="math inline">\((785, 4)\)</span> and <span class="math inline">\((785, 3)\)</span>, respectively.</p>
 </body>
 </html>

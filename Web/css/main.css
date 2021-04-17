@@ -16,3 +16,9 @@ div.sourceCode {
     padding: 10px;
     background-color: rgb(246, 246, 246);
 }
+div.sourceCode pre {
+    margin: 0;
+}
+div.sourceCode pre span {
+    display: inline-block;
+}
