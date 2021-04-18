@@ -33,7 +33,7 @@ The main points of this equation:
 
 This code does not containing any "learning" (i.e., optimization), but it is worth showing just how simple it is to write a single neuron from scratch. Nearly all code is used to create random input data.
 
-~~~python
+~~~{.python .numberLines}
 include(Code/Python/SingleNeuronLoop1.py)
 ~~~
 
@@ -53,7 +53,7 @@ I provided *reasonable* ranges for values in the previous code example. For exam
 
 An NN can work with with values in these ranges, but it makes learning easier when you first scale values into the same range, typically $[-1, 1]$. TODO: why?
 
-<div class="sourceCode">
+<div class="sourceDiff">
 <pre>
 gendiff(Code/Python/SingleNeuronLoop1.py Code/Python/SingleNeuronLoop2.py)
 </pre>

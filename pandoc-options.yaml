@@ -28,8 +28,11 @@ section-divs: true
 strip-empty-paragraphs: true
 strip-comments: false
 
-# # either a style name of a style definition file:
+# either a style name of a style definition file:
+# pygments (the default), kate, monochrome, breezeDark, espresso, zenburn, haddock, and tango
 # highlight-style: pygments
+highlight-style: /Users/ajcd2020/.config/pandoc/themes/ayu-mirage.theme
+
 # syntax-definitions:
 # - c.xml
 # # or you may use syntax-definition: with a single value
