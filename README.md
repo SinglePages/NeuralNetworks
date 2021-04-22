@@ -1,5 +1,10 @@
 # NeuralNetworks
 
+1. introduction
+2. ethics
+3. datasets
+?. computing
+
 - encourage implementing alongside
 - show how to do so with visual studio code
 
@@ -73,3 +78,11 @@ https://cs231n.github.io/
 
 [DIFFERENTIAL EQUATIONS EXPLAINED](https://lewis500.github.io/diffeq/)
 [Ordinary Least Squares Regression](https://setosa.io/ev/ordinary-least-squares-regression/)
+
+
+
+- border instead of pipe
+- responsive font for mathjax
+- fork or alter output of ansifilter
+- use bat instead of pandoc highlighter?
+- ansifilter -> table-cell last one width 100%

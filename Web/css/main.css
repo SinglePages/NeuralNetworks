@@ -35,3 +35,9 @@ div.sourceCode pre {
 div.sourceCode pre span {
     /* display: inline-block; */
 }
+
+@media screen and (max-width: 500px) {
+    .math.display {
+        font-size: 10px;
+    }
+}
