@@ -1,10 +1,5 @@
 # NeuralNetworks
 
-1. introduction
-2. ethics
-3. datasets
-?. computing
-
 - encourage implementing alongside
 - show how to do so with visual studio code
 
@@ -37,6 +32,9 @@ Tools
 	+ https://github.com/karpathy/convnetjs
 	+ https://github.com/karpathy/reinforcejs
 	+ https://cs.stanford.edu/people/karpathy/gan/
+
+
+https://github.com/ashishpatel26/Tools-to-Design-or-Visualize-Architecture-of-Neural-Network
 
 Animation:
 
@@ -81,8 +79,11 @@ https://cs231n.github.io/
 
 
 
-- border instead of pipe
-- responsive font for mathjax
 - fork or alter output of ansifilter
+- border instead of pipe
 - use bat instead of pandoc highlighter?
 - ansifilter -> table-cell last one width 100%
+
+
+individual pages
+- fix relative links

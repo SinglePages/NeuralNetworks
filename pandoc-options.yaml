@@ -1,3 +1,8 @@
+metadata:
+  title:  Neural Networks
+  subtitle: A concise neural network walk-through
+  author: Anthony J. Clark
+
 from: markdown
 to: html5
 
@@ -26,7 +31,7 @@ number-sections: true
 section-divs: true
 
 strip-empty-paragraphs: true
-strip-comments: false
+strip-comments: true
 
 # either a style name of a style definition file:
 # pygments (the default), kate, monochrome, breezeDark, espresso, zenburn, haddock, and tango

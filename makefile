@@ -41,16 +41,20 @@ HTML_FILES = $(patsubst $(BUILD_DIR)/%.md, $(OUTPUT_DIR)/%.html, $(GEN_MARKDOWN_
 all: $(OUTPUT_DIR)/index.html $(HTML_FILES) $(COPIED_WEB_FILES)
 
 
+# Single page
 $(OUTPUT_DIR)/index.html: $(GEN_MARKDOWN_FILES) | $(OUTPUT_DIR)
-	@pandoc --defaults pandoc-options.yaml $(GEN_MARKDOWN_FILES) -o $@
+	@pandoc --metadata title="Neural Networks"  $(GEN_MARKDOWN_FILES) -o $@
 $(OUTPUT_DIR):
 	@mkdir -p $@
 
 
+# Individual pages
 $(OUTPUT_DIR)/%.html: $(BUILD_DIR)/%.md | $(OUTPUT_DIR)
-	pandoc --to html5 --from markdown --standalone --mathjax $< -o $@
+	@pandoc --to html5 --from markdown --standalone --mathjax --lua-filter Utilities/filter_titleFromHeader.lua $< -o $@
 
-$(BUILD_DIR)/%.md: $(SECTION_DIR)/%.m4.md m4Macros.txt $(DIAGRAM_FILES) | $(BUILD_DIR)
+
+# Run m4 preprocessor to generate build files
+$(BUILD_DIR)/%.md: $(SECTION_DIR)/%.m4.md m4Macros.txt $(DIAGRAM_FILES) $(PYTHON_FILES) | $(BUILD_DIR)
 	@m4 m4Macros.txt $< > $@
 $(BUILD_DIR):
 	@mkdir -p $@ $@/img $@/js $@/css
@@ -63,7 +67,7 @@ $(BUILD_DIR):
 
 
 $(COPIED_WEB_FILES): $(WEB_FILES) | $(OUTPUT_DIR)
-	rsync -ar $(WEB_DIR)/ $(OUTPUT_DIR)/
+	@rsync -ar $(WEB_DIR)/ $(OUTPUT_DIR)/
 
 
 
