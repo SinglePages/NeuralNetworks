@@ -6,11 +6,7 @@ When our model is a single neuron we can only produce a single output. So, $n_y=
 
 A diagram representing a single neuron (as we'll see later, a neural network often refers to many of these neurons interconnected):
 
-<!-- TODO: use m4 here -->
-esyscmd(dot -Tsvg Diagrams/SingleNeuron.dot | tail -n +4)
-
-<script type="text/javascript" src="js/main.js"></script>
-<link rel="stylesheet" href="css/main.css">
+![](img/Neuron.svg)
 
 The diagram represents the following equations:
 
@@ -33,9 +29,11 @@ The main points of this equation:
 
 This code does not containing any "learning" (i.e., optimization), but it is worth showing just how simple it is to write a single neuron from scratch. Nearly all code is used to create random input data.
 
-~~~{.python .numberLines}
-include(Code/Python/SingleNeuronLoop1.py)
-~~~
+<div class="code-highlight">
+<pre>
+m4code(Code/Python/SingleNeuronLoop1.py)
+</pre>
+</div>
 
 In the example, we have random parameters and we ignore the output. But what if we want to train the neuron so that the output mimics a real function or process? The next subsection tackles this very problem.
 
@@ -53,9 +51,9 @@ I provided *reasonable* ranges for values in the previous code example. For exam
 
 An NN can work with with values in these ranges, but it makes learning easier when you first scale values into the same range, typically $[-1, 1]$. TODO: why?
 
-<div class="sourceDiff">
+<div class="code-highlight">
 <pre>
-gendiff(Code/Python/SingleNeuronLoop1.py Code/Python/SingleNeuronLoop2.py)
+m4diff(Code/Python/SingleNeuronLoop1.py Code/Python/SingleNeuronLoop2.py)
 </pre>
 </div>
 

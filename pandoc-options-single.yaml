@@ -1,0 +1,6 @@
+metadata:
+  subtitle: A concise neural network walk-through
+  author: Anthony J. Clark
+
+filters:
+- Utilities/filter_titleFromHeader.lua

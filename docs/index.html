@@ -1,4 +1,154 @@
-<h1 id="sec:intro">Introduction</h1>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Anthony J. Clark" />
+  <title>Neural Networks</title>
+  <style>
+    html {
+      line-height: 1.7;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 40em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin-top: 1.7em;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.7em;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1.7em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1.7em 0 1.7em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      font-style: italic;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      background-color: #f0f0f0;
+      font-size: 85%;
+      margin: 0;
+      padding: .2em .4em;
+    }
+    pre {
+      line-height: 1.5em;
+      padding: 1em;
+      background-color: #f0f0f0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin-top: 1.7em;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+    }
+    th, td {
+      border-bottom: 1px solid lightgray;
+      padding: 1em 3em 1em 0;
+    }
+    header {
+      margin-bottom: 6em;
+      text-align: center;
+    }
+    nav a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Neural Networks</h1>
+<p class="subtitle">A concise neural network walk-through</p>
+<p class="author">Anthony J. Clark</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sec:intro"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#sec:ethics"><span class="toc-section-number">2</span> Ethics</a></li>
+<li><a href="#sec:data"><span class="toc-section-number">3</span> Data</a></li>
+<li><a href="#single-neuron"><span class="toc-section-number">4</span> Single Neuron</a></li>
+<li><a href="#multi-layer-networks"><span class="toc-section-number">5</span> Multi-Layer Networks</a></li>
+<li><a href="#gradient-descent"><span class="toc-section-number">6</span> Gradient Descent</a></li>
+<li><a href="#optimization-techniques"><span class="toc-section-number">7</span> Optimization Techniques</a></li>
+<li><a href="#overfitting-and-generalization"><span class="toc-section-number">8</span> Overfitting and Generalization</a></li>
+<li><a href="#sec:cnns"><span class="toc-section-number">9</span> Convolutional Neural Networks</a></li>
+<li><a href="#recurrent-neural-networks"><span class="toc-section-number">10</span> Recurrent Neural Networks</a></li>
+<li><a href="#advanced-topics"><span class="toc-section-number">11</span> Advanced Topics</a></li>
+</ul>
+</nav>
+<section id="sec:intro" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>Goal: provide a concise walk-through of all fundamental neural network (including modern deep learning) techniques.</p>
 <p>I will not discuss every possible analogy, angle, or topic here. Instead, I will provide links to external resources so that you can choose which topics you want to investigate more closely. I will provide minimal code examples when appropriate.</p>
 <p><strong>Useful prior knowledge:</strong></p>
@@ -16,7 +166,8 @@
 <li>using a server, cloud-based services, the command line interface (CLI)</li>
 </ul></li>
 </ul>
-<h2 id="background">Background</h2>
+<section id="background" class="level2" data-number="1.1">
+<h2 data-number="1.1"><span class="header-section-number">1.1</span> Background</h2>
 <p>TODO: background</p>
 <ul>
 <li>AI/ML/NN</li>
@@ -31,14 +182,20 @@
 <ul>
 <li>Collaborative Filtering</li>
 </ul>
-<h1 id="sec:ethics">Ethics</h1>
-<h1 id="sec:data">Data</h1>
+</section>
+</section>
+<section id="sec:ethics" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Ethics</h1>
+</section>
+<section id="sec:data" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Data</h1>
 <p>Often considered the most important aspect of deep learning,</p>
-<p><span class="math display">𝒟 = {<em>X</em>, <em>Y</em>}</span></p>
-<!-- TODO: address training/validation/test sets -->
-<p>is a dataset comprising input <em>features</em> <span class="math inline"><em>X</em></span> and output <em>targets</em> <span class="math inline"><em>Y</em></span>. Although <span class="math inline"><em>X</em></span> and <span class="math inline"><em>Y</em></span> can come in many shapes, I am going to be opinionated here and use a specific (and consistent) convention. Let’s use <span class="math inline"><em>N</em></span> to denote the size of the paired dataset. (Note, not all problems have output targets, but herein I am talking about supervised learning unless otherwise specified.)</p>
-<p><span class="math inline"><em>X</em></span> is a matrix (indicated by capitalization) containing all features of all input examples. A single input example <span class="math inline"><strong>x</strong><sup>(<em>i</em>)</sup></span> is often represented as a <em>column</em> vector (indicated by boldface).</p>
-<p><span class="math display">$$
+<p><span class="math display">\[
+\mathcal{D} = \{X, Y\}
+\]</span></p>
+<p>is a dataset comprising input <em>features</em> <span class="math inline">\(X\)</span> and output <em>targets</em> <span class="math inline">\(Y\)</span>. Although <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> can come in many shapes, I am going to be opinionated here and use a specific (and consistent) convention. Let’s use <span class="math inline">\(N\)</span> to denote the size of the paired dataset. (Note, not all problems have output targets, but herein I am talking about supervised learning unless otherwise specified.)</p>
+<p><span class="math inline">\(X\)</span> is a matrix (indicated by capitalization) containing all features of all input examples. A single input example <span class="math inline">\(\mathbf{x}^{(i)}\)</span> is often represented as a <em>column</em> vector (indicated by boldface).</p>
+<p><span class="math display">\[
 \mathbf{x}^{(i)} =
 \begin{bmatrix}
 x^{(i)}_{1} \\
@@ -47,10 +204,10 @@ x^{(i)}_{2} \\
 x^{(i)}_{n_x-1} \\
 x^{(i)}_{n_x} \\
 \end{bmatrix}
-$$</span></p>
-<p>where <span class="math inline"><em>n</em><sub><em>x</em></sub></span> is the number of input features. We do not always put the input features into a column vector (see <span class="citation" data-cites="sec:cnns">[@sec:cnns]</span> for more information), but it is a useful convention to remember.</p>
-<p>Each row in <span class="math inline"><em>X</em></span> is a single input example (also referred to as an instance or sample), and when you stack all <span class="math inline"><em>N</em></span> examples side-by-side, you end up with</p>
-<p><span class="math display">$$
+\]</span></p>
+<p>where <span class="math inline">\(n_x\)</span> is the number of input features. We do not always put the input features into a column vector (see sec. <a href="#sec:cnns">9</a> for more information), but it is a useful convention to remember.</p>
+<p>Each row in <span class="math inline">\(X\)</span> is a single input example (also referred to as an instance or sample), and when you stack all <span class="math inline">\(N\)</span> examples side-by-side, you end up with</p>
+<p><span class="math display">\[
 X =
 \begin{bmatrix}
 \mathbf{x}^{(1)T}\\
@@ -66,12 +223,11 @@ x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp; x^{(2)}_{n_x-1} &amp; x^{(2)}_{
 x^{(N-1)}_{1} &amp; x^{(N-1)}_{2} &amp; \cdots &amp; x^{(N-1)}_{n_x-1} &amp; x^{(N-1)}_{n_x}\\
 x^{(N)}_{1} &amp; x^{(N)}_{2} &amp; \cdots &amp; x^{(N)}_{n_x-1} &amp; x^{(N)}_{n_x}\\
 \end{bmatrix}.
-$$</span></p>
-<!-- TODO: insert equations using m4 -->
-<p>We need to transpose each example column vector (i.e., <span class="math inline"><strong>x</strong><sup>(1)<em>T</em></sup></span>) into a row vector so that the first dimension of <span class="math inline"><em>X</em></span> is the number of examples <span class="math inline"><em>N</em></span> and the second dimension is the number of features <span class="math inline"><em>n</em><sub><em>n</em><sub><em>x</em></sub></sub></span>. (This is not required, but it is the convention I will use for <span class="math inline"><em>X</em></span>.)</p>
-<p>We say that <span class="math inline"><strong>x</strong><sup>(<em>i</em>)</sup> ∈ ℛ<sup><em>n</em><sub><em>x</em></sub></sup></span> (each input example is <span class="math inline"><em>n</em><sub><em>x</em></sub></span> real values) and <span class="math inline"><em>X</em> ∈ ℛ<sup><em>N</em> × <em>n</em><sub><em>x</em></sub></sup></span> (the entire input is a <span class="math inline">(<em>N</em>,<em>n</em><sub><em>x</em></sub>)</span> matrix).</p>
-<p><span class="math inline"><em>Y</em></span> contains the targets (also referred to as labels or the true/correct/expected output values).</p>
-<p><span class="math display">$$
+\]</span></p>
+<p>We need to transpose each example column vector (i.e., <span class="math inline">\(\mathbf{x}^{(1)T}\)</span>) into a row vector so that the first dimension of <span class="math inline">\(X\)</span> is the number of examples <span class="math inline">\(N\)</span> and the second dimension is the number of features <span class="math inline">\(n_{n_x}\)</span>. (This is not required, but it is the convention I will use for <span class="math inline">\(X\)</span>.)</p>
+<p>We say that <span class="math inline">\(\mathbf{x}^{(i)} \in \mathcal{R}^{n_x}\)</span> (each input example is <span class="math inline">\(n_x\)</span> real values) and <span class="math inline">\(X \in \mathcal{R}^{N \times n_x}\)</span> (the entire input is a <span class="math inline">\((N, n_x)\)</span> matrix).</p>
+<p><span class="math inline">\(Y\)</span> contains the targets (also referred to as labels or the true/correct/expected output values).</p>
+<p><span class="math display">\[
 Y =
 \begin{bmatrix}
 \mathbf{y}^{(1)T}\\
@@ -87,165 +243,114 @@ y^{(2)}_{1} &amp; y^{(2)}_{2} &amp; \cdots &amp; y^{(2)}_{n_y-1} &amp; y^{(2)}_{
 y^{(N-1)}_{1} &amp; y^{(N-1)}_{2} &amp; \cdots &amp; y^{(N-1)}_{n_y-1} &amp; y^{(N-1)}_{n_y}\\
 y^{(N)}_{1} &amp; y^{(N)}_{2} &amp; \cdots &amp; y^{(N)}_{n_y-1} &amp; y^{(N)}_{n_y}\\
 \end{bmatrix}
-$$</span></p>
-<p>Each <span class="math inline"><em>y</em><sup>(<em>i</em>)</sup> ∈ ℛ<sup><em>n</em><sub><em>y</em></sub></sup></span> (each target is <span class="math inline"><em>n</em><sub><em>y</em></sub></span> real values) and <span class="math inline"><em>Y</em> ∈ ℛ<sup><em>N</em> × <em>n</em><sub><em>y</em></sub></sup></span> (the entire input is a <span class="math inline">(<em>N</em>,<em>n</em><sub><em>y</em></sub>)</span> matrix).</p>
-<p>For example, we might <strong>predict a person’s location on Earth in latitude, longitude, and altitude by looking at the temperature, illuminance, time of day, and day of year at their location</strong>. In this example, <span class="math inline"><em>n</em><sub><em>x</em></sub></span> and <span class="math inline"><em>n</em><sub><em>y</em></sub></span> are <span class="math inline">4</span> (temperature, illuminance, time of day, and day of year) and <span class="math inline">3</span> (latitude, longitude, and altitude), respectively. And if we have <span class="math inline"><em>N</em> = 785</span> example pairs, then <span class="math inline"><em>X</em></span> and <span class="math inline"><em>Y</em></span> are <span class="math inline">(785,4)</span> and <span class="math inline">(785,3)</span>, respectively.</p>
-<h1 id="single-neuron">Single Neuron</h1>
-<p>When our model is a single neuron we can only produce a single output. So, <span class="math inline"><em>n</em><sub><em>y</em></sub> = 1</span> for this section.</p>
-<h2 id="notation-and-diagram">Notation and Diagram</h2>
+\]</span></p>
+<p>Each <span class="math inline">\(y^{(i)} \in \mathcal{R}^{n_y}\)</span> (each target is <span class="math inline">\(n_y\)</span> real values) and <span class="math inline">\(Y \in \mathcal{R}^{N \times n_y}\)</span> (the entire input is a <span class="math inline">\((N, n_y)\)</span> matrix).</p>
+<p>For example, we might <strong>predict a person’s location on Earth in latitude, longitude, and altitude by looking at the temperature, illuminance, time of day, and day of year at their location</strong>. In this example, <span class="math inline">\(n_x\)</span> and <span class="math inline">\(n_y\)</span> are <span class="math inline">\(4\)</span> (temperature, illuminance, time of day, and day of year) and <span class="math inline">\(3\)</span> (latitude, longitude, and altitude), respectively. And if we have <span class="math inline">\(N=785\)</span> example pairs, then <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are <span class="math inline">\((785, 4)\)</span> and <span class="math inline">\((785, 3)\)</span>, respectively.</p>
+</section>
+<section id="single-neuron" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Single Neuron</h1>
+<p>When our model is a single neuron we can only produce a single output. So, <span class="math inline">\(n_y=1\)</span> for this section.</p>
+<section id="notation-and-diagram" class="level2" data-number="4.1">
+<h2 data-number="4.1"><span class="header-section-number">4.1</span> Notation and Diagram</h2>
 <p>A diagram representing a single neuron (as we’ll see later, a neural network often refers to many of these neurons interconnected):</p>
-<!-- TODO: use m4 here -->
-<!-- Generated by graphviz version 2.47.0 (20210316.0004)
- -->
-<!-- Title: SingleNeuron Pages: 1 -->
-<svg width="431pt" height="253pt" viewBox="0.00 0.00 431.00 253.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 249)">
-<title>
-SingleNeuron
-</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-249 427,-249 427,4 -4,4"/> <g id="clust1" class="cluster">
-<title>
-cluster_input
-</title>
-<polygon fill="none" stroke="white" points="0,-8 0,-237 95,-237 95,-8 0,-8"/> <text text-anchor="middle" x="47.5" y="-221.8" font-family="Times,serif" font-size="14.00">Input Features</text> </g> <g id="clust2" class="cluster">
-<title>
-cluster_linear
-</title>
-<polygon fill="none" stroke="white" points="177,-47 177,-187 229,-187 229,-47 177,-47"/> <text text-anchor="middle" x="203" y="-171.8" font-family="Times,serif" font-size="14.00">Linear</text> </g> <g id="clust3" class="cluster">
-<title>
-cluster_activation
-</title>
-<polygon fill="none" stroke="white" points="250,-112 250,-187 324,-187 324,-112 250,-112"/> <text text-anchor="middle" x="287" y="-171.8" font-family="Times,serif" font-size="14.00">Activation</text> </g> <g id="clust4" class="cluster">
-<title>
-cluster_output
-</title>
-<polygon fill="none" stroke="white" points="345,-112 345,-164 415,-164 415,-112 345,-112"/> </g> <!-- x1 --> <g id="node1" class="node">
-<title>
-x1
-</title>
-<ellipse fill="none" stroke="lightgray" cx="47" cy="-188" rx="18" ry="18"/> <text text-anchor="middle" x="47" y="-184.3" font-family="Times,serif" font-size="14.00">&amp;x_1</text> </g> <!-- z --> <g id="node7" class="node">
-<title>
-z
-</title>
-<ellipse fill="none" stroke="#ee0000" cx="203" cy="-138" rx="18" ry="18"/> <text text-anchor="middle" x="203" y="-134.3" font-family="Times,serif" font-size="14.00">&amp;z</text> </g> <!-- x1&#45;&#45;z --> <g id="edge1" class="edge">
-<title>
-x1--z
-</title>
-<path fill="none" stroke="black" d="M64.48,-182.65C94.12,-173.03 156.08,-152.91 185.64,-143.31"/> <text text-anchor="middle" x="136" y="-175.8" font-family="Times,serif" font-size="14.00">&amp;w_1</text> </g> <!-- x2 --> <g id="node2" class="node">
-<title>
-x2
-</title>
-<ellipse fill="none" stroke="lightgray" cx="47" cy="-138" rx="18" ry="18"/> <text text-anchor="middle" x="47" y="-134.3" font-family="Times,serif" font-size="14.00">&amp;x_2</text> </g> <!-- x2&#45;&#45;z --> <g id="edge2" class="edge">
-<title>
-x2--z
-</title>
-<path fill="none" stroke="black" d="M65.07,-138C94.67,-138 155.2,-138 184.85,-138"/> <text text-anchor="middle" x="136" y="-141.8" font-family="Times,serif" font-size="14.00">&amp;w_2</text> </g> <!-- e1 --> <g id="node3" class="node">
-<title>
-e1
-</title>
-<ellipse fill="black" stroke="black" cx="47" cy="-104" rx="1.8" ry="1.8"/> </g> <!-- e2 --> <g id="node4" class="node">
-<title>
-e2
-</title>
-<ellipse fill="black" stroke="black" cx="47" cy="-86" rx="1.8" ry="1.8"/> </g> <!-- e3 --> <g id="node5" class="node">
-<title>
-e3
-</title>
-<ellipse fill="black" stroke="black" cx="47" cy="-68" rx="1.8" ry="1.8"/> </g> <!-- xn --> <g id="node6" class="node needsmath">
-<title>
-xn
-</title>
-<ellipse fill="none" stroke="lightgray" cx="47" cy="-34" rx="18" ry="18"/> <text text-anchor="middle" x="47" y="-30.3" font-family="Times,serif" font-size="14.00">&amp;x_{n_x}</text> </g> <!-- xn&#45;&#45;z --> <g id="edge3" class="edge">
-<title>
-xn--z
-</title>
-<path fill="none" stroke="black" d="M62.49,-43.78C91.84,-63.61 158.03,-108.3 187.44,-128.17"/> <text text-anchor="middle" x="136" y="-113.8" font-family="Times,serif" font-size="14.00">&amp;w_{n_x}</text> </g> <!-- b --> <g id="node8" class="node">
-<title>
-b
-</title>
-<ellipse fill="none" stroke="lightgray" cx="203" cy="-73" rx="18" ry="18"/> <text text-anchor="middle" x="203" y="-69.3" font-family="Times,serif" font-size="14.00">&amp;1</text> </g> <!-- z&#45;&#45;b --> <g id="edge5" class="edge">
-<title>
-z--b
-</title>
-<path fill="none" stroke="black" d="M203,-119.99C203,-110.99 203,-100.12 203,-91.11"/> <text text-anchor="middle" x="192.5" y="-101.8" font-family="Times,serif" font-size="14.00">&amp;b</text> </g> <!-- a --> <g id="node9" class="node">
-<title>
-a
-</title>
-<ellipse fill="none" stroke="green" cx="287" cy="-138" rx="18" ry="18"/> <text text-anchor="middle" x="287" y="-134.3" font-family="Times,serif" font-size="14.00">&amp;a</text> </g> <!-- z&#45;&#45;a --> <g id="edge4" class="edge">
-<title>
-z--a
-</title>
-<path fill="none" stroke="black" d="M221.39,-138C235.4,-138 254.99,-138 268.92,-138"/> </g> <!-- yhat --> <g id="node10" class="node">
-<title>
-yhat
-</title>
-<text text-anchor="middle" x="380" y="-134.3" font-family="Times,serif" font-size="14.00">&amp;ŷ</text> </g> <!-- a&#45;&#45;yhat --> <g id="edge6" class="edge">
-<title>
-a--yhat
-</title>
-<path fill="none" stroke="black" d="M305.12,-138C318.5,-138 337.35,-138 352.65,-138"/> </g> </g>
-</svg>
-<script type="text/javascript" src="js/main.js"></script>
-<p><link rel="stylesheet" href="css/main.css"></p>
+<p><img src="img/Neuron.svg" /></p>
 <p>The diagram represents the following equations:</p>
-<p></p>
+<p><span class="math display">\[\begin{align}
+z^{(i)} &amp;= \sum_{k=1}^{n_x} w_k x_k^{(i)} + b\\
+a^{(i)} &amp;= g(z^{(i)})
+\end{align}\]</span></p>
 <p>The main points of this equation:</p>
 <ul>
-<li><span class="math inline"><em>x</em><sub><em>k</em></sub><sup>(<em>i</em>)</sup></span> are the input features for the <span class="math inline"><em>i</em><sup><em>t</em><em>h</em></sup></span> example (e.g., temperature)</li>
-<li><span class="math inline"><em>z</em><sup>(<em>i</em>)</sup></span> is a linear combination of the input features</li>
-<li><span class="math inline"><em>w</em><sub><em>k</em></sub></span> (weights) and <span class="math inline"><em>b</em></span> (bias) are the <strong>learned</strong> parameters (notice the lack of any superscript)</li>
-<li><span class="math inline"><em>a</em><sup>(<em>i</em>)</sup></span> is the output of a non-linear activation function <span class="math inline"><em>g</em>(⋅)</span> applied to <span class="math inline"><em>z</em><sup>(<em>i</em>)</sup></span></li>
-<li><span class="math inline"><em>ŷ</em><sup>(<em>i</em>)</sup></span> is the label we often give to the output (<span class="math inline"><em>a</em><sup>(<em>i</em>)</sup> = <em>ŷ</em><sup>(<em>i</em>)</sup></span>)</li>
+<li><span class="math inline">\(x_k^{(i)}\)</span> are the input features for the <span class="math inline">\(i^{th}\)</span> example (e.g., temperature)</li>
+<li><span class="math inline">\(z^{(i)}\)</span> is a linear combination of the input features</li>
+<li><span class="math inline">\(w_k\)</span> (weights) and <span class="math inline">\(b\)</span> (bias) are the <strong>learned</strong> parameters (notice the lack of any superscript)</li>
+<li><span class="math inline">\(a^{(i)}\)</span> is the output of a non-linear activation function <span class="math inline">\(g(\mathord{\cdot})\)</span> applied to <span class="math inline">\(z^{(i)}\)</span></li>
+<li><span class="math inline">\(\hat y^{(i)}\)</span> is the label we often give to the output (<span class="math inline">\(a^{(i)} = \hat y^{(i)}\)</span>)</li>
 </ul>
-<p><strong>For this model, we want to find parameters <span class="math inline"><em>w</em><sub><em>k</em></sub></span> and <span class="math inline"><em>b</em></span> such that the neuron outputs <span class="math inline"><em>ŷ</em><sup>(<em>i</em>)</sup> ≈ <em>y</em></span> for any input.</strong> Before we discuss optimization we should take a moment to code up this single neuron model.</p>
-<h2 id="code-for-computing-a-neurons-output">Code for Computing a Neuron’s Output</h2>
+<p><strong>For this model, we want to find parameters <span class="math inline">\(w_k\)</span> and <span class="math inline">\(b\)</span> such that the neuron outputs <span class="math inline">\(\hat y^{(i)} \approx y\)</span> for any input.</strong> Before we discuss optimization we should take a moment to code up this single neuron model.</p>
+</section>
+<section id="code-for-computing-a-neurons-output" class="level2" data-number="4.2">
+<h2 data-number="4.2"><span class="header-section-number">4.2</span> Code for Computing a Neuron’s Output</h2>
 <p>This code does not containing any “learning” (i.e., optimization), but it is worth showing just how simple it is to write a single neuron from scratch. Nearly all code is used to create random input data.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#!/usr/bin/env python</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="im">from</span> math <span class="im">import</span> exp</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> random <span class="im">import</span> uniform</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">def</span> sigmoid(z: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
-<span id="cb1-8"><a href="#cb1-8"></a>    <span class="co">&quot;&quot;&quot;The sigmoid/logistic activation function.&quot;&quot;&quot;</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> exp(<span class="op">-</span>z))</span>
-<span id="cb1-10"><a href="#cb1-10"></a></span>
-<span id="cb1-11"><a href="#cb1-11"></a></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="co"># The number of examples in our dataset</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a>N <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="co"># Randomly generate some input data</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a>nx <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a>x1 <span class="op">=</span> [uniform(<span class="op">-</span><span class="dv">20</span>, <span class="dv">40</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(N)]</span>
-<span id="cb1-18"><a href="#cb1-18"></a>x2 <span class="op">=</span> [uniform(<span class="dv">0</span>, <span class="fl">1e6</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(N)]</span>
-<span id="cb1-19"><a href="#cb1-19"></a>x3 <span class="op">=</span> [uniform(<span class="dv">0</span>, <span class="dv">24</span> <span class="op">*</span> <span class="dv">60</span> <span class="op">*</span> <span class="dv">60</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(N)]</span>
-<span id="cb1-20"><a href="#cb1-20"></a>x4 <span class="op">=</span> [<span class="bu">round</span>(uniform(<span class="dv">1</span>, <span class="dv">365</span>)) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(N)]</span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="co"># Generate random neuron parameters</span></span>
-<span id="cb1-23"><a href="#cb1-23"></a>w1, w2, w3, w4 <span class="op">=</span> [uniform(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(nx)]</span>
-<span id="cb1-24"><a href="#cb1-24"></a>b <span class="op">=</span> uniform(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb1-25"><a href="#cb1-25"></a></span>
-<span id="cb1-26"><a href="#cb1-26"></a><span class="co"># Compute neuron output for each of the N examples</span></span>
-<span id="cb1-27"><a href="#cb1-27"></a><span class="cf">for</span> x1i, x2i, x3i, x4i <span class="kw">in</span> <span class="bu">zip</span>(x1, x2, x3, x4):</span>
-<span id="cb1-28"><a href="#cb1-28"></a>    zi <span class="op">=</span> w1 <span class="op">*</span> x1i <span class="op">+</span> w2 <span class="op">*</span> x2i <span class="op">+</span> w3 <span class="op">*</span> x3i <span class="op">+</span> w4 <span class="op">*</span> x4i <span class="op">+</span> b</span>
-<span id="cb1-29"><a href="#cb1-29"></a>    ai <span class="op">=</span> sigmoid(zi)</span></code></pre></div>
-<p>In the example, we have random parameters and we ignore the output. But what if we want to train the neuron so that the output mimics a real function or process? The next subsection tackles this very problem.</p>
-<h2 id="optimization-with-batch-gradient-descent">Optimization with Batch Gradient Descent</h2>
-<p>You may have noticed that in the previous code listing I also introduced a specific activation function (aka squashing function) called <code>sigmoid</code> (aka the logistic function). In this section we’</p>
-<p>Do this first</p>
-<p><strong>Deeper dive:</strong> TODO: something on activation functions.</p>
-<h2 id="input-normalization">Input Normalization</h2>
-<p>I provided <em>reasonable</em> ranges for values in the previous code example. For example, temperature values on Earth are typically in the range <span class="math inline">[−20,40]</span> °C and illuminance in the range <span class="math inline">[0,1<em>e</em>6]</span> Lux.</p>
-<p>An NN can work with with values in these ranges, but it makes learning easier when you first scale values into the same range, typically <span class="math inline">[−1,1]</span>. TODO: why?</p>
-<div class="sourceDiff">
+<div class="code-highlight">
 <pre>
-
+<span style="color:#39424e;">   1</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;">!/usr/bin/env python</span>
+<span style="color:#39424e;">   2</span> 
+<span style="color:#39424e;">   3</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">math</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">exp</span>
+<span style="color:#39424e;">   4</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">random</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">uniform</span>
+<span style="color:#39424e;">   5</span> 
+<span style="color:#39424e;">   6</span> 
+<span style="color:#39424e;">   7</span> <span style="color:#ffa759;">def</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">z</span><span style="color:#ccc9c2;">:</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">float</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">-&gt;</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">float</span><span style="color:#ccc9c2;">:</span>
+<span style="color:#39424e;">   8</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">&quot;&quot;&quot;</span><span style="color:#5c6773;">The sigmoid/logistic activation function.</span><span style="color:#5c6773;">&quot;&quot;&quot;</span>
+<span style="color:#39424e;">   9</span> <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">/</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">exp</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">z</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  10</span> 
+<span style="color:#39424e;">  11</span> 
+<span style="color:#39424e;">  12</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> The number of examples in our dataset</span>
+<span style="color:#39424e;">  13</span> <span style="color:#ccc9c2;">N</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">100</span>
+<span style="color:#39424e;">  14</span> 
+<span style="color:#39424e;">  15</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Randomly generate some input data</span>
+<span style="color:#39424e;">  16</span> <span style="color:#ccc9c2;">nx</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">4</span>
+<span style="color:#39424e;">  17</span> <span style="color:#ccc9c2;">x1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">[</span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ffcc66;">20</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">40</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">N</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">]</span>
+<span style="color:#39424e;">  18</span> <span style="color:#ccc9c2;">x2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">[</span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1e6</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">N</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">]</span>
+<span style="color:#39424e;">  19</span> <span style="color:#ccc9c2;">x3</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">[</span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">24</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">60</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">60</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">N</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">]</span>
+<span style="color:#39424e;">  20</span> <span style="color:#ccc9c2;">x4</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">[</span><span style="color:#f28779;">round</span><span style="color:#ccc9c2;">(</span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">365</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">N</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">]</span>
+<span style="color:#39424e;">  21</span> 
+<span style="color:#39424e;">  22</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Generate random neuron parameters</span>
+<span style="color:#39424e;">  23</span> <span style="color:#ccc9c2;">w1</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">w2</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">w3</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">w4</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">[</span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">nx</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">]</span>
+<span style="color:#39424e;">  24</span> <span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  25</span> 
+<span style="color:#39424e;">  26</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute neuron output for each of the N examples</span>
+<span style="color:#39424e;">  27</span> <span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x1i</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x2i</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x3i</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x4i</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">zip</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">x1</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x2</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x3</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x4</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
+<span style="color:#39424e;">  28</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">zi</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x1i</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x2i</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w3</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x3i</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w4</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">x4i</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span>
+<span style="color:#39424e;">  29</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">ai</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">zi</span><span style="color:#ccc9c2;">)</span>
 
 </pre>
 </div>
-<h2 id="parameter-initialization">Parameter Initialization</h2>
-<!-- TODO: why can we start b at 0 by not w? -->
-<h2 id="the-role-of-an-activation-function">The Role of an Activation Function</h2>
+<p>In the example, we have random parameters and we ignore the output. But what if we want to train the neuron so that the output mimics a real function or process? The next subsection tackles this very problem.</p>
+</section>
+<section id="optimization-with-batch-gradient-descent" class="level2" data-number="4.3">
+<h2 data-number="4.3"><span class="header-section-number">4.3</span> Optimization with Batch Gradient Descent</h2>
+<p>You may have noticed that in the previous code listing I also introduced a specific activation function (aka squashing function) called <code>sigmoid</code> (aka the logistic function). In this section we’</p>
+<p>Do this first</p>
+<p><strong>Deeper dive:</strong> TODO: something on activation functions.</p>
+</section>
+<section id="input-normalization" class="level2" data-number="4.4">
+<h2 data-number="4.4"><span class="header-section-number">4.4</span> Input Normalization</h2>
+<p>I provided <em>reasonable</em> ranges for values in the previous code example. For example, temperature values on Earth are typically in the range <span class="math inline">\([-20, 40]\)</span> °C and illuminance in the range <span class="math inline">\([0, 1e6]\)</span> Lux.</p>
+<p>An NN can work with with values in these ranges, but it makes learning easier when you first scale values into the same range, typically <span class="math inline">\([-1, 1]\)</span>. TODO: why?</p>
+<div class="code-highlight">
+<pre>
+
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;">nx </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">4</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;">x1 </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> [</span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ffcc66;">20</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">40</span><span style="color:#ccc9c2;">) </span><span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(N)]</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 18 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 18 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;">x2 </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> [</span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">1e6</span><span style="color:#ccc9c2;">) </span><span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(N)]</span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 19 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#a61719;">x3 </span><span style="color:#f29e74;background-color:#a61719;">=</span><span style="color:#ccc9c2;background-color:#a61719;"> [</span><span style="font-weight:bold;color:#ffd580;background-color:#901011;">uniform</span><span style="color:#ccc9c2;background-color:#a61719;">(</span><span style="color:#ffcc66;background-color:#a61719;">0</span><span style="color:#ccc9c2;background-color:#a61719;">, </span><span style="color:#ffcc66;background-color:#a61719;">24</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#f29e74;background-color:#a61719;">*</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#ffcc66;background-color:#a61719;">60</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#f29e74;background-color:#a61719;">*</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#ffcc66;background-color:#a61719;">60</span><span style="color:#ccc9c2;background-color:#a61719;">) </span><span style="color:#ffa759;background-color:#a61719;">for</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#5ccfe6;background-color:#a61719;">_</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#ffa759;background-color:#a61719;">in</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#f28779;background-color:#a61719;">range</span><span style="color:#ccc9c2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 19 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#22a322;">x3 </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> [(</span><span style="color:#ffcc66;background-color:#22a322;">0</span><span style="color:#ccc9c2;background-color:#22a322;">, </span><span style="color:#ffcc66;background-color:#22a322;">24</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#f29e74;background-color:#22a322;">*</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#ffcc66;background-color:#22a322;">60</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#f29e74;background-color:#22a322;">*</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#ffcc66;background-color:#22a322;">60</span><span style="color:#ccc9c2;background-color:#22a322;">) </span><span style="color:#ffa759;background-color:#22a322;">for</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#5ccfe6;background-color:#22a322;">_</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#ffa759;background-color:#22a322;">in</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#f28779;background-color:#22a322;">range</span><span style="color:#ccc9c2;background-color:#22a322;">(N)]</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;">x4 </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> [</span><span style="color:#f28779;">round</span><span style="color:#ccc9c2;">(</span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">365</span><span style="color:#ccc9c2;">)) </span><span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(N)]</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 21 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 21 </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 22 </span><span style="color:#0000ee;">│</span><span style="color:#5c6773;background-color:#22a322;"># Randomly generate some target data</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 23 </span><span style="color:#0000ee;">│</span><span style="color:#5c6773;background-color:#22a322;"># Normally, this would be something that you measure</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 24 </span><span style="color:#0000ee;">│</span><span style="color:#5c6773;background-color:#22a322;"># or label by hand</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 25 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#22a322;">ny </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#ffcc66;background-color:#22a322;">3</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 26 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#22a322;">y1 </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#ffcc66;background-color:#22a322;">0</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 27 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#22a322;">y2 </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#ffcc66;background-color:#22a322;">0</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 28 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#22a322;">y3 </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#ffcc66;background-color:#22a322;">0</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 29 </span><span style="color:#0000ee;">│</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 22 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 30 </span><span style="color:#0000ee;">│</span><span style="color:#5c6773;"># Generate random neuron parameters</span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 23 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#a61719;">w1, w2, w3, w4 </span><span style="color:#f29e74;background-color:#a61719;">=</span><span style="color:#ccc9c2;background-color:#a61719;"> [</span><span style="font-weight:bold;color:#ffd580;background-color:#901011;">uniform</span><span style="color:#ccc9c2;background-color:#a61719;">(</span><span style="color:#f29e74;background-color:#a61719;">-</span><span style="color:#ffcc66;background-color:#a61719;">1</span><span style="color:#ccc9c2;background-color:#a61719;">, </span><span style="color:#ffcc66;background-color:#a61719;">1</span><span style="color:#ccc9c2;background-color:#a61719;">) </span><span style="color:#ffa759;background-color:#a61719;">for</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#5ccfe6;background-color:#a61719;">_</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#ffa759;background-color:#a61719;">in</span><span style="color:#ccc9c2;background-color:#a61719;"> </span><span style="color:#f28779;background-color:#a61719;">range</span><span style="color:#ccc9c2;background-color:#a61719;">(nx)]</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 31 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#22a322;">w1, w2, w3, w4 </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> [</span><span style="font-weight:bold;color:#ffd580;background-color:#006000;">uniformity</span><span style="color:#ccc9c2;background-color:#22a322;">(</span><span style="color:#f29e74;background-color:#22a322;">-</span><span style="color:#ffcc66;background-color:#22a322;">1</span><span style="color:#ccc9c2;background-color:#22a322;">, </span><span style="color:#ffcc66;background-color:#22a322;">1</span><span style="color:#ccc9c2;background-color:#22a322;">) </span><span style="color:#ffa759;background-color:#22a322;">for</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#5ccfe6;background-color:#22a322;">_</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#ffa759;background-color:#22a322;">in</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="color:#f28779;background-color:#22a322;">range</span><span style="color:#ccc9c2;background-color:#22a322;">(nx)]</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 24 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 32 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;">b </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">uniform</span><span style="color:#ccc9c2;">(</span><span style="color:#f29e74;">-</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 25 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 33 </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 26 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 34 </span><span style="color:#0000ee;">│</span><span style="color:#5c6773;"># Compute neuron output for each of the N examples</span>
+
+</pre>
+</div>
+</section>
+<section id="parameter-initialization" class="level2" data-number="4.5">
+<h2 data-number="4.5"><span class="header-section-number">4.5</span> Parameter Initialization</h2>
+</section>
+<section id="the-role-of-an-activation-function" class="level2" data-number="4.6">
+<h2 data-number="4.6"><span class="header-section-number">4.6</span> The Role of an Activation Function</h2>
 <ul>
 <li>hidden neurons
 <ul>
@@ -259,26 +364,49 @@ a--yhat
 <li>default to no activation for regression</li>
 </ul></li>
 </ul>
-<h2 id="vectorization-with-pytorch">Vectorization with PyTorch</h2>
-<h1 id="multi-layer-networks">Multi-Layer Networks</h1>
+</section>
+<section id="vectorization-with-pytorch" class="level2" data-number="4.7">
+<h2 data-number="4.7"><span class="header-section-number">4.7</span> Vectorization with PyTorch</h2>
+</section>
+</section>
+<section id="multi-layer-networks" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Multi-Layer Networks</h1>
 <ul>
 <li>mlp</li>
 <li>deep networks</li>
 </ul>
-<h1 id="gradient-descent">Gradient Descent</h1>
-<h2 id="batch-gradient-descent">Batch Gradient Descent</h2>
-<h2 id="stochastic-gradient-descent">Stochastic Gradient Descent</h2>
-<h2 id="mini-batch-stochastic-gradient-descent">Mini-Batch Stochastic Gradient Descent</h2>
+</section>
+<section id="gradient-descent" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Gradient Descent</h1>
+<section id="batch-gradient-descent" class="level2" data-number="6.1">
+<h2 data-number="6.1"><span class="header-section-number">6.1</span> Batch Gradient Descent</h2>
+</section>
+<section id="stochastic-gradient-descent" class="level2" data-number="6.2">
+<h2 data-number="6.2"><span class="header-section-number">6.2</span> Stochastic Gradient Descent</h2>
+</section>
+<section id="mini-batch-stochastic-gradient-descent" class="level2" data-number="6.3">
+<h2 data-number="6.3"><span class="header-section-number">6.3</span> Mini-Batch Stochastic Gradient Descent</h2>
 <ul>
 <li>SGD</li>
 <li>Mini-Batch Stochastic Gradient Descent</li>
 </ul>
-<h1 id="optimization-techniques">Optimization Techniques</h1>
-<h1 id="overfitting-and-generalization">Overfitting and Generalization</h1>
-<h1 id="sec:cnns">Convolutional Neural Networks</h1>
-<h1 id="recurrent-neural-networks">Recurrent Neural Networks</h1>
+</section>
+</section>
+<section id="optimization-techniques" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Optimization Techniques</h1>
+</section>
+<section id="overfitting-and-generalization" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Overfitting and Generalization</h1>
+</section>
+<section id="sec:cnns" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Convolutional Neural Networks</h1>
+</section>
+<section id="recurrent-neural-networks" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Recurrent Neural Networks</h1>
 <p>recursive</p>
-<h1 id="advanced-topics">Advanced Topics</h1>
+</section>
+<section id="advanced-topics" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Advanced Topics</h1>
 <ul>
 <li>Generative and Adversarial Training</li>
 <li>NLP, Transformers, and Attention</li>
@@ -291,3 +419,6 @@ a--yhat
 </ul></li>
 <li>Alternative Machine Learning Techniques</li>
 </ul>
+</section>
+</body>
+</html>

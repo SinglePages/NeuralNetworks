@@ -15,7 +15,9 @@ Ideas
 - add index with definitions
 - connect variables and diagrams so that when you hover it will show in multiple places
 - use roughjs?
+- svg line label background...
 
+https://thoughtspile.github.io/grafar/#/
 
 https://setosa.io/#/
 interactive = intuitive
@@ -87,3 +89,19 @@ https://cs231n.github.io/
 
 individual pages
 - fix relative links
+- add TOC
+
+
+old svg method:
+esyscmd(dot -Tsvg Diagrams/SingleNeuron.dot | tail -n +4)
+
+
+https://www.ncei.noaa.gov/pub/data/uscrn/products/hourly02/
+
+
+Computing memory usage
+- optimization issues (use nvidia-smi)
+- parameters (sometimes duplicated for certain computations)
+- activations and inputs
+- batches
+https://cs231n.github.io/convolutional-networks/#computational-considerations

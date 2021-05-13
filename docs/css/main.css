@@ -12,29 +12,14 @@
     line-height: 0;
 }
 
-div.sourceCode, div.sourceDiff {
+div.code-highlight pre {
     line-height: 1;
     font-size: 0.8rem;
     border-radius: 8px;
     background-color: #1f2430;
-    /* padding: 10px;
-    background-color: rgb(246, 246, 246); */
+    padding: 16px 0px 10px 10px;
 }
 
-div.sourceCode {
-    padding: 0.8rem 0;
-}
-
-div.sourceCode a {
-    color: #dddddd;
-}
-
-div.sourceCode pre {
-    /* margin: 0; */
-}
-div.sourceCode pre span {
-    /* display: inline-block; */
-}
 
 @media screen and (max-width: 500px) {
     .math.display {
