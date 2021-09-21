@@ -20,6 +20,11 @@ div.code-highlight pre {
     padding: 16px 0px 10px 10px;
 }
 
+img {
+    margin: 0 auto;
+    display: block;
+}
+
 
 @media screen and (max-width: 500px) {
     .math.display {

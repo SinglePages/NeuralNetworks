@@ -10,7 +10,7 @@ $$
 
 is a dataset comprising input *features* $X$ and output *targets* $Y$. Although $X$ and $Y$ can come in many shapes, I am going to be opinionated here and use a specific (and consistent) convention. Let's use $N$ to denote the size of the paired dataset. (Note, not all problems have output targets, but herein I am talking about supervised learning unless otherwise specified.)
 
-$X$ is a matrix (indicated by capitalization) containing all features of all input examples. A single input example $\mathbf{x}^{(i)}$ is often represented as a *column* vector (indicated by boldface).
+$X$ is a matrix (indicated by capitalization) containing all features of all input examples. A single input example $\mathbf{x}^{(i)}$ is often represented as a *column* vector (indicated by boldface)
 
 $$
 \mathbf{x}^{(i)} =
@@ -23,7 +23,7 @@ x^{(i)}_{n_x} \\
 \end{bmatrix}
 $$
 
-where $n_x$ is the number of input features. We do not always put the input features into a column vector (see [@sec:cnns] for more information), but it is a useful convention to remember.
+where $n_x$ is the number of input features and $i$ denotes the $i^{\mathit{it}}$ training example}. We do not always put the input features into a column vector (see [@sec:cnns] for more information), but it is a useful convention to remember.
 
 Each row in $X$ is a single input example (also referred to as an instance or sample), and when you stack all $N$ examples side-by-side, you end up with
 
@@ -48,6 +48,8 @@ $$
 <!-- TODO: insert equations using m4 -->
 
 We need to transpose each example column vector (i.e., $\mathbf{x}^{(1)T}$) into a row vector so that the first dimension of $X$ is the number of examples $N$ and the second dimension is the number of features $n_{n_x}$. (This is not required, but it is the convention I will use for $X$.)
+
+m4callout(Why is $X$... (do this with a plugin?))
 
 We say that $\mathbf{x}^{(i)} \in \mathcal{R}^{n_x}$ (each input example is $n_x$ real values) and $X \in \mathcal{R}^{N \times n_x}$ (the entire input is a $(N, n_x)$ matrix).
 

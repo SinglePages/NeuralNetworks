@@ -9,9 +9,9 @@ I will not discuss every possible analogy, angle, or topic here. Instead, I will
 - matrix calculus
     + see [The Matrix Calculus You Need For Deep Learning](https://explained.ai/matrix-calculus/) by Terence Parr and Jeremy Howard
 - programming skills
-    + I will show examples in Python, but many languages will work
+    + I will show examples in Python, but many languages are well suited
 - familiarity with computing tools
-    + using a server, cloud-based services, the command line interface (CLI)
+    + using a server, cloud-based services, and the command line interface (CLI)
 
 ## Background
 
@@ -29,4 +29,3 @@ TODO: background
 Application areas
 
 - Collaborative Filtering
-

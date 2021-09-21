@@ -8,7 +8,7 @@
   <title>Neural Networks</title>
   <style>
     html {
-      line-height: 1.7;
+      line-height: 1.5;
       font-family: Georgia, serif;
       font-size: 20px;
       color: #1a1a1a;
@@ -16,13 +16,13 @@
     }
     body {
       margin: 0 auto;
-      max-width: 40em;
+      max-width: 36em;
       padding-left: 50px;
       padding-right: 50px;
       padding-top: 50px;
       padding-bottom: 50px;
       hyphens: auto;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       text-rendering: optimizeLegibility;
       font-kerning: normal;
     }
@@ -36,6 +36,7 @@
       body {
         background-color: transparent;
         color: black;
+        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -46,7 +47,7 @@
       }
     }
     p {
-      margin-top: 1.7em;
+      margin: 1em 0;
     }
     a {
       color: #1a1a1a;
@@ -58,59 +59,83 @@
       max-width: 100%;
     }
     h1, h2, h3, h4, h5, h6 {
-      margin-top: 1.7em;
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
     }
     ol, ul {
       padding-left: 1.7em;
-      margin-top: 1.7em;
+      margin-top: 1em;
     }
     li > ol, li > ul {
       margin-top: 0;
     }
     blockquote {
-      margin: 1.7em 0 1.7em 1.7em;
+      margin: 1em 0 1em 1.7em;
       padding-left: 1em;
       border-left: 2px solid #e6e6e6;
-      font-style: italic;
+      color: #606060;
     }
     code {
       font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
-      background-color: #f0f0f0;
       font-size: 85%;
       margin: 0;
-      padding: .2em .4em;
     }
     pre {
-      line-height: 1.5em;
-      padding: 1em;
-      background-color: #f0f0f0;
+      margin: 1em 0;
       overflow: auto;
     }
     pre code {
       padding: 0;
       overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
     }
     hr {
       background-color: #1a1a1a;
       border: none;
       height: 1px;
-      margin-top: 1.7em;
+      margin: 1em 0;
     }
     table {
+      margin: 1em 0;
       border-collapse: collapse;
       width: 100%;
       overflow-x: auto;
       display: block;
+      font-variant-numeric: lining-nums tabular-nums;
     }
-    th, td {
-      border-bottom: 1px solid lightgray;
-      padding: 1em 3em 1em 0;
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
     }
     header {
-      margin-bottom: 6em;
+      margin-bottom: 4em;
       text-align: center;
     }
-    nav a:not(:hover) {
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
       text-decoration: none;
     }
     code{white-space: pre-wrap;}
@@ -125,6 +150,19 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
   <link rel="stylesheet" href="css/main.css">
+  <style>
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+              Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+              "Helvetica Neue", sans-serif;
+      }
+
+      code {
+          font-family: SFMono-Regular, Menlo, Monaco,
+              Consolas, "Liberation Mono",
+              "Courier New", monospace;
+      }
+  </style>
 </head>
 <body>
 <header id="title-block-header">
@@ -159,11 +197,11 @@
 </ul></li>
 <li>programming skills
 <ul>
-<li>I will show examples in Python, but many languages will work</li>
+<li>I will show examples in Python, but many languages are well suited</li>
 </ul></li>
 <li>familiarity with computing tools
 <ul>
-<li>using a server, cloud-based services, the command line interface (CLI)</li>
+<li>using a server, cloud-based services, and the command line interface (CLI)</li>
 </ul></li>
 </ul>
 <section id="background" class="level2" data-number="1.1">
@@ -194,7 +232,7 @@
 \mathcal{D} = \{X, Y\}
 \]</span></p>
 <p>is a dataset comprising input <em>features</em> <span class="math inline">\(X\)</span> and output <em>targets</em> <span class="math inline">\(Y\)</span>. Although <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> can come in many shapes, I am going to be opinionated here and use a specific (and consistent) convention. Let’s use <span class="math inline">\(N\)</span> to denote the size of the paired dataset. (Note, not all problems have output targets, but herein I am talking about supervised learning unless otherwise specified.)</p>
-<p><span class="math inline">\(X\)</span> is a matrix (indicated by capitalization) containing all features of all input examples. A single input example <span class="math inline">\(\mathbf{x}^{(i)}\)</span> is often represented as a <em>column</em> vector (indicated by boldface).</p>
+<p><span class="math inline">\(X\)</span> is a matrix (indicated by capitalization) containing all features of all input examples. A single input example <span class="math inline">\(\mathbf{x}^{(i)}\)</span> is often represented as a <em>column</em> vector (indicated by boldface)</p>
 <p><span class="math display">\[
 \mathbf{x}^{(i)} =
 \begin{bmatrix}
@@ -205,7 +243,7 @@ x^{(i)}_{n_x-1} \\
 x^{(i)}_{n_x} \\
 \end{bmatrix}
 \]</span></p>
-<p>where <span class="math inline">\(n_x\)</span> is the number of input features. We do not always put the input features into a column vector (see sec. <a href="#sec:cnns">9</a> for more information), but it is a useful convention to remember.</p>
+<p>where <span class="math inline">\(n_x\)</span> is the number of input features and <span class="math inline">\(i\)</span> denotes the <span class="math inline">\(i^{\mathit{it}}\)</span> training example}. We do not always put the input features into a column vector (see sec. <a href="#sec:cnns">9</a> for more information), but it is a useful convention to remember.</p>
 <p>Each row in <span class="math inline">\(X\)</span> is a single input example (also referred to as an instance or sample), and when you stack all <span class="math inline">\(N\)</span> examples side-by-side, you end up with</p>
 <p><span class="math display">\[
 X =
@@ -225,6 +263,11 @@ x^{(N)}_{1} &amp; x^{(N)}_{2} &amp; \cdots &amp; x^{(N)}_{n_x-1} &amp; x^{(N)}_{
 \end{bmatrix}.
 \]</span></p>
 <p>We need to transpose each example column vector (i.e., <span class="math inline">\(\mathbf{x}^{(1)T}\)</span>) into a row vector so that the first dimension of <span class="math inline">\(X\)</span> is the number of examples <span class="math inline">\(N\)</span> and the second dimension is the number of features <span class="math inline">\(n_{n_x}\)</span>. (This is not required, but it is the convention I will use for <span class="math inline">\(X\)</span>.)</p>
+<hr />
+<blockquote>
+<p><strong>Q</strong>: Why is <span class="math inline">\(X\)</span>… (do this with a plugin?)</p>
+</blockquote>
+<hr />
 <p>We say that <span class="math inline">\(\mathbf{x}^{(i)} \in \mathcal{R}^{n_x}\)</span> (each input example is <span class="math inline">\(n_x\)</span> real values) and <span class="math inline">\(X \in \mathcal{R}^{N \times n_x}\)</span> (the entire input is a <span class="math inline">\((N, n_x)\)</span> matrix).</p>
 <p><span class="math inline">\(Y\)</span> contains the targets (also referred to as labels or the true/correct/expected output values).</p>
 <p><span class="math display">\[
@@ -263,10 +306,15 @@ a^{(i)} &amp;= g(z^{(i)})
 <ul>
 <li><span class="math inline">\(x_k^{(i)}\)</span> are the input features for the <span class="math inline">\(i^{th}\)</span> example (e.g., temperature)</li>
 <li><span class="math inline">\(z^{(i)}\)</span> is a linear combination of the input features</li>
-<li><span class="math inline">\(w_k\)</span> (weights) and <span class="math inline">\(b\)</span> (bias) are the <strong>learned</strong> parameters (notice the lack of any superscript)</li>
+<li><span class="math inline">\(w_k\)</span> (weights) and <span class="math inline">\(b\)</span> (bias) are the <strong>learned</strong> parameters</li>
 <li><span class="math inline">\(a^{(i)}\)</span> is the output of a non-linear activation function <span class="math inline">\(g(\mathord{\cdot})\)</span> applied to <span class="math inline">\(z^{(i)}\)</span></li>
 <li><span class="math inline">\(\hat y^{(i)}\)</span> is the label we often give to the output (<span class="math inline">\(a^{(i)} = \hat y^{(i)}\)</span>)</li>
 </ul>
+<hr />
+<blockquote>
+<p><strong>Q</strong>: Why is there no superscript for <span class="math inline">\(w_k\)</span> and <span class="math inline">\(b\)</span></p>
+</blockquote>
+<hr />
 <p><strong>For this model, we want to find parameters <span class="math inline">\(w_k\)</span> and <span class="math inline">\(b\)</span> such that the neuron outputs <span class="math inline">\(\hat y^{(i)} \approx y\)</span> for any input.</strong> Before we discuss optimization we should take a moment to code up this single neuron model.</p>
 </section>
 <section id="code-for-computing-a-neurons-output" class="level2" data-number="4.2">
@@ -313,6 +361,7 @@ a^{(i)} &amp;= g(z^{(i)})
 <p>You may have noticed that in the previous code listing I also introduced a specific activation function (aka squashing function) called <code>sigmoid</code> (aka the logistic function). In this section we’</p>
 <p>Do this first</p>
 <p><strong>Deeper dive:</strong> TODO: something on activation functions.</p>
+<p>https://nbviewer.jupyter.org/gist/joshfp/85d96f07aaa5f4d2c9eb47956ccdcc88/lesson2-sgd-in-action.ipynb</p>
 </section>
 <section id="input-normalization" class="level2" data-number="4.4">
 <h2 data-number="4.4"><span class="header-section-number">4.4</span> Input Normalization</h2>

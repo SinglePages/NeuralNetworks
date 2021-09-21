@@ -19,9 +19,11 @@ The main points of this equation:
 
 - $x_k^{(i)}$ are the input features for the $i^{th}$ example (e.g., temperature)
 - $z^{(i)}$ is a linear combination of the input features
-- $w_k$ (weights) and $b$ (bias) are the **learned** parameters (notice the lack of any superscript)
+- $w_k$ (weights) and $b$ (bias) are the **learned** parameters
 - $a^{(i)}$ is the output of a non-linear activation function $g(\mathord{\cdot})$ applied to $z^{(i)}$
 - $\hat y^{(i)}$ is the label we often give to the output ($a^{(i)} = \hat y^{(i)}$)
+
+m4callout(Why is there no superscript for $w_k$ and $b$)
 
 **For this model, we want to find parameters $w_k$ and $b$ such that the neuron outputs $\hat y^{(i)} \approx y$ for any input.** Before we discuss optimization we should take a moment to code up this single neuron model.
 
@@ -44,6 +46,8 @@ You may have noticed that in the previous code listing I also introduced a speci
 Do this first
 
 **Deeper dive:** TODO: something on activation functions.
+
+https://nbviewer.jupyter.org/gist/joshfp/85d96f07aaa5f4d2c9eb47956ccdcc88/lesson2-sgd-in-action.ipynb
 
 ## Input Normalization
 
