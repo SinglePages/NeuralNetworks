@@ -5,6 +5,7 @@
 
 Ideas
 
+- add "additional resources" to each section
 - multiple programming languages (tabs?)
 - single page and multi-page options
 - prerender math during build

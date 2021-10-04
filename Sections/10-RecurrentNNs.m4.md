@@ -1,3 +1,5 @@
 # Recurrent Neural Networks
 
-recursive
+<!-- recursive -->
+
+*Being revised*

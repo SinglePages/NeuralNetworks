@@ -22,10 +22,13 @@ PYTHON_FILES = $(wildcard $(PYTHON_DIR)/*.py)
 # IMAGE_FILES = $(wildcard $(IMAGE_DIR)/*.svg)
 # COPIED_IMAGE_FILES = $(patsubst $(IMAGE_DIR)/%, $(OUTPUT_IMG_DIR)/%, $(IMAGE_FILES))
 
-DIAGRAM_DIR = Diagrams
+# DIAGRAM_DIR = Diagrams
 # DIAGRAM_FILES = $(wildcard $(DIAGRAM_DIR)/*.dot)
-DIAGRAM_FILES = $(wildcard $(DIAGRAM_DIR)/*.drawio)
-SVG_FILES = $(patsubst $(DIAGRAM_DIR)/%.drawio, $(OUTPUT_DIR)/img/%.svg, $(DIAGRAM_FILES))
+# DIAGRAM_FILES = $(wildcard $(DIAGRAM_DIR)/*.drawio)
+# SVG_FILES = $(patsubst $(DIAGRAM_DIR)/%.drawio, $(OUTPUT_DIR)/img/%.svg, $(DIAGRAM_FILES))
+# SVG_DIR = Diagrams
+# SVG_FILES = $(wildcard $(DIAGRAM_DIR)/*.drawio)
+
 
 WEB_DIR = Web
 WEB_FILES = $(wildcard $(WEB_DIR)/*/*)
@@ -40,40 +43,41 @@ GEN_MARKDOWN_FILES = $(patsubst $(SECTION_DIR)/%.m4.md, $(BUILD_DIR)/%.md, $(SEC
 HTML_FILES = $(patsubst $(BUILD_DIR)/%.md, $(OUTPUT_DIR)/%.html, $(GEN_MARKDOWN_FILES))
 
 .PHONY: all
-all: $(OUTPUT_DIR)/index.html $(HTML_FILES) $(SVG_FILES) $(COPIED_WEB_FILES)
+all: $(OUTPUT_DIR)/index.html $(SVG_FILES) $(COPIED_WEB_FILES)
+# all: $(OUTPUT_DIR)/index.html $(HTML_FILES) $(SVG_FILES) $(COPIED_WEB_FILES)
 
 
 # Single page
 $(OUTPUT_DIR)/index.html: $(GEN_MARKDOWN_FILES) | $(OUTPUT_DIR)
-	@pandoc --defaults pandoc-options-common --defaults pandoc-options-full  $(GEN_MARKDOWN_FILES) -o $@
+	pandoc --defaults pandoc-options-common --defaults pandoc-options-full  $(GEN_MARKDOWN_FILES) -o $@
 $(OUTPUT_DIR):
-	@mkdir -p $@ $@/img
+	mkdir -p $@ $@/img
 
 
 # Individual pages
 $(OUTPUT_DIR)/%.html: $(BUILD_DIR)/%.md | $(OUTPUT_DIR)
-	@pandoc --defaults pandoc-options-common --defaults pandoc-options-single $< -o $@
+	pandoc --defaults pandoc-options-common --defaults pandoc-options-single $< -o $@
 
 # Run m4 preprocessor to generate build files
 $(BUILD_DIR)/%.md: $(SECTION_DIR)/%.m4.md m4Macros.txt $(DIAGRAM_FILES) $(PYTHON_FILES) | $(BUILD_DIR)
-	@m4 m4Macros.txt $< > $@
+	m4 m4Macros.txt $< > $@
 $(BUILD_DIR):
-	@mkdir -p $@ $@/js $@/css
+	mkdir -p $@ $@/js $@/css
 
 
-# SVG images from diagrams
-$(OUTPUT_DIR)/img/%.svg: $(DIAGRAM_DIR)/%.drawio | $(OUTPUT_DIR)
-	@/Applications/draw.io.app/Contents/MacOS/draw.io --export --format svg $< -o $@
+# # SVG images from diagrams
+# $(OUTPUT_DIR)/img/%.svg: $(DIAGRAM_DIR)/%.drawio | $(OUTPUT_DIR)
+# 	/Applications/draw.io.app/Contents/MacOS/draw.io --export --format svg $< -o $@
 
 
 # $(OUTPUT_IMG_DIR)/%: $(IMAGE_DIR)/% | $(OUTPUT_IMG_DIR)
-# 	@cp $< $@
+# 	cp $< $@
 # $(OUTPUT_IMG_DIR):
-# 	@mkdir -p $@
+# 	mkdir -p $@
 
 
 $(COPIED_WEB_FILES): $(WEB_FILES) | $(OUTPUT_DIR)
-	@rsync -ar $(WEB_DIR)/ $(OUTPUT_DIR)/
+	rsync -ar $(WEB_DIR)/ $(OUTPUT_DIR)/
 
 
 

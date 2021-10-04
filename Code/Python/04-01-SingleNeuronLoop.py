@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from math import exp
-from random import uniform
+from random import gauss
 
 
 def sigmoid(z: float) -> float:
@@ -14,14 +14,17 @@ N = 100
 
 # Randomly generate some input data
 nx = 4
-x1 = [uniform(-20, 40) for _ in range(N)]
-x2 = [uniform(0, 1e6) for _ in range(N)]
-x3 = [uniform(0, 24 * 60 * 60) for _ in range(N)]
-x4 = [round(uniform(1, 365)) for _ in range(N)]
+x1 = [gauss(0, 1) for _ in range(N)]
+x2 = [gauss(0, 1) for _ in range(N)]
+x3 = [gauss(0, 1) for _ in range(N)]
+x4 = [gauss(0, 1) for _ in range(N)]
 
 # Generate random neuron parameters
-w1, w2, w3, w4 = [uniform(-1, 1) for _ in range(nx)]
-b = uniform(-1, 1)
+w1 = gauss(0, 1)
+w2 = gauss(0, 1)
+w3 = gauss(0, 1)
+w4 = gauss(0, 1)
+b = 0
 
 # Compute neuron output for each of the N examples
 for x1i, x2i, x3i, x4i in zip(x1, x2, x3, x4):

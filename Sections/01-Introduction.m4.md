@@ -6,16 +6,15 @@ I will not discuss every possible analogy, angle, or topic here. Instead, I will
 
 **Useful prior knowledge:**
 
-- matrix calculus
-    + see [The Matrix Calculus You Need For Deep Learning](https://explained.ai/matrix-calculus/) by Terence Parr and Jeremy Howard
-- programming skills
-    + I will show examples in Python, but many languages are well suited
-- familiarity with computing tools
-    + using a server, cloud-based services, and the command line interface (CLI)
+- matrix calculus (see [The Matrix Calculus You Need For Deep Learning](https://explained.ai/matrix-calculus/) by Terence Parr and Jeremy Howard)
+- programming skills (I will show examples in Python)
+- familiarity with computing tools (primarily a command line interface (CLI))
 
-## Background
+<!-- ## Background -->
 
-TODO: background
+<!-- *Being revised* -->
+
+<!-- TODO: background
 
 - AI/ML/NN
 - automatic features
@@ -25,7 +24,20 @@ TODO: background
 - ethics
 - non-ml example
 
+classification vs regression vs clustering vs association
 
 Application areas
 
-- Collaborative Filtering
+- Collaborative Filtering -->
+
+<!-- ## Applications -->
+
+<!-- ## Terms -->
+
+<!--
+
+- model
+- architecture
+- layer (3-layer)
+
+ -->

@@ -1,8 +1,7 @@
-changequote(`{{', `}}')dnl
-define({{m4diff}}, {{syscmd({{delta $1 $2 --no-gitconfig -n --syntax-theme ayu-mirage --commit-style omit --file-style omit --hunk-header-style omit --line-numbers-left-format '{nm:^4}│' --line-numbers-right-format '{np:^4}│' --dark --minus-style 'syntax "#a61719"' --minus-non-emph-style 'syntax "#a61719"' --minus-emph-style 'syntax bold "#901011"' --minus-empty-line-marker-style 'syntax "#a61719"' --plus-style 'syntax "#22a322"' --plus-non-emph-style 'syntax "#22a322"' --plus-emph-style 'syntax bold "#006000"' --plus-empty-line-marker-style 'syntax "#22a322"' | ansifilter --html -f}})}})dnl
-define({{m4code}}, {{syscmd({{bat -pp --style=numbers --color=always --theme=ayu-mirage $1 | ansifilter --html -f}})}})dnl
-define({{m4callout}}, {{---
-
-> **Q**: $*
-
----}})
+changequote(`[[', `]]')dnl
+define([[m4diff]], [[<div class="code-highlight"><pre>syscmd([[delta $1 $2 --no-gitconfig -n --syntax-theme ayu-mirage --commit-style omit --file-style omit --hunk-header-style omit --line-numbers-left-format '{nm:^4}│' --line-numbers-right-format '{np:^4}│' --dark --minus-style 'syntax "#a61719"' --minus-non-emph-style 'syntax "#a61719"' --minus-emph-style 'syntax bold "#901011"' --minus-empty-line-marker-style 'syntax "#a61719"' --plus-style 'syntax "#22a322"' --plus-non-emph-style 'syntax "#22a322"' --plus-emph-style 'syntax bold "#006000"' --plus-empty-line-marker-style 'syntax "#22a322"' | ansifilter --html -f]])</pre><div class="code-caption"><a href="https://github.com/SinglePages/NeuralNetworks/blob/main/$2">Link to code.</a></div></div>]])dnl
+define([[m4code]], [[<div class="code-highlight"><pre>syscmd([[bat -pp --style=numbers --color=always --theme=ayu-mirage $1 | ansifilter --html -f]])</pre><div class="code-caption"><a href="https://github.com/SinglePages/NeuralNetworks/blob/main/$1">Link to code.</a></div></div>]])dnl
+define([[m4question]], [[<details class="question"><summary><strong>Question:</strong> $1</summary><div class="answer"><strong>Answer:</strong> $2</div></details>]])
+define([[m4rowvec]], [[syscmd([[python Utilities/notations.py --rowvector $1 $2]])]])dnl
+define([[m4colvec]], [[syscmd([[python Utilities/notations.py --vector $1 $2]])]])dnl
+define([[m4matrix]], [[syscmd([[python Utilities/notations.py --matrix $1 $2 $3]])]])dnl
