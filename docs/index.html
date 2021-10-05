@@ -143,6 +143,69 @@
     div.column{display: inline-block; vertical-align: top; width: 50%;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
   <!--[if lt IE 9]>
@@ -718,7 +781,7 @@ b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
 </div>
 </details>
 <p>.</p>
-<p>With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of <span class="math inline">\(\alpha\)</span>. <span class="math inline">\(\alpha\)</span> is known as the “learning rate,” and it enables us to tune how fast or slow we learn. If <span class="math inline">\(\alpha\)</span> is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly.</p>
+<p>With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of <span class="math inline">\(\alpha\)</span> (i.e., the “learning rate”). This factor enables us to tune how fast or slow we learn. If <span class="math inline">\(\alpha\)</span> is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly.</p>
 <p>We will go into more details on optimization in sec. <a href="#sec:opti">7</a>.</p>
 </section>
 <section id="neuron-batch-gradient-descent" class="level2" data-number="4.6">
@@ -808,10 +871,111 @@ b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
 </section>
 <section id="multi-layer-networks" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Multi-Layer Networks</h1>
-<p><em>Being revised</em></p>
+<p>Below is our first neural network. We’ll start by using this diagram to state our terminology and conventions.</p>
 <figure>
 <img src="img/2LayerNetwork.svg" alt="A two-layer neural network." /><figcaption aria-hidden="true">A two-layer neural network.</figcaption>
 </figure>
+<p>Notation:</p>
+<ul>
+<li>Layer 0 is the input (we called this <span class="math inline">\(X\)</span> for a single Neuron)</li>
+<li>Bracket superscripts denote the network layer</li>
+<li>Parenthesis superscripts denote the example index</li>
+<li><span class="math inline">\(w\)</span> parameter subscripts denote first the associated neuron in the current layer and second the associated neuron (or input) from the previous layer</li>
+<li><span class="math inline">\(b\)</span>, <span class="math inline">\(z\)</span>, and <span class="math inline">\(a\)</span> subscripts denote the associated neuron</li>
+</ul>
+<p>Notice how we have all the same components as we did for the single neuron. We’ve just added additional notation to distinguish among layers and neurons in the same layer.</p>
+<details class="question">
+<summary>
+<strong>Question:</strong> Given some hypothetical deep neural network, how would you denote the linear computation of the third neuron in the fifth layer for training example 6123?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> <span class="math display">\[z_3^{[5](6123)}\]</span>
+</div>
+</details>
+<section id="vectorized-equations-for-a-neural-network" class="level2" data-number="5.1">
+<h2 data-number="5.1"><span class="header-section-number">5.1</span> Vectorized Equations For a Neural Network</h2>
+<p>Starting with the parameters:</p>
+<p><span class="math display">\[\begin{align}
+W^{[l]} &amp;= \begin{bmatrix}
+w_{1,1}^{[l]} &amp; w_{1,2}^{[l]} &amp; \cdots &amp; w_{1,n_{l-1}}^{[l]}\\
+w_{2,1}^{[l]} &amp; w_{2,2}^{[l]} &amp; \cdots &amp; w_{2,n_{l-1}}^{[l]}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+w_{n_l,1}^{[l]} &amp; w_{n_l,2}^{[l]} &amp; \cdots &amp; w_{n_l,n_{l-1}}^{[l]}\\
+\end{bmatrix}
+ \\
+\mathbf{b}^{[l]} &amp;= \begin{bmatrix}
+b_{1}^{[l]} \\
+b_{2}^{[l]} \\
+\vdots \\
+b_{n_l}^{[l]} \\
+\end{bmatrix}
+\end{align}\]</span></p>
+<p>Before continuing, you should compare these equations to the diagram above.</p>
+<p>Next we have linear values and activations for each neuron in a layer (these are for all training examples):</p>
+<p><span class="math display">\[\begin{align}
+Z^{[l]} &amp;= A^{[l-1]} W^{[l]T} + \mathbf{1} \mathbf{b}^{[l]T}\\
+A^{[l]} &amp;= g^{[l]}(Z^{[l]})
+\end{align}\]</span></p>
+<details class="question">
+<summary>
+<strong>Question:</strong> Why do we have <span class="math inline">\(\mathbf{1} \mathbf{b}^{[l]T}\)</span>?
+</summary>
+<div class="answer">
+<p><strong>Answer:</strong> This ensures that the dimensions are correct between the added matrices. Try this out in Python:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>N, nl <span class="op">=</span> <span class="dv">10</span>, <span class="dv">4</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.randn(nl, <span class="dv">1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ONE <span class="op">=</span> torch.ones(N, <span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ONE <span class="op">@</span> b.T)</span></code></pre></div>
+</div>
+</details>
+<details class="question">
+<summary>
+<strong>Question:</strong> What is the shape of <span class="math inline">\(Z^{[l]}\)</span>?
+</summary>
+<div class="answer">
+<p><strong>Answer:</strong> <span class="math inline">\(Z^{[l]}\)</span> is <span class="math inline">\((N \times n_l)\)</span>. <span class="math display">\[Z^{[l]} = \begin{bmatrix}
+z_{1}^{[l](1)} &amp; z_{2}^{[l](1)} &amp; \cdots &amp; z_{n_l}^{[l](1)}\\
+z_{1}^{[l](2)} &amp; z_{2}^{[l](2)} &amp; \cdots &amp; z_{n_l}^{[l](2)}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+z_{1}^{[l](N)} &amp; z_{2}^{[l](N)} &amp; \cdots &amp; z_{n_l}^{[l](N)}\\
+\end{bmatrix}
+\]</span></p>
+<p>We compute this matrix by multiplying a <span class="math inline">\((N \times n_{l-1})\)</span> matrix by a <span class="math inline">\((n_{l-1}, n_l)\)</span> matrix (the transposed parameter matrix) and adding an <span class="math inline">\((N \times n_l)\)</span> matrix.</p>
+</div>
+</details>
+<details class="question">
+<summary>
+<strong>Question:</strong> What is the shape of <span class="math inline">\(A^{[l]}\)</span>?
+</summary>
+<div class="answer">
+<p><strong>Answer:</strong> <span class="math inline">\(A^{[l]}\)</span> is <span class="math inline">\((N \times n_l)\)</span>. <span class="math display">\[\begin{align}
+A^{[l]} &amp;= \begin{bmatrix}
+a_{1}^{[l](1)} &amp; a_{2}^{[l](1)} &amp; \cdots &amp; a_{n_l}^{[l](1)}\\
+a_{1}^{[l](2)} &amp; a_{2}^{[l](2)} &amp; \cdots &amp; a_{n_l}^{[l](2)}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+a_{1}^{[l](N)} &amp; a_{2}^{[l](N)} &amp; \cdots &amp; a_{n_l}^{[l](N)}\\
+\end{bmatrix}
+ \\
+\\
+&amp;= \begin{bmatrix}
+g_{1}^{[l]}(z_{1}^{[l](1)}) &amp; g_{2}^{[l]}(z_{2}^{[l](1)}) &amp; \cdots &amp; g_{n_l}^{[l]}(z_{n_l}^{[l](1)})\\
+g_{1}^{[l]}(z_{1}^{[l](2)}) &amp; g_{2}^{[l]}(z_{2}^{[l](2)}) &amp; \cdots &amp; g_{n_l}^{[l]}(z_{n_l}^{[l](2)})\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+g_{1}^{[l]}(z_{1}^{[l](N)}) &amp; g_{2}^{[l]}(z_{2}^{[l](N)}) &amp; \cdots &amp; g_{n_l}^{[l]}(z_{n_l}^{[l](N)})\\
+\end{bmatrix}
+ \\
+\\
+&amp;= \begin{bmatrix}
+g_{1}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g_{n_l}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
+g_{1}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g_{n_l}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+g_{1}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g_{n_l}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
+\end{bmatrix}
+\end{align}\]</span></p>
+<p>You should also think about the shapes of <span class="math inline">\(\mathbf{a}^{[l-1](i)}\)</span> and <span class="math inline">\(\mathbf{w}_{j}^{[l]}\)</span>.</p>
+</div>
+</details>
+</section>
 </section>
 <section id="gradient-descent" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Gradient Descent</h1>

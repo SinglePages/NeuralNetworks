@@ -2,6 +2,13 @@
 
 When our model is a single neuron we can only produce a single output. So, $n_y=1$ for this section. Sticking to our MNSIT digits example from above, we could train a single neuron to distinguish between two different classes (e.g., "1" vs "7", "0" vs "non-zero", etc.).
 
+<!--
+m4aside
+
+perceptron, regression
+
+ -->
+
 ## Notation and Diagram
 
 Here is a diagram representing a single neuron (as we'll see later, a neural network often refers to many of these neurons interconnected):
@@ -188,7 +195,7 @@ b &:= b - \alpha \frac{\partial ℒ}{\partial b}
 ]]).
 
 
-With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of $\alpha$. $\alpha$ is known as the "learning rate," and it enables us to tune how fast or slow we learn. If $\alpha$ is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly.
+With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of $\alpha$ (i.e., the "learning rate"). This factor enables us to tune how fast or slow we learn. If $\alpha$ is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly.
 
 We will go into more details on optimization in [@sec:opti].
 
