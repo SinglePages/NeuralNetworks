@@ -39,6 +39,9 @@ code {
     color: coral;
 }
 
+table {
+    display: table;
+}
 
 .question {
     margin: 30px 0;

@@ -1,3 +1,3 @@
-# Optimization Techniques
+# Optimization Techniques {#sec:opti}
 
 *Being revised*

@@ -22,7 +22,7 @@
       padding-top: 50px;
       padding-bottom: 50px;
       hyphens: auto;
-      overflow-wrap: break-word;
+      word-wrap: break-word;
       text-rendering: optimizeLegibility;
       font-kerning: normal;
     }
@@ -93,7 +93,6 @@
     pre code {
       padding: 0;
       overflow: visible;
-      overflow-wrap: normal;
     }
     .sourceCode {
      background-color: transparent;
@@ -178,7 +177,7 @@
 <li><a href="#single-neuron"><span class="toc-section-number">4</span> Single Neuron</a></li>
 <li><a href="#multi-layer-networks"><span class="toc-section-number">5</span> Multi-Layer Networks</a></li>
 <li><a href="#gradient-descent"><span class="toc-section-number">6</span> Gradient Descent</a></li>
-<li><a href="#optimization-techniques"><span class="toc-section-number">7</span> Optimization Techniques</a></li>
+<li><a href="#sec:opti"><span class="toc-section-number">7</span> Optimization Techniques</a></li>
 <li><a href="#overfitting-and-generalization"><span class="toc-section-number">8</span> Overfitting and Generalization</a></li>
 <li><a href="#sec:cnns"><span class="toc-section-number">9</span> Convolutional Neural Networks</a></li>
 <li><a href="#recurrent-neural-networks"><span class="toc-section-number">10</span> Recurrent Neural Networks</a></li>
@@ -402,7 +401,7 @@ a^{(i)} &amp;= g(z^{(i)})
 <strong>Answer:</strong> The parameters <span class="math inline">\(w_k\)</span> and <span class="math inline">\(b\)</span> do not change as the input <span class="math inline">\(x_k^{(i)}\)</span> changes. These parameters <strong>are</strong> the neuron, and they are used to produce the output <span class="math inline">\(\hat y^{(i)}\)</span> for any given input; we use the same parameter values regardless of input.
 </div>
 </details>
-<p><strong>For this model, we want to find parameters <span class="math inline">\(w_k\)</span> and <span class="math inline">\(b\)</span> such that the neuron outputs <span class="math inline">\(\hat y^{(i)} \approx y\)</span> for any input.</strong> Before we discuss optimization we should take a moment to code up this single neuron model.</p>
+<p><strong>For this model, we want to find parameters <span class="math inline">\(w_k\)</span> and <span class="math inline">\(b\)</span> such that the neuron outputs <span class="math inline">\(\hat y^{(i)} \approx y^{(i)}\)</span> for any input.</strong> Before we discuss optimization we should take a moment to code up this single neuron model.</p>
 <p>Before we continue I should show a more common representation of a neuron model. The image above separates the linear and activation components, but it is more common to show them together in a single node.</p>
 <figure>
 <img src="img/Neuron.svg" alt="A neuron model." /><figcaption aria-hidden="true">A neuron model.</figcaption>
@@ -446,9 +445,29 @@ a^{(i)} &amp;= g(z^{(i)})
 <span style="color:#39424e;">  32</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">ai</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">zi</span><span style="color:#ccc9c2;">)</span>
 </pre>
 <div class="code-caption">
-<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-01-SingleNeuronLoop.py">Link to code.</a>
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-01-NeuronLoop.py">Link to code.</a>
 </div>
 </div>
+<p>In this code listing I use the <code>sigmoid</code> activation function (referred to as <span class="math inline">\(g(\mathord{\cdot})\)</span> in most equations.). This function is plotted below.</p>
+<figure>
+<img src="img/Sigmoid.png" alt="Sigmoid activation function and its derivative." /><figcaption aria-hidden="true">Sigmoid activation function and its derivative.</figcaption>
+</figure>
+<p>Some nice properties of this function include:</p>
+<ul>
+<li>An output range of [0, 1] (all inputs are “squashed” into this range).</li>
+<li>An easy to compute derivative.</li>
+<li>Easy to interpret and understand.</li>
+<li>Well-known.</li>
+</ul>
+<p>We often use sigmoid activation functions for binary classification (i.e., models trained to predict whether an input belongs to one of two classes). If the output is <span class="math inline">\(≤0.5\)</span> we say the neuron predicts class <span class="math inline">\(A\)</span> otherwise class <span class="math inline">\(B\)</span>.</p>
+<details class="question">
+<summary>
+<strong>Question:</strong> Can you think of any downsides for this function (hint: look at the derivative curve)?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> While this function was once widely used, it has fallen out of favor because it can often lead to slower learning due to small derivative values for any input <span class="math inline">\(z\)</span> outside of the range [-4, 4]. <a href="https://en.wikipedia.org/wiki/Rectifier_(neural_networks)">ReLU</a> is a more commonly used activation function for hidden layer neurons.
+</div>
+</details>
 </section>
 <section id="the-dot-product" class="level2" data-number="4.3">
 <h2 data-number="4.3"><span class="header-section-number">4.3</span> The Dot-Product</h2>
@@ -500,7 +519,7 @@ z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T} \mathbf{w} + b
 <span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#22a322;">    ai </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">torch</span><span style="font-weight:bold;color:#f29e74;background-color:#006000;">.</span><span style="color:#ffd580;background-color:#22a322;">sigmoid</span><span style="color:#ccc9c2;background-color:#22a322;">(zi)</span><span style="background-color:#22a322;"></span>
 </pre>
 <div class="code-caption">
-<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-02-SingleNeuronDot.py">Link to code.</a>
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-02-NeuronDot.py">Link to code.</a>
 </div>
 </div>
 <p>The code snippet above shows a <a href="https://en.wikipedia.org/wiki/Diff">diff</a> between the previous code snippet and an updated one using the dot product. You will see many diffs throughout this document. The key points are that: (1) red indicates text or entire lines that have been removed and (2) green indicates updated or newly added lines.</p>
@@ -525,7 +544,7 @@ z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T} \mathbf{w} + b
 <span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 19 </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#ccc9c2;background-color:#006000;">yhat </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> torch</span><span style="color:#f29e74;background-color:#22a322;">.</span><span style="color:#ffd580;background-color:#22a322;">sigmoid</span><span style="color:#ccc9c2;background-color:#22a322;">(</span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">z</span><span style="color:#ccc9c2;background-color:#22a322;">)</span><span style="background-color:#22a322;"></span>
 </pre>
 <div class="code-caption">
-<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-03-SingleNeuronVectorized.py">Link to code.</a>
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-03-NeuronVectorized.py">Link to code.</a>
 </div>
 </div>
 <details class="question">
@@ -555,89 +574,250 @@ g(z^{(N)}) \\
 <p>Inner dimensions (the last dimension of the left matrix and the first dimension of the right matrix) must be the same for any valid matrix multiplication. The scalar, <span class="math inline">\(b\)</span>, is added element-wise to every element in the final matrix due to <a href="https://pytorch.org/docs/stable/notes/broadcasting.html">broadcasting</a> (this is a common library feature, not necessarily standard linear algebra).</p>
 <p>So far, we have random parameters and we ignore the output. But what if we want to train the neuron so that the output mimics a real function or process? The next subsection tackles this very problem.</p>
 </section>
+<section id="optimization-with-batch-gradient-descent" class="level2" data-number="4.5">
+<h2 data-number="4.5"><span class="header-section-number">4.5</span> Optimization with Batch Gradient Descent</h2>
+<p>We must find values for parameters <span class="math inline">\(\mathbf{w}\)</span> and <span class="math inline">\(b\)</span> to make <span class="math inline">\(\hat y^{(i)} \approx y^{(i)}\)</span>. As you might expect from the title of this subsection, we are going to use gradient descent to optimize the parameters. This means that we are going to need an objective function (something to minimize) and to compute some derivatives.</p>
+<p>But what is an appropriate objective function (I’ll refer to this as the <em>loss</em> function going forward)? How about the <strong>mean-difference</strong>?</p>
+<p><span class="math display">\[ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \sum_{i=1}^N \hat y^{(i)} - y^{(i)} \quad \color{red}{\text{Don&#39;t use this loss function.}}\]</span></p>
+<details class="question">
+<summary>
+<strong>Question:</strong> What is problematic about this loss function?
+</summary>
+<div class="answer">
+<p><strong>Answer:</strong></p>
+<p>Let’s start by looking at the output of the function for different values of the inputs.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(\hat y^{(i)}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(y^{(i)}\)</span></th>
+<th style="text-align: center;">ℒ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">-0.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.9</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.9</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">-0.1</td>
+</tr>
+</tbody>
+</table>
+The table indicates that loss can be positive or negative. But how should we interpret negative loss? The sign of loss is not helpful–as we’ll see shortly, we will use the sign of the derivative.
+</div>
+</details>
+<p>A quick “fix” for the above loss function is to change it into the <strong>mean-absolute-error</strong> (MAE):</p>
+<p><span class="math display">\[ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \sum_{i=1}^N |\hat y^{(i)} - y^{(i)}| \quad \text{MAE works well with outliers.}\]</span></p>
+<p>A common choice for a loss function when training a regression model is <strong>Half mean-square-error</strong> (Half-MSE):</p>
+<p><span class="math display">\[ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \frac{1}{2N} \sum_{i=1}^N (\hat y^{(i)} - y^{(i)})^2\]</span></p>
+<details class="question">
+<summary>
+<strong>Question:</strong> Why might we compute the half-MSE instead of MSE?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> The  factor cancels out when we take the derivative. This scaling factor is unimportant since we will later multiply it by a learning rate.
+</div>
+</details>
+<p>The standard choice when performing classification with a neuron is <strong>binary cross-entropy</strong>:</p>
+<p><span class="math display">\[ℒ(\hat{\mathbf{y}}, \mathbf{y}) = - \sum_{i=1}^N (y \log{\hat y^{(i)}} + (1 - y)\log{(1-\hat y^{(i)})})\]</span></p>
+<details class="question">
+<summary>
+<strong>Question:</strong> Take some time to examine this loss function. What happens for various values of <span class="math inline">\(\hat y^{(i)}\)</span>, <span class="math inline">\(y^{(i)}\)</span>?
+</summary>
+<div class="answer">
+<p><strong>Answer:</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(\hat y^{(i)}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(y^{(i)}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(\log{\hat y^{(i)}}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(\log{(1-\hat y^{(i)})}\)</span></th>
+<th style="text-align: center;">ℒ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-2.3</td>
+<td style="text-align: center;">-0.1</td>
+<td style="text-align: center;">0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">-2.3</td>
+<td style="text-align: center;">-0.1</td>
+<td style="text-align: center;">2.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.9</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-0.1</td>
+<td style="text-align: center;">-2.3</td>
+<td style="text-align: center;">2.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.9</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">-0.1</td>
+<td style="text-align: center;">-2.3</td>
+<td style="text-align: center;">0.1</td>
+</tr>
+</tbody>
+</table>
+<p>The tables shows that a larger difference between <span class="math inline">\(\hat y^{(i)}\)</span> and <span class="math inline">\(y^{(i)}\)</span> (rows 2 and 3) results in a larger loss, which is exactly what we’d like to see.</p>
+</div>
+</details>
+<p>Let’s move forward using binary cross-entropy loss. We can only reduce loss by adjusting parameters. To determine <strong>how</strong> we should adjust parameters, we take the partial derivative of loss with respect to each parameter. We can do this using the chain rule in matrix form as follows:</p>
+<p><span class="math display">\[\begin{align}
+\frac{\partial ℒ}{\partial \mathbf{w}} &amp;=
+    \frac{\partial ℒ}{\partial \hat{\mathbf{y}}}
+    \frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{z}}
+    \frac{\partial \mathbf{z}}{\partial \mathbf{w}} \\
+&amp;= \frac{1}{N}(\hat{\mathbf{y}} - \mathbf{y})X\\\\
+\frac{\partial ℒ}{\partial b} &amp;=
+    \frac{\partial ℒ}{\partial \hat{\mathbf{y}}}
+    \frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{z}}
+    \frac{\partial \mathbf{z}}{\partial b} \\
+&amp;= \frac{1}{N}\sum_{i=1}^N (\hat y^{(i)} - y^{(i)})
+\end{align}\]</span></p>
+<details class="question">
+<summary>
+<strong>Question:</strong> Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> First, we cannot directly compute the partial derivative of <span class="math inline">\(ℒ\)</span> with respect to <span class="math inline">\(\mathbf{w}\)</span> (or <span class="math inline">\(b\)</span>). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator (<span class="math inline">\(\mathbf{w}\)</span> and <span class="math inline">\(b\)</span>).
+</div>
+</details>
+<details class="question">
+<summary>
+<strong>Question:</strong> What do we do with the partial derivatives <span class="math inline">\(\frac{\partial ℒ}{\partial \mathbf{w}}\)</span> and <span class="math inline">\(\frac{\partial ℒ}{\partial b}\)</span>?
+</summary>
+<div class="answer">
+<p><strong>Answer:</strong> We use these terms to update parameters</p>
+<p><span class="math display">\[\begin{align}
+w &amp;:= w - \alpha \frac{\partial ℒ}{\partial \mathbf{w}} \\
+b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
+\end{align}\]</span></p>
+</div>
+</details>
+<p>.</p>
+<p>With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of <span class="math inline">\(\alpha\)</span>. <span class="math inline">\(\alpha\)</span> is known as the “learning rate,” and it enables us to tune how fast or slow we learn. If <span class="math inline">\(\alpha\)</span> is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly.</p>
+<p>We will go into more details on optimization in sec. <a href="#sec:opti">7</a>.</p>
+</section>
+<section id="neuron-batch-gradient-descent" class="level2" data-number="4.6">
+<h2 data-number="4.6"><span class="header-section-number">4.6</span> Neuron Batch Gradient Descent</h2>
+<div class="code-highlight">
+<pre><span style="color:#39424e;">   1</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">utilities</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">format_duration_with_prefix</span>
+<span style="color:#39424e;">   2</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timeit</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">default_timer</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timer</span>
+<span style="color:#39424e;">   3</span> <span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span>
+<span style="color:#39424e;">   4</span> 
+<span style="color:#39424e;">   5</span> 
+<span style="color:#39424e;">   6</span> <span style="color:#ffa759;">def</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">y</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
+<span style="color:#39424e;">   7</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_N</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">y</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">]</span>
+<span style="color:#39424e;">   8</span> <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">round</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">y</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">abs</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sum</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">/</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_N</span>
+<span style="color:#39424e;">   9</span> 
+<span style="color:#39424e;">  10</span> 
+<span style="color:#39424e;">  11</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Get training and validation data loaders for classes A and B</span>
+<span style="color:#39424e;">  12</span> <span style="color:#ccc9c2;">data_dir</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">../../Data</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  13</span> <span style="color:#ccc9c2;">classA</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">classB</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">7</span>
+<span style="color:#39424e;">  14</span> <span style="color:#ccc9c2;">flatten</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">True</span>
+<span style="color:#39424e;">  15</span> <span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">(</span>
+<span style="color:#39424e;">  16</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">data_dir</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">classA</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">classB</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">flatten</span>
+<span style="color:#39424e;">  17</span> <span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  18</span> 
+<span style="color:#39424e;">  19</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Neuron parameters</span>
+<span style="color:#39424e;">  20</span> <span style="color:#ccc9c2;">nx</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">28</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">28</span>
+<span style="color:#39424e;">  21</span> <span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">nx</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">.</span><span style="color:#ffcc66;">01</span>
+<span style="color:#39424e;">  22</span> <span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">zeros</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  23</span> 
+<span style="color:#39424e;">  24</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Batch gradient descent hyper-parameters</span>
+<span style="color:#39424e;">  25</span> <span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">4</span>
+<span style="color:#39424e;">  26</span> <span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">.</span><span style="color:#ffcc66;">01</span>
+<span style="color:#39424e;">  27</span> 
+<span style="color:#39424e;">  28</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute initial accuracy (should be around 50%)</span>
+<span style="color:#39424e;">  29</span> <span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  30</span> <span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  31</span> <span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">Accuracy before training: </span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  32</span> 
+<span style="color:#39424e;">  33</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Learn values for w and b that minimize loss</span>
+<span style="color:#39424e;">  34</span> <span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">epoch</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
+<span style="color:#39424e;">  35</span> 
+<span style="color:#39424e;">  36</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">start</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">timer</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  37</span> 
+<span style="color:#39424e;">  38</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Make predictions given current paramters and then compute loss</span>
+<span style="color:#39424e;">  39</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  40</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">loss</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  41</span> 
+<span style="color:#39424e;">  42</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute derivatives for w and b (dz is common to both derivatives)</span>
+<span style="color:#39424e;">  43</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">dz</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span>
+<span style="color:#39424e;">  44</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">dw</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">/</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">dz</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  45</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">db</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">dz</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  46</span> 
+<span style="color:#39424e;">  47</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Update parameters</span>
+<span style="color:#39424e;">  48</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">dw</span>
+<span style="color:#39424e;">  49</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">db</span>
+<span style="color:#39424e;">  50</span> 
+<span style="color:#39424e;">  51</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Report on progress</span>
+<span style="color:#39424e;">  52</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  53</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  54</span> 
+<span style="color:#39424e;">  55</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">epoch</span><span style="color:#f29e74;">+</span><span style="color:#ffcc66;">1</span><span style="color:#ffcc66;">:&gt;2</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">/</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  56</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Cost=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">loss</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ffcc66;">:0.1f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  57</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Accuracy=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  58</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Time=</span><span style="color:#ccc9c2;">{</span><span style="color:#ffd580;">format_duration_with_prefix</span><span style="color:#ccc9c2;">(</span><span style="color:#ffd580;">timer</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">start</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  59</span> <span style="color:#ccc9c2;">    </span><span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;">)</span>
+</pre>
+<div class="code-caption">
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-04-NeuronMNIST.py">Link to code.</a>
+</div>
+</div>
+<details class="question">
+<summary>
+<strong>Question:</strong> Which lines of code correspond to <span class="math inline">\(\frac{\partial ℒ}{\partial \mathbf{w}}\)</span> and <span class="math inline">\(\frac{\partial ℒ}{\partial b}\)</span>?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> Lines 44 and 45.
+</div>
+</details>
+<details class="question">
+<summary>
+<strong>Question:</strong> What is an epoch?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> It turns out that we might need to update our weights more than once to get useful results. Each time we update parameters based on all training examples we mark the end of an epoch. In the code above we iterate through four epochs.
+</div>
+</details>
+</section>
 </section>
 <section id="multi-layer-networks" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Multi-Layer Networks</h1>
+<p><em>Being revised</em></p>
 <figure>
 <img src="img/2LayerNetwork.svg" alt="A two-layer neural network." /><figcaption aria-hidden="true">A two-layer neural network.</figcaption>
 </figure>
-<ul>
-<li>Layer 0 is the input (formerly X)</li>
-<li>Bracket superscript gives the layer</li>
-<li>Parentheses superscript gives the example index (removed for readability)</li>
-<li>Subscript gives neuron index, previous layer neuron index</li>
-</ul>
-<p>Single neuron uses the same equations as above</p>
-<p>Grouping neurons</p>
-<p><span class="math display">\[\begin{align}
-W^{[l]} &amp;= \begin{bmatrix}
-w_{1,1}^{[l]} &amp; w_{1,2}^{[l]} &amp; \cdots &amp; w_{1,n_{l-1}}^{[l]}\\
-w_{2,1}^{[l]} &amp; w_{2,2}^{[l]} &amp; \cdots &amp; w_{2,n_{l-1}}^{[l]}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-w_{n_l,1}^{[l]} &amp; w_{n_l,2}^{[l]} &amp; \cdots &amp; w_{n_l,n_{l-1}}^{[l]}\\
-\end{bmatrix}
- \\
-\mathbf{b}^{[l]} &amp;= \begin{bmatrix}
-b_{1}^{[l]} \\
-b_{2}^{[l]} \\
-\vdots \\
-b_{n_l}^{[l]} \\
-\end{bmatrix}
-\end{align}\]</span></p>
-<p><span class="math display">\[Z^{[l]} = A^{[l-1]} W^{[l]T}\]</span></p>
-<details class="question">
-<summary>
-<strong>Question:</strong> What is the shape of <span class="math inline">\(Z^{[l]}\)</span>?
-</summary>
-<div class="answer">
-<strong>Answer:</strong> <span class="math inline">\(Z^{[l]}\)</span> is <span class="math inline">\((N \times n_l)\)</span>. <span class="math display">\[Z^{[l]} = \begin{bmatrix}
-z_{1}^{[l](1)} &amp; z_{2}^{[l](1)} &amp; \cdots &amp; z_{n_l}^{[l](1)}\\
-z_{1}^{[l](2)} &amp; z_{2}^{[l](2)} &amp; \cdots &amp; z_{n_l}^{[l](2)}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-z_{1}^{[l](N)} &amp; z_{2}^{[l](N)} &amp; \cdots &amp; z_{n_l}^{[l](N)}\\
-\end{bmatrix}
-\]</span>
-</div>
-</details>
-<p><span class="math display">\[A^{[l]} = g(Z^{[l]})\]</span></p>
-<details class="question">
-<summary>
-<strong>Question:</strong> What is the shape of <span class="math inline">\(A^{[l]}\)</span>?
-</summary>
-<div class="answer">
-<p><strong>Answer:</strong> <span class="math inline">\(A^{[l]}\)</span> is <span class="math inline">\((N \times n_l)\)</span>. <span class="math display">\[\begin{align}
-A^{[l]} &amp;= \begin{bmatrix}
-a_{1}^{[l](1)} &amp; a_{2}^{[l](1)} &amp; \cdots &amp; a_{n_l}^{[l](1)}\\
-a_{1}^{[l](2)} &amp; a_{2}^{[l](2)} &amp; \cdots &amp; a_{n_l}^{[l](2)}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-a_{1}^{[l](N)} &amp; a_{2}^{[l](N)} &amp; \cdots &amp; a_{n_l}^{[l](N)}\\
-\end{bmatrix}
- \\
-\\
-&amp;= \begin{bmatrix}
-g(z_{1}^{[l](1)}) &amp; g(z_{2}^{[l](1)}) &amp; \cdots &amp; g(z_{n_l}^{[l](1)})\\
-g(z_{1}^{[l](2)}) &amp; g(z_{2}^{[l](2)}) &amp; \cdots &amp; g(z_{n_l}^{[l](2)})\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-g(z_{1}^{[l](N)}) &amp; g(z_{2}^{[l](N)}) &amp; \cdots &amp; g(z_{n_l}^{[l](N)})\\
-\end{bmatrix}
- \\
-\\
-&amp;= \begin{bmatrix}
-g(\mathbf{a}^{[l-1](1)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g(\mathbf{a}^{[l-1](1)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g(\mathbf{a}^{[l-1](1)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
-g(\mathbf{a}^{[l-1](2)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g(\mathbf{a}^{[l-1](2)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g(\mathbf{a}^{[l-1](2)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-g(\mathbf{a}^{[l-1](N)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g(\mathbf{a}^{[l-1](N)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g(\mathbf{a}^{[l-1](N)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
-\end{bmatrix}
-\end{align}\]</span></p>
-<p>You should also think about the shapes of <span class="math inline">\(\mathbf{a}^{[l-1](i)}\)</span> and <span class="math inline">\(\mathbf{w}_{j}^{[l]}\)</span>.</p>
-</div>
-</details>
 </section>
 <section id="gradient-descent" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Gradient Descent</h1>
 <p><em>Being revised</em> </p>
 </section>
-<section id="optimization-techniques" class="level1" data-number="7">
+<section id="sec:opti" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Optimization Techniques</h1>
 <p><em>Being revised</em></p>
 </section>

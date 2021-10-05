@@ -6,6 +6,7 @@
 Ideas
 
 - add "additional resources" to each section
+- add pointer to BCE and why it is better than MSE
 - multiple programming languages (tabs?)
 - single page and multi-page options
 - prerender math during build

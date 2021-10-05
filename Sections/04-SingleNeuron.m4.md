@@ -27,7 +27,7 @@ For these two equations:
 m4question([[Why do $w_k$ and $b$ not have superscripts?]], [[The parameters $w_k$ and $b$ do not change as the input $x_k^{(i)}$ changes. These parameters **are** the neuron, and they are used to produce the output $\hat y^{(i)}$ for any given input; we use the same parameter values regardless of input.]])
 
 
-**For this model, we want to find parameters $w_k$ and $b$ such that the neuron outputs $\hat y^{(i)} \approx y$ for any input.** Before we discuss optimization we should take a moment to code up this single neuron model.
+**For this model, we want to find parameters $w_k$ and $b$ such that the neuron outputs $\hat y^{(i)} \approx y^{(i)}$ for any input.** Before we discuss optimization we should take a moment to code up this single neuron model.
 
 Before we continue I should show a more common representation of a neuron model. The image above separates the linear and activation components, but it is more common to show them together in a single node.
 
@@ -38,7 +38,26 @@ Before we continue I should show a more common representation of a neuron model.
 This code does not include any "learning" (i.e., optimization), but it is worth showing just how simple it is to write a single neuron from scratch. Most of the code below is necessary only to create some faked input data.
 
 
-m4code(Code/Python/04-01-SingleNeuronLoop.py)
+m4code(Code/Python/04-01-NeuronLoop.py)
+
+
+In this code listing I use the `sigmoid` activation function (referred to as $g(\mathord{\cdot})$ in most equations.). This function is plotted below.
+
+
+![Sigmoid activation function and its derivative.](img/Sigmoid.png)
+
+
+Some nice properties of this function include:
+
+- An output range of [0, 1] (all inputs are "squashed" into this range).
+- An easy to compute derivative.
+- Easy to interpret and understand.
+- Well-known.
+
+We often use sigmoid activation functions for binary classification (i.e., models trained to predict whether an input belongs to one of two classes). If the output is $≤0.5$ we say the neuron predicts class $A$ otherwise class $B$.
+
+
+m4question([[Can you think of any downsides for this function (hint: look at the derivative curve)?]], [[While this function was once widely used, it has fallen out of favor because it can often lead to slower learning due to small derivative values for any input $z$ outside of the range [-4, 4]. [ReLU](https://en.wikipedia.org/wiki/Rectifier_(neural_networks)) is a more commonly used activation function for hidden layer neurons.]])
 
 
 ## The Dot-Product
@@ -56,7 +75,7 @@ The $\mathbf{x}^{(i)T} \mathbf{w}$ part of the equation computes the dot-product
 This not only turns out to be easier to write/type, but it is more efficiently computed by a neural network library. The code listing below uses [PyTorch](https://pytorch.org/) to compute $z^{(i)}$ (`zi`). Libraries like PyTorch and Tensorflow make use of both vectorized CPU instructions and graphics cards (GPUs) to quickly compute the output of matrix multiplications.
 
 
-m4diff([[Code/Python/04-01-SingleNeuronLoop.py]], [[Code/Python/04-02-SingleNeuronDot.py]])
+m4diff([[Code/Python/04-01-NeuronLoop.py]], [[Code/Python/04-02-NeuronDot.py]])
 
 
 The code snippet above shows a [diff](https://en.wikipedia.org/wiki/Diff) between the previous code snippet and an updated one using the dot product. You will see many diffs throughout this document. The key points are that: (1) red indicates text or entire lines that have been removed and (2) green indicates updated or newly added lines.
@@ -74,7 +93,7 @@ In addition to using a dot-product in place of a summation, we can use a matrix 
 \end{align}
 
 
-m4diff([[Code/Python/04-02-SingleNeuronDot.py]], [[Code/Python/04-03-SingleNeuronVectorized.py]])
+m4diff([[Code/Python/04-02-NeuronDot.py]], [[Code/Python/04-03-NeuronVectorized.py]])
 
 
 m4question([[What are the dimensions of $\mathbf{z}$ and $\mathbf{a}$ (aka, $\mathbf{\hat y}$)?]], [[We are computing a single output value for each input, so, the shape of these vectors are $(N \times 1)$. PyTorch will treat these as arrays with $N$ elements instead of as column vectors.
@@ -91,41 +110,92 @@ Inner dimensions (the last dimension of the left matrix and the first dimension 
 
 So far, we have random parameters and we ignore the output. But what if we want to train the neuron so that the output mimics a real function or process? The next subsection tackles this very problem.
 
-<!--
-
 ## Optimization with Batch Gradient Descent
 
-You may have noticed that in the previous code listing I also introduced a specific activation function (aka squashing function) called `sigmoid` (aka the logistic function). In this section we'
+We must find values for parameters $\mathbf{w}$ and $b$ to make $\hat y^{(i)} \approx y^{(i)}$. As you might expect from the title of this subsection, we are going to use gradient descent to optimize the parameters. This means that we are going to need an objective function (something to minimize) and to compute some derivatives.
 
-Do this first
+But what is an appropriate objective function (I'll refer to this as the *loss* function going forward)? How about the **mean-difference**?
 
-**Deeper dive:** TODO: something on activation functions.
+$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \sum_{i=1}^N \hat y^{(i)} - y^{(i)} \quad \color{red}{\text{Don't use this loss function.}}$$
 
-https://nbviewer.jupyter.org/gist/joshfp/85d96f07aaa5f4d2c9eb47956ccdcc88/lesson2-sgd-in-action.ipynb
+m4question([[What is problematic about this loss function?]], [[
 
-## Input Normalization
+Let's start by looking at the output of the function for different values of the inputs.
 
-I provided *reasonable* ranges for values in the previous code example. For example, temperature values on Earth are typically in the range $[-20, 40]$ °C and illuminance in the range $[0, 1e6]$ Lux.
+ $\hat y^{(i)}$   $y^{(i)}$     ℒ
+---------------- ----------- -------
+   0.1                 0        0.1
+   0.1                 1       -0.9
+   0.9                 0        0.9
+   0.9                 1       -0.1
 
-An NN can work with with values in these ranges, but it makes learning easier when you first scale values into the same range, typically $[-1, 1]$. TODO: why?
+The table indicates that loss can be positive or negative. But how should we interpret negative loss? The sign of loss is not helpful--as we'll see shortly, we will use the sign of the derivative.]])
+
+A quick "fix" for the above loss function is to change it into the **mean-absolute-error** (MAE):
+
+$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \sum_{i=1}^N |\hat y^{(i)} - y^{(i)}| \quad \text{MAE works well with outliers.}$$
+
+A common choice for a loss function when training a regression model is **Half mean-square-error** (Half-MSE):
+
+$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \frac{1}{2N} \sum_{i=1}^N (\hat y^{(i)} - y^{(i)})^2$$
 
 
+m4question([[Why might we compute the half-MSE instead of MSE?]], [[The \frac{1}{2} factor cancels out when we take the derivative. This scaling factor is unimportant since we will later multiply it by a learning rate.]])
 
 
-## Parameter Initialization
+The standard choice when performing classification with a neuron is **binary cross-entropy**:
 
-TODO: why can we start b at 0 by not \mathbf{w}?
+$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = - \sum_{i=1}^N (y \log{\hat y^{(i)}} + (1 - y)\log{(1-\hat y^{(i)})})$$
 
-## The Role of an Activation Function
+m4question([[Take some time to examine this loss function. What happens for various values of $\hat y^{(i)}$, $y^{(i)}$?]], [[
 
-- hidden neurons
-    + default to relu
-    + try/create others to solve/investigate specific issues
-- output neurons
-    + default to sigmoid for binary classification
-    + default to softmax for multi-class classification
-    + default to no activation for regression
+ $\hat y^{(i)}$   $y^{(i)}$   $\log{\hat y^{(i)}}$   $\log{(1-\hat y^{(i)})}$     ℒ
+---------------- ----------- ---------------------- -------------------------- -------
+   0.1                 0           -2.3                   -0.1                   0.1
+   0.1                 1           -2.3                   -0.1                   2.3
+   0.9                 0           -0.1                   -2.3                   2.3
+   0.9                 1           -0.1                   -2.3                   0.1
 
-## Vectorization with PyTorch
+The tables shows that a larger difference between $\hat y^{(i)}$ and $y^{(i)}$ (rows 2 and 3) results in a larger loss, which is exactly what we'd like to see.
+]])
 
--->
+
+Let's move forward using binary cross-entropy loss. We can only reduce loss by adjusting parameters. To determine **how** we should adjust parameters, we take the partial derivative of loss with respect to each parameter. We can do this using the chain rule in matrix form as follows:
+
+\begin{align}
+\frac{\partial ℒ}{\partial \mathbf{w}} &=
+    \frac{\partial ℒ}{\partial \hat{\mathbf{y}}}
+    \frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{z}}
+    \frac{\partial \mathbf{z}}{\partial \mathbf{w}} \\
+&= \frac{1}{N}(\hat{\mathbf{y}} - \mathbf{y})X\\\\
+\frac{\partial ℒ}{\partial b} &=
+    \frac{\partial ℒ}{\partial \hat{\mathbf{y}}}
+    \frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{z}}
+    \frac{\partial \mathbf{z}}{\partial b} \\
+&= \frac{1}{N}\sum_{i=1}^N (\hat y^{(i)} - y^{(i)})
+\end{align}
+
+m4question([[Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?]], [[First, we cannot directly compute the partial derivative of $ℒ$ with respect to $\mathbf{w}$ (or $b$). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator ($\mathbf{w}$ and $b$).]])
+
+
+m4question([[What do we do with the partial derivatives $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[We use these terms to update parameters
+
+\begin{align}
+w &:= w - \alpha \frac{\partial ℒ}{\partial \mathbf{w}} \\
+b &:= b - \alpha \frac{\partial ℒ}{\partial b}
+\end{align}
+
+]]).
+
+
+With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of $\alpha$. $\alpha$ is known as the "learning rate," and it enables us to tune how fast or slow we learn. If $\alpha$ is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly.
+
+We will go into more details on optimization in [@sec:opti].
+
+## Neuron Batch Gradient Descent
+
+m4code([[Code/Python/04-04-NeuronMNIST.py]])
+
+m4question([[Which lines of code correspond to $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[Lines 44 and 45.]])
+
+m4question([[What is an epoch?]], [[It turns out that we might need to update our weights more than once to get useful results. Each time we update parameters based on all training examples we mark the end of an epoch. In the code above we iterate through four epochs.]])
