@@ -1,6 +1,6 @@
 # Single Neuron
 
-When our model is a single neuron we can only produce a single output. So, $n_y=1$ for this section. Sticking to our MNSIT digits example from above, we could train a single neuron to distinguish between two different classes (e.g., "1" vs "7", "0" vs "non-zero", etc.).
+When our model is a single neuron we can only produce a single output. So, $n_y=1$ for this section. Sticking to our MNSIT digits example from above, we could train a single neuron to distinguish between two different classes of digits (e.g., "1" vs "7", "0" vs "non-zero", etc.).
 
 <!--
 m4aside
@@ -11,7 +11,7 @@ perceptron, regression
 
 ## Notation and Diagram
 
-Here is a diagram representing a single neuron (as we'll see later, a neural network often refers to many of these neurons interconnected):
+Here is a diagram representing a single neuron (as we'll see later, some neural networks are just many of these neurons interconnected):
 
 ![A neuron model with separate nodes for linear and activation computations.](img/NeuronSeparate.svg)
 
@@ -36,7 +36,7 @@ m4question([[Why do $w_k$ and $b$ not have superscripts?]], [[The parameters $w_
 
 **For this model, we want to find parameters $w_k$ and $b$ such that the neuron outputs $\hat y^{(i)} \approx y^{(i)}$ for any input.** Before we discuss optimization we should take a moment to code up this single neuron model.
 
-Before we continue I should show a more common representation of a neuron model. The image above separates the linear and activation components, but it is more common to show them together in a single node.
+(Below is a more common representation of a neuron model. The image above separates the linear and activation components into distinct nodes, but it is more common to show them together as below.)
 
 ![A neuron model.](img/Neuron.svg)
 
@@ -48,7 +48,7 @@ This code does not include any "learning" (i.e., optimization), but it is worth 
 m4code(Code/Python/04-01-NeuronLoop.py)
 
 
-In this code listing I use the `sigmoid` activation function (referred to as $g(\mathord{\cdot})$ in most equations.). This function is plotted below.
+In this code listing I use the `sigmoid` activation function (when not using a specific activation function we use $g(\mathord{\cdot})$ in most equations). This function is plotted below.
 
 
 ![Sigmoid activation function and its derivative.](img/Sigmoid.png)
@@ -69,7 +69,7 @@ m4question([[Can you think of any downsides for this function (hint: look at the
 
 ## The Dot-Product
 
-We compute $z^{(i)}$ above using a summation, but we can express this same bit of math using the dot-product from linear algebra.
+We compute $z^{(i)}$ using a summation, but we can express this same bit of math using the dot-product from linear algebra.
 
 
 $$
@@ -95,7 +95,7 @@ In addition to using a dot-product in place of a summation, we can use a matrix 
 
 
 \begin{align}
-\mathbf{z} &= X \mathbf{w} + b \\
+\mathbf{z} &= X \mathbf{w} + \mathbf{1} b \\
 \mathbf{a} &= g(\mathbf{z})
 \end{align}
 
@@ -111,9 +111,9 @@ m4question([[What are the dimensions of $\mathbf{z}$ and $\mathbf{a}$ (aka, $\ma
 ]])
 
 
-In the code snippet above, a matrix multiplication is indicated in PyTorch using the `@` symbol (a `*` is used for element-wise multiplications). A key to understanding matrix math is to examine the shapes of all matrices involved. Above, $X$ has a shape of $(N \times n_x)$, $\mathbf{w}$ has a shape of $(n_x \times 1)$, and $b$ is a scalar.
+In the code snippet above, a matrix multiplication is indicated in PyTorch using the `@` symbol (a `*` is used for element-wise multiplications). A key to understanding matrix math is to examine the shapes of all matrices involved. Above, $X$ has a shape of $(N \times n_x)$, $\mathbf{w}$ has a shape of $(n_x \times 1)$, and $b$ is a scalar multiplied by an appropriately-shaped matrix of all ones (so that we can add $b$ to each element of the $X\mathbf{w}$ result). Inner dimensions (the last dimension of the left matrix and the first dimension of the right matrix) must be the same for any valid matrix multiplication.
 
-Inner dimensions (the last dimension of the left matrix and the first dimension of the right matrix) must be the same for any valid matrix multiplication. The scalar, $b$, is added element-wise to every element in the final matrix due to [broadcasting](https://pytorch.org/docs/stable/notes/broadcasting.html) (this is a common library feature, not necessarily standard linear algebra).
+In the code snippet, the scalar $b$ is added element-wise to every element in the final matrix due to [broadcasting](https://pytorch.org/docs/stable/notes/broadcasting.html) (this is a common library feature, not necessarily standard linear algebra).
 
 So far, we have random parameters and we ignore the output. But what if we want to train the neuron so that the output mimics a real function or process? The next subsection tackles this very problem.
 
@@ -136,7 +136,7 @@ Let's start by looking at the output of the function for different values of the
    0.9                 0        0.9
    0.9                 1       -0.1
 
-The table indicates that loss can be positive or negative. But how should we interpret negative loss? The sign of loss is not helpful--as we'll see shortly, we will use the sign of the derivative.]])
+The table indicates that loss can be positive or negative. But how should we interpret negative loss? We see that $ℒ$ is minimized in row 2 of the table, but this is not an ideal result. The sign of loss is not helpful--as we'll see shortly, we will use the sign of the derivative.]])
 
 A quick "fix" for the above loss function is to change it into the **mean-absolute-error** (MAE):
 
@@ -167,7 +167,9 @@ The tables shows that a larger difference between $\hat y^{(i)}$ and $y^{(i)}$ (
 ]])
 
 
-Let's move forward using binary cross-entropy loss. We can only reduce loss by adjusting parameters. To determine **how** we should adjust parameters, we take the partial derivative of loss with respect to each parameter. We can do this using the chain rule in matrix form as follows:
+Let's move forward using binary cross-entropy loss and the sigmoid activation function.
+
+We can only reduce loss by adjusting parameters (it doesn't make sense, for example, to minimize loss by changing the input values $X$ or the output targets $Y$). To determine **how** we should adjust parameters, we take the partial derivative of loss with respect to each parameter. We can do this using the chain rule in matrix form as follows:
 
 \begin{align}
 \frac{\partial ℒ}{\partial \mathbf{w}} &=
@@ -182,7 +184,13 @@ Let's move forward using binary cross-entropy loss. We can only reduce loss by a
 &= \frac{1}{N}\sum_{i=1}^N (\hat y^{(i)} - y^{(i)})
 \end{align}
 
-m4question([[Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?]], [[First, we cannot directly compute the partial derivative of $ℒ$ with respect to $\mathbf{w}$ (or $b$). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator ($\mathbf{w}$ and $b$).]])
+
+m4question([[Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?]], [[First, we cannot directly compute the partial derivative of $ℒ$ with respect to $\mathbf{w}$ (or $b$). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator ($\mathbf{w}$ and $b$). It is useful to look at the loss function when we substitute in values for $\hat y$ and $z$.
+
+$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = - \sum_{i=1}^N (y \log{\sigma(X \mathbf{w} + \mathbf{1} b)} + (1 - y)\log{(1-\sigma(X \mathbf{w} + \mathbf{1} b))})$$
+
+In the above equation we can more easily see how the chain-rule comes into play. The parameter $\mathbf{w}$ is nested within a call to $\sigma$ which is nested within a call to $\log$ when computing \frac{\partial ℒ}{\partial \mathbf{w}}.
+]])
 
 
 m4question([[What do we do with the partial derivatives $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[We use these terms to update parameters
@@ -192,17 +200,35 @@ w &:= w - \alpha \frac{\partial ℒ}{\partial \mathbf{w}} \\
 b &:= b - \alpha \frac{\partial ℒ}{\partial b}
 \end{align}
 
-]]).
+]])
 
 
-With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of $\alpha$ (i.e., the "learning rate"). This factor enables us to tune how fast or slow we learn. If $\alpha$ is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly.
+m4question([[What is the derivative of the sigmoid function, $\sigma$?]], [[TODO: sigmoid derivation]])
 
-We will go into more details on optimization in [@sec:opti].
+
+With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of $\alpha$ (i.e., the "learning rate"). This factor enables us to tune how fast or slow we learn. If $\alpha$ is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly. We will go into more details on optimization in [@sec:opti].
 
 ## Neuron Batch Gradient Descent
 
+Her is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the `get_binary_mnist_one_batch` function, but you can find that [code in the repository for this guide](https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Code/Python/utilities.py#L69).
+
+
 m4code([[Code/Python/04-04-NeuronMNIST.py]])
+
 
 m4question([[Which lines of code correspond to $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[Lines 44 and 45.]])
 
+
 m4question([[What is an epoch?]], [[It turns out that we might need to update our weights more than once to get useful results. Each time we update parameters based on all training examples we mark the end of an epoch. In the code above we iterate through four epochs.]])
+
+
+m4question([[What do you expect to see for the output?]], [[
+
+<pre class="code-block">
+Accuracy before training: 0.54
+ 1/4, Cost=0.7, Accuracy=0.97, Time=5.5 ms
+ 2/4, Cost=0.5, Accuracy=0.96, Time=4.8 ms
+ 3/4, Cost=0.4, Accuracy=0.96, Time=4.6 ms
+ 4/4, Cost=0.3, Accuracy=0.96, Time=4.4 ms
+</pre>
+]])

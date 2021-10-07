@@ -3,7 +3,7 @@
 <!-- - mlp
 - deep networks -->
 
-Below is our first neural network. We'll start by using this diagram to state our terminology and conventions.
+Below is our first neural network. We'll start by using this diagram to formulate terminology and conventions.
 
 
 ![A two-layer neural network.](img/2LayerNetwork.svg)
@@ -12,20 +12,27 @@ Below is our first neural network. We'll start by using this diagram to state ou
 Notation:
 
 - Layer 0 is the input (we called this $X$ for a single Neuron)
-- Bracket superscripts denote the network layer
-- Parenthesis superscripts denote the example index
+- Square bracket superscripts denote the network layer
+- Round parenthesis superscripts denote the example index
 - $w$ parameter subscripts denote first the associated neuron in the current layer and second the associated neuron (or input) from the previous layer
-- $b$, $z$, and $a$ subscripts denote the associated neuron
+- $b$, $z$, and $a$ subscripts denote an associated neuron
 
 Notice how we have all the same components as we did for the single neuron. We've just added additional notation to distinguish among layers and neurons in the same layer.
 
 
-m4question([[Given some hypothetical deep neural network, how would you denote the linear computation of the third neuron in the fifth layer for training example 6123?]], [[$$z_3^{[5](6123)}$$]])
+m4question([[Given some hypothetical deep neural network, how would you denote the linear computation of the third neuron in the fifth layer for training example 6123?]], [[$$z_3^{[5](6123)}$$
+
+- "$z$": linear computation
+- "$[5]$" superscript: fifth layer
+- "$(6123)$" superscript: example 6123
+- "$3$" subscript: third neuron
+
+]])
 
 
 ## Vectorized Equations For a Neural Network
 
-Starting with the parameters:
+Let's start with showing the notation for parameters from any layer $l = 1, 2, ..., L$ where $L$ is the number of layers in the network.
 
 \begin{align}
 W^{[l]} &= m4matrix([["w_{row,col}^{[l]}"]], "n_l", "n_{l-1}") \\
@@ -70,6 +77,32 @@ A^{[l]} &= m4matrix("a_{col}^{[l](row)}", "N", "n_l") \\
 
 You should also think about the shapes of $\mathbf{a}^{[l-1](i)}$ and $\mathbf{w}_{j}^{[l]}$.
 ]])
+
+
+## Backpropagation
+
+Just like for the single neuron, we want to find values for $W^{[l]}$ and $b^{[l]}$ (for $l = 1, 2, ..., L$) such that $\hat Y \approx Y$. Instead of looking at a more general case, let's work through gradient descent for the network above where
+
+- We have three inputs ($n_0=3$)
+- We have two neurons in layer 1 ($n_1=2$)
+- We have three neurons in layer 2 ($n_2=3$)
+- We are using sigmoid activations for all neurons
+- We are using the mean-square-error loss function
+
+For this network, we need to compute these partial derivatives:
+
+$$
+\frac{\partial{ℒ}}{\partial{W^{[1]}}},
+\frac{\partial{ℒ}}{\partial{b^{[1]}}},
+\frac{\partial{ℒ}}{\partial{W^{[2]}}},
+\frac{\partial{ℒ}}{\partial{b^{[2]}}}
+$$
+
+We are going to start at layer 2 and work backward through the network to layer 1. As we compute these derivatives answer for yourself "why do we work backward through the network?"
+
+This process of computing derivatives backward through the network is why this process if referred to as backpropagation--we'll compute values and propagate them backward to earlier layers in the network.
+
+TODO: compute graph
 
 <!--
 ## Input Normalization

@@ -22,7 +22,7 @@
       padding-top: 50px;
       padding-bottom: 50px;
       hyphens: auto;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       text-rendering: optimizeLegibility;
       font-kerning: normal;
     }
@@ -93,6 +93,7 @@
     pre code {
       padding: 0;
       overflow: visible;
+      overflow-wrap: normal;
     }
     .sourceCode {
      background-color: transparent;
@@ -280,7 +281,7 @@ x^{(i)}_{2} \\
 x^{(i)}_{n_x} \\
 \end{bmatrix}
 \]</span></p>
-<p>where subscripts denote the feature index, <span class="math inline">\(n_x\)</span> is the number of features, and the superscript <span class="math inline">\(i\)</span> denotes that this is the <span class="math inline">\(i^{\mathit{th}}\)</span> training example. We do not always put the input features into a column vector (see sec. <a href="#sec:cnns">9</a> for more information), but it is the standard default.</p>
+<p>where subscripts denote the feature index, <span class="math inline">\(n_x\)</span> is the number of features, and the superscript <span class="math inline">\(i\)</span> denotes that this is the <span class="math inline">\(i^{\mathit{th}}\)</span> training example. We do not always put the input features into a column vector (see sec. <a href="#sec:cnns">9</a> for more information), but it is fairly standard.</p>
 <p>Each row in <span class="math inline">\(X\)</span> is a single input example (also referred to as an instance or sample), and when you stack all <span class="math inline">\(N\)</span> examples on top of each other (first transposing them into row vectors), you end up with:</p>
 <p><span class="math display">\[X = \begin{bmatrix}
 \rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
@@ -295,7 +296,7 @@ x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp; x^{(2)}_{n_x}\\
 x^{(N)}_{1} &amp; x^{(N)}_{2} &amp; \cdots &amp; x^{(N)}_{n_x}\\
 \end{bmatrix}
 \]</span></p>
-<p>We transpose each example column vector (i.e., <span class="math inline">\(\mathbf{x}^{(i)T}\)</span>) into a row vector so that the first dimension of <span class="math inline">\(X\)</span> corresponds to the number of examples <span class="math inline">\(N\)</span> and the second dimension is the number of features <span class="math inline">\(n_x\)</span>. Compare the column vector above to each row in the matrix. (This is not required, but it is the convention I will use for <span class="math inline">\(X\)</span>.)</p>
+<p>We transpose each example column vector (i.e., <span class="math inline">\(\mathbf{x}^{(i)T}\)</span>) into a row vector so that the first dimension of <span class="math inline">\(X\)</span> corresponds to the number of examples <span class="math inline">\(N\)</span> and the second dimension is the number of features <span class="math inline">\(n_x\)</span>. Compare the column vector above to each row in the matrix.</p>
 <p>Let’s denote matrix dimensions with <span class="math inline">\((r \times c)\)</span> (the number of rows <span class="math inline">\(r\)</span> by the number of columns <span class="math inline">\(c\)</span> in the matrix). I will, in text and in code, refer to matrix dimensions as the “shape” of the matrix.</p>
 <details class="question">
 <summary>
@@ -335,7 +336,7 @@ y^{(N)}_{1} &amp; y^{(N)}_{2} &amp; \cdots &amp; y^{(N)}_{n_y}\\
 <strong>Answer:</strong> The shape of <span class="math inline">\(Y\)</span> is <span class="math inline">\((N \times n_y)\)</span>.
 </div>
 </details>
-<p>Let’s use the <a href="https://en.wikipedia.org/wiki/MNIST_database">MNIST dataset</a> as an example. This dataset comprises a training partition including 60,000 images and a validation partition including 10,000 images. Each image is 28 pixels in height and 28 pixels in width for a total of 784 pixels. Each image contains a single handwritten digit—a number in the range zero through nine). Here is a small sample of these images:</p>
+<p>Let’s use the <a href="https://en.wikipedia.org/wiki/MNIST_database">MNIST dataset</a> as an example. This dataset comprises a training partition including 60,000 images and a validation partition including 10,000 images. Each image is 28 pixels in height and 28 pixels in width for a total of 784 pixels. Each image depicts a single handwritten digit—a number in the range zero through nine). Here is a small sample of these images:</p>
 <figure>
 <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/MnistExamples.png" alt="MNIST Sample. Image from Wikipedia." /><figcaption aria-hidden="true">MNIST Sample. Image from Wikipedia.</figcaption>
 </figure>
@@ -364,7 +365,7 @@ x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp; x^{(2)}_{10}\\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp; x^{(60000)}_{10}\\
 \end{bmatrix}
-\]</span> Each row in this matrix is one-hot encoded, meaning that only one item in each row is “1” and all other items in a row are “0”. Here is an example of a one-hot encoding target for an input image representing the digit “2” <span class="math display">\[y^T = \begin{bmatrix} 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\end{bmatrix}\]</span> To save space we will often just represent a one-hot encoded vector using just the index of the “hot” item. For example, the previous vector can be represented by the integer 2.
+\]</span> Each row in this matrix is one-hot encoded, meaning that only one item in each row is “1” and all other items in a row are “0”. Here is an example of a one-hot encoding target for an input image representing the digit “2” <span class="math display">\[y^T = \begin{bmatrix} 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\end{bmatrix}\]</span> For efficiency sake, we often represent a one-hot encoded vector using just the index of the “hot” item. For example, the previous vector can be represented by the integer 2.
 </div>
 </details>
 <details class="question">
@@ -375,11 +376,12 @@ x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp; x^{(60000)}_{10}\\
 <strong>Answer:</strong> <span class="math inline">\(X_{valid}\)</span> and <span class="math inline">\(Y_{valid}\)</span> are <span class="math inline">\((10000 \times 784)\)</span> and <span class="math inline">\((10000 \times 10)\)</span>, respectively.
 </div>
 </details>
-<p>You might now wonder why we split a dataset into training/validation/evaluation partitions. It is reasonable to think that we would be better off using all 70000 images to train a neural network. However, we need some method for <em>measuring</em> how well a model is performing. We use the validation partition to measure performance.</p>
-<p>If we measure performance directly on the training dataset we might trick ourselves into thinking that the neural network will perform very well when it is deployed as part of an application (for example, to convert a an image of someones’s handwritten notes into a text document), when in reality the network might only perform well specifically on the examples found in the training dataset.</p>
-<p>Similarly, the evaluation partition is only used to compare performance after hyper-parameter tuning. We’ll discuss this more in sec. <a href="#sec:hyper">12</a>.</p>
+<p>You might now wonder why we split a dataset into training/validation/evaluation partitions. It is reasonable to think that we would be better off using all 70000 images to train a neural network. However, we need some method for <em>measuring</em> how well a model is performing. That is the purpose of the validation set–to measure performance.</p>
+<p>If we measure performance directly on the training dataset, we might trick ourselves into thinking that the neural network will perform very well when it is eventually deployed as part of an application (for example, as a mobile app in which we convert an image of someones’s handwritten notes into a text document), when in reality the network might only perform well specifically on the examples found in the training dataset. We will discuss this issue more in sec. <strong>¿sec:general?</strong> when we cover overfitting and generalization.</p>
+<p>Similarly, the evaluation partition is only used to compare performance after hyper-parameter tuning, which we’ll discuss in sec. <a href="#sec:hyper">12</a>.</p>
 <section id="loading-mnist-using-pytorch" class="level2" data-number="3.1">
 <h2 data-number="3.1"><span class="header-section-number">3.1</span> Loading MNIST Using PyTorch</h2>
+<p>We’ve discuss notation and general concepts, but how would we write this out in code? Here is an example how how to load the MNIST dataset using PyTorch.</p>
 <div class="code-highlight">
 <pre><span style="color:#39424e;">   1</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;">!/usr/bin/env python</span>
 <span style="color:#39424e;">   2</span> 
@@ -436,10 +438,10 @@ Validation target shape : torch.Size([10000])
 </section>
 <section id="single-neuron" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Single Neuron</h1>
-<p>When our model is a single neuron we can only produce a single output. So, <span class="math inline">\(n_y=1\)</span> for this section. Sticking to our MNSIT digits example from above, we could train a single neuron to distinguish between two different classes (e.g., “1” vs “7”, “0” vs “non-zero”, etc.).</p>
+<p>When our model is a single neuron we can only produce a single output. So, <span class="math inline">\(n_y=1\)</span> for this section. Sticking to our MNSIT digits example from above, we could train a single neuron to distinguish between two different classes of digits (e.g., “1” vs “7”, “0” vs “non-zero”, etc.).</p>
 <section id="notation-and-diagram" class="level2" data-number="4.1">
 <h2 data-number="4.1"><span class="header-section-number">4.1</span> Notation and Diagram</h2>
-<p>Here is a diagram representing a single neuron (as we’ll see later, a neural network often refers to many of these neurons interconnected):</p>
+<p>Here is a diagram representing a single neuron (as we’ll see later, some neural networks are just many of these neurons interconnected):</p>
 <figure>
 <img src="img/NeuronSeparate.svg" alt="A neuron model with separate nodes for linear and activation computations." /><figcaption aria-hidden="true">A neuron model with separate nodes for linear and activation computations.</figcaption>
 </figure>
@@ -465,7 +467,7 @@ a^{(i)} &amp;= g(z^{(i)})
 </div>
 </details>
 <p><strong>For this model, we want to find parameters <span class="math inline">\(w_k\)</span> and <span class="math inline">\(b\)</span> such that the neuron outputs <span class="math inline">\(\hat y^{(i)} \approx y^{(i)}\)</span> for any input.</strong> Before we discuss optimization we should take a moment to code up this single neuron model.</p>
-<p>Before we continue I should show a more common representation of a neuron model. The image above separates the linear and activation components, but it is more common to show them together in a single node.</p>
+<p>(Below is a more common representation of a neuron model. The image above separates the linear and activation components into distinct nodes, but it is more common to show them together as below.)</p>
 <figure>
 <img src="img/Neuron.svg" alt="A neuron model." /><figcaption aria-hidden="true">A neuron model.</figcaption>
 </figure>
@@ -511,7 +513,7 @@ a^{(i)} &amp;= g(z^{(i)})
 <a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-01-NeuronLoop.py">Link to code.</a>
 </div>
 </div>
-<p>In this code listing I use the <code>sigmoid</code> activation function (referred to as <span class="math inline">\(g(\mathord{\cdot})\)</span> in most equations.). This function is plotted below.</p>
+<p>In this code listing I use the <code>sigmoid</code> activation function (when not using a specific activation function we use <span class="math inline">\(g(\mathord{\cdot})\)</span> in most equations). This function is plotted below.</p>
 <figure>
 <img src="img/Sigmoid.png" alt="Sigmoid activation function and its derivative." /><figcaption aria-hidden="true">Sigmoid activation function and its derivative.</figcaption>
 </figure>
@@ -534,7 +536,7 @@ a^{(i)} &amp;= g(z^{(i)})
 </section>
 <section id="the-dot-product" class="level2" data-number="4.3">
 <h2 data-number="4.3"><span class="header-section-number">4.3</span> The Dot-Product</h2>
-<p>We compute <span class="math inline">\(z^{(i)}\)</span> above using a summation, but we can express this same bit of math using the dot-product from linear algebra.</p>
+<p>We compute <span class="math inline">\(z^{(i)}\)</span> using a summation, but we can express this same bit of math using the dot-product from linear algebra.</p>
 <p><span class="math display">\[
 z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T} \mathbf{w} + b
 \]</span></p>
@@ -592,7 +594,7 @@ z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T} \mathbf{w} + b
 <h2 data-number="4.4"><span class="header-section-number">4.4</span> Vectorizing Inputs</h2>
 <p>In addition to using a dot-product in place of a summation, we can use a matrix multiplication in place of looping over all examples in the dataset. In the two equations below we perform a matrix multiplication that computes the output of the network for all examples at once. A neural network library can turn this into highly efficient CPU or GPU operations.</p>
 <p><span class="math display">\[\begin{align}
-\mathbf{z} &amp;= X \mathbf{w} + b \\
+\mathbf{z} &amp;= X \mathbf{w} + \mathbf{1} b \\
 \mathbf{a} &amp;= g(\mathbf{z})
 \end{align}\]</span></p>
 <div class="code-highlight">
@@ -633,8 +635,8 @@ g(z^{(N)}) \\
 \end{align}\]</span></p>
 </div>
 </details>
-<p>In the code snippet above, a matrix multiplication is indicated in PyTorch using the <code>@</code> symbol (a <code>*</code> is used for element-wise multiplications). A key to understanding matrix math is to examine the shapes of all matrices involved. Above, <span class="math inline">\(X\)</span> has a shape of <span class="math inline">\((N \times n_x)\)</span>, <span class="math inline">\(\mathbf{w}\)</span> has a shape of <span class="math inline">\((n_x \times 1)\)</span>, and <span class="math inline">\(b\)</span> is a scalar.</p>
-<p>Inner dimensions (the last dimension of the left matrix and the first dimension of the right matrix) must be the same for any valid matrix multiplication. The scalar, <span class="math inline">\(b\)</span>, is added element-wise to every element in the final matrix due to <a href="https://pytorch.org/docs/stable/notes/broadcasting.html">broadcasting</a> (this is a common library feature, not necessarily standard linear algebra).</p>
+<p>In the code snippet above, a matrix multiplication is indicated in PyTorch using the <code>@</code> symbol (a <code>*</code> is used for element-wise multiplications). A key to understanding matrix math is to examine the shapes of all matrices involved. Above, <span class="math inline">\(X\)</span> has a shape of <span class="math inline">\((N \times n_x)\)</span>, <span class="math inline">\(\mathbf{w}\)</span> has a shape of <span class="math inline">\((n_x \times 1)\)</span>, and <span class="math inline">\(b\)</span> is a scalar multiplied by an appropriately-shaped matrix of all ones (so that we can add <span class="math inline">\(b\)</span> to each element of the <span class="math inline">\(X\mathbf{w}\)</span> result). Inner dimensions (the last dimension of the left matrix and the first dimension of the right matrix) must be the same for any valid matrix multiplication.</p>
+<p>In the code snippet, the scalar <span class="math inline">\(b\)</span> is added element-wise to every element in the final matrix due to <a href="https://pytorch.org/docs/stable/notes/broadcasting.html">broadcasting</a> (this is a common library feature, not necessarily standard linear algebra).</p>
 <p>So far, we have random parameters and we ignore the output. But what if we want to train the neuron so that the output mimics a real function or process? The next subsection tackles this very problem.</p>
 </section>
 <section id="optimization-with-batch-gradient-descent" class="level2" data-number="4.5">
@@ -680,7 +682,7 @@ g(z^{(N)}) \\
 </tr>
 </tbody>
 </table>
-The table indicates that loss can be positive or negative. But how should we interpret negative loss? The sign of loss is not helpful–as we’ll see shortly, we will use the sign of the derivative.
+The table indicates that loss can be positive or negative. But how should we interpret negative loss? We see that <span class="math inline">\(ℒ\)</span> is minimized in row 2 of the table, but this is not an ideal result. The sign of loss is not helpful–as we’ll see shortly, we will use the sign of the derivative.
 </div>
 </details>
 <p>A quick “fix” for the above loss function is to change it into the <strong>mean-absolute-error</strong> (MAE):</p>
@@ -747,7 +749,8 @@ The table indicates that loss can be positive or negative. But how should we int
 <p>The tables shows that a larger difference between <span class="math inline">\(\hat y^{(i)}\)</span> and <span class="math inline">\(y^{(i)}\)</span> (rows 2 and 3) results in a larger loss, which is exactly what we’d like to see.</p>
 </div>
 </details>
-<p>Let’s move forward using binary cross-entropy loss. We can only reduce loss by adjusting parameters. To determine <strong>how</strong> we should adjust parameters, we take the partial derivative of loss with respect to each parameter. We can do this using the chain rule in matrix form as follows:</p>
+<p>Let’s move forward using binary cross-entropy loss and the sigmoid activation function.</p>
+<p>We can only reduce loss by adjusting parameters (it doesn’t make sense, for example, to minimize loss by changing the input values <span class="math inline">\(X\)</span> or the output targets <span class="math inline">\(Y\)</span>). To determine <strong>how</strong> we should adjust parameters, we take the partial derivative of loss with respect to each parameter. We can do this using the chain rule in matrix form as follows:</p>
 <p><span class="math display">\[\begin{align}
 \frac{\partial ℒ}{\partial \mathbf{w}} &amp;=
     \frac{\partial ℒ}{\partial \hat{\mathbf{y}}}
@@ -765,7 +768,9 @@ The table indicates that loss can be positive or negative. But how should we int
 <strong>Question:</strong> Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?
 </summary>
 <div class="answer">
-<strong>Answer:</strong> First, we cannot directly compute the partial derivative of <span class="math inline">\(ℒ\)</span> with respect to <span class="math inline">\(\mathbf{w}\)</span> (or <span class="math inline">\(b\)</span>). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator (<span class="math inline">\(\mathbf{w}\)</span> and <span class="math inline">\(b\)</span>).
+<p><strong>Answer:</strong> First, we cannot directly compute the partial derivative of <span class="math inline">\(ℒ\)</span> with respect to <span class="math inline">\(\mathbf{w}\)</span> (or <span class="math inline">\(b\)</span>). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator (<span class="math inline">\(\mathbf{w}\)</span> and <span class="math inline">\(b\)</span>). It is useful to look at the loss function when we substitute in values for <span class="math inline">\(\hat y\)</span> and <span class="math inline">\(z\)</span>.</p>
+<p><span class="math display">\[ℒ(\hat{\mathbf{y}}, \mathbf{y}) = - \sum_{i=1}^N (y \log{\sigma(X \mathbf{w} + \mathbf{1} b)} + (1 - y)\log{(1-\sigma(X \mathbf{w} + \mathbf{1} b))})\]</span></p>
+<p>In the above equation we can more easily see how the chain-rule comes into play. The parameter <span class="math inline">\(\mathbf{w}\)</span> is nested within a call to <span class="math inline">\(\sigma\)</span> which is nested within a call to <span class="math inline">\(\log\)</span> when computing .</p>
 </div>
 </details>
 <details class="question">
@@ -780,12 +785,19 @@ b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
 \end{align}\]</span></p>
 </div>
 </details>
-<p>.</p>
-<p>With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of <span class="math inline">\(\alpha\)</span> (i.e., the “learning rate”). This factor enables us to tune how fast or slow we learn. If <span class="math inline">\(\alpha\)</span> is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly.</p>
-<p>We will go into more details on optimization in sec. <a href="#sec:opti">7</a>.</p>
+<details class="question">
+<summary>
+<strong>Question:</strong> What is the derivative of the sigmoid function, <span class="math inline">\(\sigma\)</span>?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> TODO: sigmoid derivation
+</div>
+</details>
+<p>With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of <span class="math inline">\(\alpha\)</span> (i.e., the “learning rate”). This factor enables us to tune how fast or slow we learn. If <span class="math inline">\(\alpha\)</span> is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly. We will go into more details on optimization in sec. <a href="#sec:opti">7</a>.</p>
 </section>
 <section id="neuron-batch-gradient-descent" class="level2" data-number="4.6">
 <h2 data-number="4.6"><span class="header-section-number">4.6</span> Neuron Batch Gradient Descent</h2>
+<p>Her is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the <code>get_binary_mnist_one_batch</code> function, but you can find that <a href="https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Code/Python/utilities.py#L69">code in the repository for this guide</a>.</p>
 <div class="code-highlight">
 <pre><span style="color:#39424e;">   1</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">utilities</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">format_duration_with_prefix</span>
 <span style="color:#39424e;">   2</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timeit</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">default_timer</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timer</span>
@@ -867,21 +879,36 @@ b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
 <strong>Answer:</strong> It turns out that we might need to update our weights more than once to get useful results. Each time we update parameters based on all training examples we mark the end of an epoch. In the code above we iterate through four epochs.
 </div>
 </details>
+<details class="question">
+<summary>
+<strong>Question:</strong> What do you expect to see for the output?
+</summary>
+<div class="answer">
+<p><strong>Answer:</strong></p>
+<pre class="code-block">
+Accuracy before training: 0.54
+ 1/4, Cost=0.7, Accuracy=0.97, Time=5.5 ms
+ 2/4, Cost=0.5, Accuracy=0.96, Time=4.8 ms
+ 3/4, Cost=0.4, Accuracy=0.96, Time=4.6 ms
+ 4/4, Cost=0.3, Accuracy=0.96, Time=4.4 ms
+</pre>
+</div>
+</details>
 </section>
 </section>
 <section id="multi-layer-networks" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Multi-Layer Networks</h1>
-<p>Below is our first neural network. We’ll start by using this diagram to state our terminology and conventions.</p>
+<p>Below is our first neural network. We’ll start by using this diagram to formulate terminology and conventions.</p>
 <figure>
 <img src="img/2LayerNetwork.svg" alt="A two-layer neural network." /><figcaption aria-hidden="true">A two-layer neural network.</figcaption>
 </figure>
 <p>Notation:</p>
 <ul>
 <li>Layer 0 is the input (we called this <span class="math inline">\(X\)</span> for a single Neuron)</li>
-<li>Bracket superscripts denote the network layer</li>
-<li>Parenthesis superscripts denote the example index</li>
+<li>Square bracket superscripts denote the network layer</li>
+<li>Round parenthesis superscripts denote the example index</li>
 <li><span class="math inline">\(w\)</span> parameter subscripts denote first the associated neuron in the current layer and second the associated neuron (or input) from the previous layer</li>
-<li><span class="math inline">\(b\)</span>, <span class="math inline">\(z\)</span>, and <span class="math inline">\(a\)</span> subscripts denote the associated neuron</li>
+<li><span class="math inline">\(b\)</span>, <span class="math inline">\(z\)</span>, and <span class="math inline">\(a\)</span> subscripts denote an associated neuron</li>
 </ul>
 <p>Notice how we have all the same components as we did for the single neuron. We’ve just added additional notation to distinguish among layers and neurons in the same layer.</p>
 <details class="question">
@@ -889,12 +916,18 @@ b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
 <strong>Question:</strong> Given some hypothetical deep neural network, how would you denote the linear computation of the third neuron in the fifth layer for training example 6123?
 </summary>
 <div class="answer">
-<strong>Answer:</strong> <span class="math display">\[z_3^{[5](6123)}\]</span>
+<p><strong>Answer:</strong> <span class="math display">\[z_3^{[5](6123)}\]</span></p>
+<ul>
+<li>“<span class="math inline">\(z\)</span>”: linear computation</li>
+<li>“<span class="math inline">\([5]\)</span>” superscript: fifth layer</li>
+<li>“<span class="math inline">\((6123)\)</span>” superscript: example 6123</li>
+<li>“<span class="math inline">\(3\)</span>” subscript: third neuron</li>
+</ul>
 </div>
 </details>
 <section id="vectorized-equations-for-a-neural-network" class="level2" data-number="5.1">
 <h2 data-number="5.1"><span class="header-section-number">5.1</span> Vectorized Equations For a Neural Network</h2>
-<p>Starting with the parameters:</p>
+<p>Let’s start with showing the notation for parameters from any layer <span class="math inline">\(l = 1, 2, ..., L\)</span> where <span class="math inline">\(L\)</span> is the number of layers in the network.</p>
 <p><span class="math display">\[\begin{align}
 W^{[l]} &amp;= \begin{bmatrix}
 w_{1,1}^{[l]} &amp; w_{1,2}^{[l]} &amp; \cdots &amp; w_{1,n_{l-1}}^{[l]}\\
@@ -975,6 +1008,27 @@ g_{1}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{
 <p>You should also think about the shapes of <span class="math inline">\(\mathbf{a}^{[l-1](i)}\)</span> and <span class="math inline">\(\mathbf{w}_{j}^{[l]}\)</span>.</p>
 </div>
 </details>
+</section>
+<section id="backpropagation" class="level2" data-number="5.2">
+<h2 data-number="5.2"><span class="header-section-number">5.2</span> Backpropagation</h2>
+<p>Just like for the single neuron, we want to find values for <span class="math inline">\(W^{[l]}\)</span> and <span class="math inline">\(b^{[l]}\)</span> (for <span class="math inline">\(l = 1, 2, ..., L\)</span>) such that <span class="math inline">\(\hat Y \approx Y\)</span>. Instead of looking at a more general case, let’s work through gradient descent for the network above where</p>
+<ul>
+<li>We have three inputs (<span class="math inline">\(n_0=3\)</span>)</li>
+<li>We have two neurons in layer 1 (<span class="math inline">\(n_1=2\)</span>)</li>
+<li>We have three neurons in layer 2 (<span class="math inline">\(n_2=3\)</span>)</li>
+<li>We are using sigmoid activations for all neurons</li>
+<li>We are using the mean-square-error loss function</li>
+</ul>
+<p>For this network, we need to compute these partial derivatives:</p>
+<p><span class="math display">\[
+\frac{\partial{ℒ}}{\partial{W^{[1]}}},
+\frac{\partial{ℒ}}{\partial{b^{[1]}}},
+\frac{\partial{ℒ}}{\partial{W^{[2]}}},
+\frac{\partial{ℒ}}{\partial{b^{[2]}}}
+\]</span></p>
+<p>We are going to start at layer 2 and work backward through the network to layer 1. As we compute these derivatives answer for yourself “why do we work backward through the network?”</p>
+<p>This process of computing derivatives backward through the network is why this process if referred to as backpropagation–we’ll compute values and propagate them backward to earlier layers in the network.</p>
+<p>TODO: compute graph</p>
 </section>
 </section>
 <section id="gradient-descent" class="level1" data-number="6">
