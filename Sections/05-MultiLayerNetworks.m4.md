@@ -51,6 +51,7 @@ A^{[l]} &= g^{[l]}(Z^{[l]})
 
 m4question([[Why do we have $\mathbf{1} \mathbf{b}^{[l]T}$?]], [[This ensures that the dimensions are correct between the added matrices. Try this out in Python:
 ```python
+import torch
 N, nl = 10, 4
 b = torch.randn(nl, 1)
 ONE = torch.ones(N, 1)
