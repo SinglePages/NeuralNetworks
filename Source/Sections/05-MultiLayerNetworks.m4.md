@@ -93,10 +93,10 @@ Just like for the single neuron, we want to find values for $W^{[l]}$ and $b^{[l
 For this network, we need to compute these partial derivatives:
 
 $$
-\frac{\partial{ℒ}}{\partial{W^{[1]}}},
-\frac{\partial{ℒ}}{\partial{b^{[1]}}},
-\frac{\partial{ℒ}}{\partial{W^{[2]}}},
-\frac{\partial{ℒ}}{\partial{b^{[2]}}}
+\frac{\partial{ℒ}}{\partial{W^{[1]}}}^①,
+\frac{\partial{ℒ}}{\partial{b^{[1]}}}^②,
+\frac{\partial{ℒ}}{\partial{W^{[2]}}}^③,
+\frac{\partial{ℒ}}{\partial{b^{[2]}}}^④
 $$
 
 We are going to start at layer 2 and work backward through the network to layer 1. As we compute these derivatives answer for yourself "why do we work backward through the network?"
@@ -104,6 +104,9 @@ We are going to start at layer 2 and work backward through the network to layer 
 This process of computing derivatives backward through the network is why this process if referred to as backpropagation--we'll compute values and propagate them backward to earlier layers in the network.
 
 TODO: compute graph
+
+![Compute graph for 2-layer network.](img/ComputeGraph.svg)
+
 
 <!--
 ## Input Normalization

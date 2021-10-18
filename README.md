@@ -18,6 +18,7 @@ Ideas
 - connect variables and diagrams so that when you hover it will show in multiple places
 - use roughjs?
 - svg line label background...
+- use image symlinks?
 
 https://thoughtspile.github.io/grafar/#/
 
@@ -26,6 +27,10 @@ interactive = intuitive
 substance > information
 
 Theme
+
+
+
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨
 
 
 https://github.com/observablehq/plot

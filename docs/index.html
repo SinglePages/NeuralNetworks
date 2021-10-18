@@ -955,10 +955,11 @@ A^{[l]} &amp;= g^{[l]}(Z^{[l]})
 </summary>
 <div class="answer">
 <p><strong>Answer:</strong> This ensures that the dimensions are correct between the added matrices. Try this out in Python:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>N, nl <span class="op">=</span> <span class="dv">10</span>, <span class="dv">4</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.randn(nl, <span class="dv">1</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ONE <span class="op">=</span> torch.ones(N, <span class="dv">1</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ONE <span class="op">@</span> b.T)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>N, nl <span class="op">=</span> <span class="dv">10</span>, <span class="dv">4</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.randn(nl, <span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>ONE <span class="op">=</span> torch.ones(N, <span class="dv">1</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ONE <span class="op">@</span> b.T)</span></code></pre></div>
 </div>
 </details>
 <details class="question">
@@ -1021,14 +1022,17 @@ g_{1}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{
 </ul>
 <p>For this network, we need to compute these partial derivatives:</p>
 <p><span class="math display">\[
-\frac{\partial{ℒ}}{\partial{W^{[1]}}},
-\frac{\partial{ℒ}}{\partial{b^{[1]}}},
-\frac{\partial{ℒ}}{\partial{W^{[2]}}},
-\frac{\partial{ℒ}}{\partial{b^{[2]}}}
+\frac{\partial{ℒ}}{\partial{W^{[1]}}}^①,
+\frac{\partial{ℒ}}{\partial{b^{[1]}}}^②,
+\frac{\partial{ℒ}}{\partial{W^{[2]}}}^③,
+\frac{\partial{ℒ}}{\partial{b^{[2]}}}^④
 \]</span></p>
 <p>We are going to start at layer 2 and work backward through the network to layer 1. As we compute these derivatives answer for yourself “why do we work backward through the network?”</p>
 <p>This process of computing derivatives backward through the network is why this process if referred to as backpropagation–we’ll compute values and propagate them backward to earlier layers in the network.</p>
 <p>TODO: compute graph</p>
+<figure>
+<img src="img/ComputeGraph.svg" alt="Compute graph for 2-layer network." /><figcaption aria-hidden="true">Compute graph for 2-layer network.</figcaption>
+</figure>
 </section>
 </section>
 <section id="gradient-descent" class="level1" data-number="6">
