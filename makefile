@@ -4,18 +4,16 @@
 # symlink unprocessed stuff? (probably just if uploading to server where rsync can follow)
 
 
-UTIL_DIR = Utilitites
-
 OUTPUT_DIR = docs
 
 #
 # Source files
 #
 
-SECTION_DIR = Sections
+SECTION_DIR = Source/Sections
 SECTION_FILES = $(sort $(wildcard $(SECTION_DIR)/*.md))
 
-PYTHON_DIR = Code/Python
+PYTHON_DIR = Source/Code/Python
 PYTHON_FILES = $(wildcard $(PYTHON_DIR)/*.py)
 
 # IMAGE_DIR = Images
@@ -30,7 +28,7 @@ PYTHON_FILES = $(wildcard $(PYTHON_DIR)/*.py)
 # SVG_FILES = $(wildcard $(DIAGRAM_DIR)/*.drawio)
 
 
-WEB_DIR = Web
+WEB_DIR = Source/WebStatic
 WEB_FILES = $(wildcard $(WEB_DIR)/*/*)
 COPIED_WEB_FILES = $(patsubst $(WEB_DIR)/%, $(OUTPUT_DIR)/%, $(WEB_FILES))
 
@@ -49,18 +47,18 @@ all: $(OUTPUT_DIR)/index.html $(SVG_FILES) $(COPIED_WEB_FILES)
 
 # Single page
 $(OUTPUT_DIR)/index.html: $(GEN_MARKDOWN_FILES) | $(OUTPUT_DIR)
-	pandoc --defaults pandoc-options-common --defaults pandoc-options-full  $(GEN_MARKDOWN_FILES) -o $@
+	pandoc --defaults Pandoc/pandoc-options-common --defaults Pandoc/pandoc-options-full  $(GEN_MARKDOWN_FILES) -o $@
 $(OUTPUT_DIR):
 	mkdir -p $@ $@/img
 
 
 # Individual pages
 $(OUTPUT_DIR)/%.html: $(BUILD_DIR)/%.md | $(OUTPUT_DIR)
-	pandoc --defaults pandoc-options-common --defaults pandoc-options-single $< -o $@
+	pandoc --defaults Pandoc/pandoc-options-common --defaults Pandoc/pandoc-options-single $< -o $@
 
 # Run m4 preprocessor to generate build files
-$(BUILD_DIR)/%.md: $(SECTION_DIR)/%.m4.md m4Macros.txt $(DIAGRAM_FILES) $(PYTHON_FILES) | $(BUILD_DIR)
-	m4 m4Macros.txt $< > $@
+$(BUILD_DIR)/%.md: $(SECTION_DIR)/%.m4.md M4/macros.txt $(DIAGRAM_FILES) $(PYTHON_FILES) | $(BUILD_DIR)
+	m4 M4/macros.txt $< > $@
 $(BUILD_DIR):
 	mkdir -p $@ $@/js $@/css
 

@@ -2,9 +2,7 @@
 
 Perhaps the most important aspect of a neural network is the dataset. Let
 
-$$
-\mathcal{D} = \{X, Y\}
-$$
+$$\mathcal{D} = \{X, Y\}$$
 
 <!-- TODO: address training/validation/test sets -->
 
@@ -77,7 +75,7 @@ Similarly, the evaluation partition is only used to compare performance after hy
 We've discuss notation and general concepts, but how would we write this out in code? Here is an example how how to load the MNIST dataset using PyTorch.
 
 
-m4code([[Code/Python/03-01-LoadMNIST.py]])
+m4code([[Source/Code/Python/03-01-LoadMNIST.py]])
 
 
 m4question([[What do you expect to see as this program's output?]], [[

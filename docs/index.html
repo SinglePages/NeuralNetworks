@@ -22,7 +22,7 @@
       padding-top: 50px;
       padding-bottom: 50px;
       hyphens: auto;
-      overflow-wrap: break-word;
+      word-wrap: break-word;
       text-rendering: optimizeLegibility;
       font-kerning: normal;
     }
@@ -93,7 +93,6 @@
     pre code {
       padding: 0;
       overflow: visible;
-      overflow-wrap: normal;
     }
     .sourceCode {
      background-color: transparent;
@@ -268,32 +267,33 @@
 <section id="sec:data" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Data</h1>
 <p>Perhaps the most important aspect of a neural network is the dataset. Let</p>
-<p><span class="math display">\[
-\mathcal{D} = \{X, Y\}
-\]</span></p>
+<p><span class="math display">\[\mathcal{D} = \{X, Y\}\]</span></p>
 <p>denote a dataset comprising input <em>features</em> <span class="math inline">\(X\)</span> and output <em>targets</em> <span class="math inline">\(Y\)</span>. Although <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> can come in many shapes, I am going to be opinionated here and use a specific (and consistent) convention. Let’s use <span class="math inline">\(N\)</span> to denote the size of the paired dataset. (Note, not all problems have output targets, but herein I am talking about supervised learning unless otherwise specified.)</p>
 <p>We will frequently take a dataset and split it into examples used for training, validation, and evaluation. We’ll discuss these terms near the end of this section.</p>
 <p><span class="math inline">\(X\)</span> is a matrix (indicated by capitalization) containing all features of all input examples. A single input example <span class="math inline">\(\mathbf{x}^{(i)}\)</span> is often represented as a <em>column</em> vector (indicated by boldface):</p>
-<p><span class="math display">\[\mathbf{x}^{(i)} = \begin{bmatrix}
-x^{(i)}_{1} \\
-x^{(i)}_{2} \\
-\vdots \\
-x^{(i)}_{n_x} \\
+<p><span class="math display">\[\mathbf{x}^{(i)} = 
+\begin{bmatrix}
+    x^{(i)}_{1} \\
+    x^{(i)}_{2} \\
+    \vdots \\ 
+    x^{(i)}_{n_x} \\
 \end{bmatrix}
 \]</span></p>
-<p>where subscripts denote the feature index, <span class="math inline">\(n_x\)</span> is the number of features, and the superscript <span class="math inline">\(i\)</span> denotes that this is the <span class="math inline">\(i^{\mathit{th}}\)</span> training example. We do not always put the input features into a column vector (see sec. <a href="#sec:cnns">9</a> for more information), but it is fairly standard.</p>
+<p>where subscripts denote the feature index, <span class="math inline">\(n_x\)</span> is the number of features, and the superscript <span class="math inline">\(i\)</span> denotes that this is the <span class="math inline">\(i^{\mathit{th}}\)</span> training example. We do not always put the input features into a column vector (see sec. 9 for more information), but it is fairly standard.</p>
 <p>Each row in <span class="math inline">\(X\)</span> is a single input example (also referred to as an instance or sample), and when you stack all <span class="math inline">\(N\)</span> examples on top of each other (first transposing them into row vectors), you end up with:</p>
-<p><span class="math display">\[X = \begin{bmatrix}
-\rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
-\rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(2)T}\rule[.5ex]{1em}{0.4pt} \\
-\vdots \\
-\rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(N)T}\rule[.5ex]{1em}{0.4pt} \\
+<p><span class="math display">\[X = 
+\begin{bmatrix}
+    \rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
+    \rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(2)T}\rule[.5ex]{1em}{0.4pt} \\
+    \vdots \\ 
+    \rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(N)T}\rule[.5ex]{1em}{0.4pt} \\
 \end{bmatrix}
- = \begin{bmatrix}
-x^{(1)}_{1} &amp; x^{(1)}_{2} &amp; \cdots &amp; x^{(1)}_{n_x}\\
-x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp; x^{(2)}_{n_x}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-x^{(N)}_{1} &amp; x^{(N)}_{2} &amp; \cdots &amp; x^{(N)}_{n_x}\\
+ = 
+\begin{bmatrix}
+    x^{(1)}_{1} &amp; x^{(1)}_{2} &amp; \cdots &amp;  x^{(1)}_{n_x} \\
+    x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp;  x^{(2)}_{n_x} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    x^{(N)}_{1} &amp; x^{(N)}_{2} &amp; \cdots &amp;  x^{(N)}_{n_x}
 \end{bmatrix}
 \]</span></p>
 <p>We transpose each example column vector (i.e., <span class="math inline">\(\mathbf{x}^{(i)T}\)</span>) into a row vector so that the first dimension of <span class="math inline">\(X\)</span> corresponds to the number of examples <span class="math inline">\(N\)</span> and the second dimension is the number of features <span class="math inline">\(n_x\)</span>. Compare the column vector above to each row in the matrix.</p>
@@ -307,25 +307,28 @@ x^{(N)}_{1} &amp; x^{(N)}_{2} &amp; \cdots &amp; x^{(N)}_{n_x}\\
 </div>
 </details>
 <p><span class="math inline">\(Y\)</span> contains the targets (also referred to as labels or the true/correct/actual/expected output values). Here is a single target column vector:</p>
-<p><span class="math display">\[\mathbf{y}^{(i)} = \begin{bmatrix}
-y^{(i)}_{1} \\
-y^{(i)}_{2} \\
-\vdots \\
-y^{(i)}_{n_y} \\
+<p><span class="math display">\[\mathbf{y}^{(i)} = 
+\begin{bmatrix}
+    y^{(i)}_{1} \\
+    y^{(i)}_{2} \\
+    \vdots \\ 
+    y^{(i)}_{n_y} \\
 \end{bmatrix}
 \]</span></p>
 <p>And here is the entire target matrix including all examples:</p>
-<p><span class="math display">\[Y = \begin{bmatrix}
-\rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
-\rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(2)T}\rule[.5ex]{1em}{0.4pt} \\
-\vdots \\
-\rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(N)T}\rule[.5ex]{1em}{0.4pt} \\
+<p><span class="math display">\[Y = 
+\begin{bmatrix}
+    \rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
+    \rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(2)T}\rule[.5ex]{1em}{0.4pt} \\
+    \vdots \\ 
+    \rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(N)T}\rule[.5ex]{1em}{0.4pt} \\
 \end{bmatrix}
- = \begin{bmatrix}
-y^{(1)}_{1} &amp; y^{(1)}_{2} &amp; \cdots &amp; y^{(1)}_{n_y}\\
-y^{(2)}_{1} &amp; y^{(2)}_{2} &amp; \cdots &amp; y^{(2)}_{n_y}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-y^{(N)}_{1} &amp; y^{(N)}_{2} &amp; \cdots &amp; y^{(N)}_{n_y}\\
+ = 
+\begin{bmatrix}
+    y^{(1)}_{1} &amp; y^{(1)}_{2} &amp; \cdots &amp;  y^{(1)}_{n_y} \\
+    y^{(2)}_{1} &amp; y^{(2)}_{2} &amp; \cdots &amp;  y^{(2)}_{n_y} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    y^{(N)}_{1} &amp; y^{(N)}_{2} &amp; \cdots &amp;  y^{(N)}_{n_y}
 \end{bmatrix}
 \]</span></p>
 <details class="question">
@@ -345,11 +348,12 @@ y^{(N)}_{1} &amp; y^{(N)}_{2} &amp; \cdots &amp; y^{(N)}_{n_y}\\
 <strong>Question:</strong> What is the shape of the training partition of the input <span class="math inline">\(X_{train}\)</span>?
 </summary>
 <div class="answer">
-<strong>Answer:</strong> <span class="math inline">\(X_{train}\)</span> is <span class="math inline">\((60000 \times 784\)</span>): <span class="math display">\[X = \begin{bmatrix}
-x^{(1)}_{1} &amp; x^{(1)}_{2} &amp; \cdots &amp; x^{(1)}_{784}\\
-x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp; x^{(2)}_{784}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp; x^{(60000)}_{784}\\
+<strong>Answer:</strong> <span class="math inline">\(X_{train}\)</span> is <span class="math inline">\((60000 \times 784\)</span>): <span class="math display">\[X = 
+\begin{bmatrix}
+    x^{(1)}_{1} &amp; x^{(1)}_{2} &amp; \cdots &amp;  x^{(1)}_{784} \\
+    x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp;  x^{(2)}_{784} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp;  x^{(60000)}_{784}
 \end{bmatrix}
 \]</span> The first row includes all 784 pixels of the first training image, and subsequent rows likewise contain pixel data for a single image.
 </div>
@@ -359,11 +363,12 @@ x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp; x^{(60000)}_{784}\\
 <strong>Question:</strong> What is the shape of the training partition of the targets <span class="math inline">\(Y_{train}\)</span>?
 </summary>
 <div class="answer">
-<strong>Answer:</strong> <span class="math inline">\(Y_{train}\)</span> is <span class="math inline">\((60000 \times 10\)</span>): <span class="math display">\[Y = \begin{bmatrix}
-x^{(1)}_{1} &amp; x^{(1)}_{2} &amp; \cdots &amp; x^{(1)}_{10}\\
-x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp; x^{(2)}_{10}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp; x^{(60000)}_{10}\\
+<strong>Answer:</strong> <span class="math inline">\(Y_{train}\)</span> is <span class="math inline">\((60000 \times 10\)</span>): <span class="math display">\[Y = 
+\begin{bmatrix}
+    x^{(1)}_{1} &amp; x^{(1)}_{2} &amp; \cdots &amp;  x^{(1)}_{10} \\
+    x^{(2)}_{1} &amp; x^{(2)}_{2} &amp; \cdots &amp;  x^{(2)}_{10} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp;  x^{(60000)}_{10}
 \end{bmatrix}
 \]</span> Each row in this matrix is one-hot encoded, meaning that only one item in each row is “1” and all other items in a row are “0”. Here is an example of a one-hot encoding target for an input image representing the digit “2” <span class="math display">\[y^T = \begin{bmatrix} 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\end{bmatrix}\]</span> For efficiency sake, we often represent a one-hot encoded vector using just the index of the “hot” item. For example, the previous vector can be represented by the integer 2.
 </div>
@@ -378,7 +383,7 @@ x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp; x^{(60000)}_{10}\\
 </details>
 <p>You might now wonder why we split a dataset into training/validation/evaluation partitions. It is reasonable to think that we would be better off using all 70000 images to train a neural network. However, we need some method for <em>measuring</em> how well a model is performing. That is the purpose of the validation set–to measure performance.</p>
 <p>If we measure performance directly on the training dataset, we might trick ourselves into thinking that the neural network will perform very well when it is eventually deployed as part of an application (for example, as a mobile app in which we convert an image of someones’s handwritten notes into a text document), when in reality the network might only perform well specifically on the examples found in the training dataset. We will discuss this issue more in sec. <strong>¿sec:general?</strong> when we cover overfitting and generalization.</p>
-<p>Similarly, the evaluation partition is only used to compare performance after hyper-parameter tuning, which we’ll discuss in sec. <a href="#sec:hyper">12</a>.</p>
+<p>Similarly, the evaluation partition is only used to compare performance after hyper-parameter tuning, which we’ll discuss in sec. 12.</p>
 <section id="loading-mnist-using-pytorch" class="level2" data-number="3.1">
 <h2 data-number="3.1"><span class="header-section-number">3.1</span> Loading MNIST Using PyTorch</h2>
 <p>We’ve discuss notation and general concepts, but how would we write this out in code? Here is an example how how to load the MNIST dataset using PyTorch.</p>
@@ -416,7 +421,7 @@ x^{(60000)}_{1} &amp; x^{(60000)}_{2} &amp; \cdots &amp; x^{(60000)}_{10}\\
 <span style="color:#39424e;">  31</span> <span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">Validation target shape :</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">y_valid</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">)</span>
 </pre>
 <div class="code-caption">
-<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/03-01-LoadMNIST.py">Link to code.</a>
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/03-01-LoadMNIST.py">Link to code.</a>
 </div>
 </div>
 <details class="question">
@@ -431,7 +436,7 @@ Training target shape   : torch.Size([60000])
 Validation input shape  : torch.Size([10000, 1, 28, 28])
 Validation target shape : torch.Size([10000])
 </pre>
-<p>This is slightly different than what we discussed. PyTorch expects us to use this dataset with a convolutional neural network. When we get to sec. <a href="#sec:cnns">9</a> we’ll make more sense of this data format.</p>
+<p>This is slightly different than what we discussed. PyTorch expects us to use this dataset with a convolutional neural network. When we get to sec. 9 we’ll make more sense of this data format.</p>
 </div>
 </details>
 </section>
@@ -510,7 +515,7 @@ a^{(i)} &amp;= g(z^{(i)})
 <span style="color:#39424e;">  32</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">ai</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">zi</span><span style="color:#ccc9c2;">)</span>
 </pre>
 <div class="code-caption">
-<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-01-NeuronLoop.py">Link to code.</a>
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-01-NeuronLoop.py">Link to code.</a>
 </div>
 </div>
 <p>In this code listing I use the <code>sigmoid</code> activation function (when not using a specific activation function we use <span class="math inline">\(g(\mathord{\cdot})\)</span> in most equations). This function is plotted below.</p>
@@ -584,7 +589,7 @@ z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T} \mathbf{w} + b
 <span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#ccc9c2;background-color:#22a322;">    ai </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> </span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">torch</span><span style="font-weight:bold;color:#f29e74;background-color:#006000;">.</span><span style="color:#ffd580;background-color:#22a322;">sigmoid</span><span style="color:#ccc9c2;background-color:#22a322;">(zi)</span><span style="background-color:#22a322;"></span>
 </pre>
 <div class="code-caption">
-<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-02-NeuronDot.py">Link to code.</a>
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-02-NeuronDot.py">Link to code.</a>
 </div>
 </div>
 <p>The code snippet above shows a <a href="https://en.wikipedia.org/wiki/Diff">diff</a> between the previous code snippet and an updated one using the dot product. You will see many diffs throughout this document. The key points are that: (1) red indicates text or entire lines that have been removed and (2) green indicates updated or newly added lines.</p>
@@ -609,7 +614,7 @@ z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T} \mathbf{w} + b
 <span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 19 </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#ccc9c2;background-color:#006000;">yhat </span><span style="color:#f29e74;background-color:#22a322;">=</span><span style="color:#ccc9c2;background-color:#22a322;"> torch</span><span style="color:#f29e74;background-color:#22a322;">.</span><span style="color:#ffd580;background-color:#22a322;">sigmoid</span><span style="color:#ccc9c2;background-color:#22a322;">(</span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">z</span><span style="color:#ccc9c2;background-color:#22a322;">)</span><span style="background-color:#22a322;"></span>
 </pre>
 <div class="code-caption">
-<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-03-NeuronVectorized.py">Link to code.</a>
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-03-NeuronVectorized.py">Link to code.</a>
 </div>
 </div>
 <details class="question">
@@ -618,18 +623,20 @@ z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T} \mathbf{w} + b
 </summary>
 <div class="answer">
 <p><strong>Answer:</strong> We are computing a single output value for each input, so, the shape of these vectors are <span class="math inline">\((N \times 1)\)</span>. PyTorch will treat these as arrays with <span class="math inline">\(N\)</span> elements instead of as column vectors. <span class="math display">\[\begin{align}
-\mathbf{z} &amp;= \begin{bmatrix}
-\mathbf{x}^{(1)T} \mathbf{w} + b \\
-\mathbf{x}^{(2)T} \mathbf{w} + b \\
-\vdots \\
-\mathbf{x}^{(N)T} \mathbf{w} + b \\
+\mathbf{z} &amp;= 
+\begin{bmatrix}
+    \mathbf{x}^{(1)T} \mathbf{w} + b \\
+    \mathbf{x}^{(2)T} \mathbf{w} + b \\
+    \vdots \\ 
+    \mathbf{x}^{(N)T} \mathbf{w} + b \\
 \end{bmatrix}
  \\
-\mathbf{a} &amp;= \begin{bmatrix}
-g(z^{(1)}) \\
-g(z^{(2)}) \\
-\vdots \\
-g(z^{(N)}) \\
+\mathbf{a} &amp;= 
+\begin{bmatrix}
+    g(z^{(1)}) \\
+    g(z^{(2)}) \\
+    \vdots \\ 
+    g(z^{(N)}) \\
 \end{bmatrix}
 
 \end{align}\]</span></p>
@@ -793,11 +800,11 @@ b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
 <strong>Answer:</strong> TODO: sigmoid derivation
 </div>
 </details>
-<p>With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of <span class="math inline">\(\alpha\)</span> (i.e., the “learning rate”). This factor enables us to tune how fast or slow we learn. If <span class="math inline">\(\alpha\)</span> is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly. We will go into more details on optimization in sec. <a href="#sec:opti">7</a>.</p>
+<p>With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of <span class="math inline">\(\alpha\)</span> (i.e., the “learning rate”). This factor enables us to tune how fast or slow we learn. If <span class="math inline">\(\alpha\)</span> is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly. We will go into more details on optimization in sec. 7.</p>
 </section>
 <section id="neuron-batch-gradient-descent" class="level2" data-number="4.6">
 <h2 data-number="4.6"><span class="header-section-number">4.6</span> Neuron Batch Gradient Descent</h2>
-<p>Her is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the <code>get_binary_mnist_one_batch</code> function, but you can find that <a href="https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Code/Python/utilities.py#L69">code in the repository for this guide</a>.</p>
+<p>Her is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the <code>get_binary_mnist_one_batch</code> function, but you can find that <a href="https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Source/Code/Python/utilities.py#L69">code in the repository for this guide</a>.</p>
 <div class="code-highlight">
 <pre><span style="color:#39424e;">   1</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">utilities</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">format_duration_with_prefix</span>
 <span style="color:#39424e;">   2</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timeit</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">default_timer</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timer</span>
@@ -860,7 +867,7 @@ b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
 <span style="color:#39424e;">  59</span> <span style="color:#ccc9c2;">    </span><span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;">)</span>
 </pre>
 <div class="code-caption">
-<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Code/Python/04-04-NeuronMNIST.py">Link to code.</a>
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-04-NeuronMNIST.py">Link to code.</a>
 </div>
 </div>
 <details class="question">
@@ -929,18 +936,20 @@ Accuracy before training: 0.54
 <h2 data-number="5.1"><span class="header-section-number">5.1</span> Vectorized Equations For a Neural Network</h2>
 <p>Let’s start with showing the notation for parameters from any layer <span class="math inline">\(l = 1, 2, ..., L\)</span> where <span class="math inline">\(L\)</span> is the number of layers in the network.</p>
 <p><span class="math display">\[\begin{align}
-W^{[l]} &amp;= \begin{bmatrix}
-w_{1,1}^{[l]} &amp; w_{1,2}^{[l]} &amp; \cdots &amp; w_{1,n_{l-1}}^{[l]}\\
-w_{2,1}^{[l]} &amp; w_{2,2}^{[l]} &amp; \cdots &amp; w_{2,n_{l-1}}^{[l]}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-w_{n_l,1}^{[l]} &amp; w_{n_l,2}^{[l]} &amp; \cdots &amp; w_{n_l,n_{l-1}}^{[l]}\\
+W^{[l]} &amp;= 
+\begin{bmatrix}
+    w_{1,1}^{[l]} &amp; w_{1,2}^{[l]} &amp; \cdots &amp;  w_{1,n_{l-1}}^{[l]} \\
+    w_{2,1}^{[l]} &amp; w_{2,2}^{[l]} &amp; \cdots &amp;  w_{2,n_{l-1}}^{[l]} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    w_{n_l,1}^{[l]} &amp; w_{n_l,2}^{[l]} &amp; \cdots &amp;  w_{n_l,n_{l-1}}^{[l]}
 \end{bmatrix}
  \\
-\mathbf{b}^{[l]} &amp;= \begin{bmatrix}
-b_{1}^{[l]} \\
-b_{2}^{[l]} \\
-\vdots \\
-b_{n_l}^{[l]} \\
+\mathbf{b}^{[l]} &amp;= 
+\begin{bmatrix}
+    b_{1}^{[l]} \\
+    b_{2}^{[l]} \\
+    \vdots \\ 
+    b_{n_l}^{[l]} \\
 \end{bmatrix}
 \end{align}\]</span></p>
 <p>Before continuing, you should compare these equations to the diagram above.</p>
@@ -967,11 +976,12 @@ A^{[l]} &amp;= g^{[l]}(Z^{[l]})
 <strong>Question:</strong> What is the shape of <span class="math inline">\(Z^{[l]}\)</span>?
 </summary>
 <div class="answer">
-<p><strong>Answer:</strong> <span class="math inline">\(Z^{[l]}\)</span> is <span class="math inline">\((N \times n_l)\)</span>. <span class="math display">\[Z^{[l]} = \begin{bmatrix}
-z_{1}^{[l](1)} &amp; z_{2}^{[l](1)} &amp; \cdots &amp; z_{n_l}^{[l](1)}\\
-z_{1}^{[l](2)} &amp; z_{2}^{[l](2)} &amp; \cdots &amp; z_{n_l}^{[l](2)}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-z_{1}^{[l](N)} &amp; z_{2}^{[l](N)} &amp; \cdots &amp; z_{n_l}^{[l](N)}\\
+<p><strong>Answer:</strong> <span class="math inline">\(Z^{[l]}\)</span> is <span class="math inline">\((N \times n_l)\)</span>. <span class="math display">\[Z^{[l]} = 
+\begin{bmatrix}
+    z_{1}^{[l](1)} &amp; z_{2}^{[l](1)} &amp; \cdots &amp;  z_{n_l}^{[l](1)} \\
+    z_{1}^{[l](2)} &amp; z_{2}^{[l](2)} &amp; \cdots &amp;  z_{n_l}^{[l](2)} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    z_{1}^{[l](N)} &amp; z_{2}^{[l](N)} &amp; \cdots &amp;  z_{n_l}^{[l](N)}
 \end{bmatrix}
 \]</span></p>
 <p>We compute this matrix by multiplying a <span class="math inline">\((N \times n_{l-1})\)</span> matrix by a <span class="math inline">\((n_{l-1}, n_l)\)</span> matrix (the transposed parameter matrix) and adding an <span class="math inline">\((N \times n_l)\)</span> matrix.</p>
@@ -983,27 +993,30 @@ z_{1}^{[l](N)} &amp; z_{2}^{[l](N)} &amp; \cdots &amp; z_{n_l}^{[l](N)}\\
 </summary>
 <div class="answer">
 <p><strong>Answer:</strong> <span class="math inline">\(A^{[l]}\)</span> is <span class="math inline">\((N \times n_l)\)</span>. <span class="math display">\[\begin{align}
-A^{[l]} &amp;= \begin{bmatrix}
-a_{1}^{[l](1)} &amp; a_{2}^{[l](1)} &amp; \cdots &amp; a_{n_l}^{[l](1)}\\
-a_{1}^{[l](2)} &amp; a_{2}^{[l](2)} &amp; \cdots &amp; a_{n_l}^{[l](2)}\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-a_{1}^{[l](N)} &amp; a_{2}^{[l](N)} &amp; \cdots &amp; a_{n_l}^{[l](N)}\\
+A^{[l]} &amp;= 
+\begin{bmatrix}
+    a_{1}^{[l](1)} &amp; a_{2}^{[l](1)} &amp; \cdots &amp;  a_{n_l}^{[l](1)} \\
+    a_{1}^{[l](2)} &amp; a_{2}^{[l](2)} &amp; \cdots &amp;  a_{n_l}^{[l](2)} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    a_{1}^{[l](N)} &amp; a_{2}^{[l](N)} &amp; \cdots &amp;  a_{n_l}^{[l](N)}
 \end{bmatrix}
  \\
 \\
-&amp;= \begin{bmatrix}
-g_{1}^{[l]}(z_{1}^{[l](1)}) &amp; g_{2}^{[l]}(z_{2}^{[l](1)}) &amp; \cdots &amp; g_{n_l}^{[l]}(z_{n_l}^{[l](1)})\\
-g_{1}^{[l]}(z_{1}^{[l](2)}) &amp; g_{2}^{[l]}(z_{2}^{[l](2)}) &amp; \cdots &amp; g_{n_l}^{[l]}(z_{n_l}^{[l](2)})\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-g_{1}^{[l]}(z_{1}^{[l](N)}) &amp; g_{2}^{[l]}(z_{2}^{[l](N)}) &amp; \cdots &amp; g_{n_l}^{[l]}(z_{n_l}^{[l](N)})\\
+&amp;= 
+\begin{bmatrix}
+    g_{1}^{[l]}(z_{1}^{[l](1)}) &amp; g_{2}^{[l]}(z_{2}^{[l](1)}) &amp; \cdots &amp;  g_{n_l}^{[l]}(z_{n_l}^{[l](1)}) \\
+    g_{1}^{[l]}(z_{1}^{[l](2)}) &amp; g_{2}^{[l]}(z_{2}^{[l](2)}) &amp; \cdots &amp;  g_{n_l}^{[l]}(z_{n_l}^{[l](2)}) \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    g_{1}^{[l]}(z_{1}^{[l](N)}) &amp; g_{2}^{[l]}(z_{2}^{[l](N)}) &amp; \cdots &amp;  g_{n_l}^{[l]}(z_{n_l}^{[l](N)})
 \end{bmatrix}
  \\
 \\
-&amp;= \begin{bmatrix}
-g_{1}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g_{n_l}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
-g_{1}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g_{n_l}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-g_{1}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp; g_{n_l}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})\\
+&amp;= 
+\begin{bmatrix}
+    g_{1}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp;  g_{n_l}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]}) \\
+    g_{1}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp;  g_{n_l}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]}) \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\ 
+    g_{1}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{1}^{[l]T} + b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots &amp;  g_{n_l}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{n_l}^{[l]T} + b_{n_l}^{[l]})
 \end{bmatrix}
 \end{align}\]</span></p>
 <p>You should also think about the shapes of <span class="math inline">\(\mathbf{a}^{[l-1](i)}\)</span> and <span class="math inline">\(\mathbf{w}_{j}^{[l]}\)</span>.</p>

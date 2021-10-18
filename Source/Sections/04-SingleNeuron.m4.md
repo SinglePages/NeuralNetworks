@@ -45,7 +45,7 @@ m4question([[Why do $w_k$ and $b$ not have superscripts?]], [[The parameters $w_
 This code does not include any "learning" (i.e., optimization), but it is worth showing just how simple it is to write a single neuron from scratch. Most of the code below is necessary only to create some faked input data.
 
 
-m4code(Code/Python/04-01-NeuronLoop.py)
+m4code(Source/Code/Python/04-01-NeuronLoop.py)
 
 
 In this code listing I use the `sigmoid` activation function (when not using a specific activation function we use $g(\mathord{\cdot})$ in most equations). This function is plotted below.
@@ -82,7 +82,7 @@ The $\mathbf{x}^{(i)T} \mathbf{w}$ part of the equation computes the dot-product
 This not only turns out to be easier to write/type, but it is more efficiently computed by a neural network library. The code listing below uses [PyTorch](https://pytorch.org/) to compute $z^{(i)}$ (`zi`). Libraries like PyTorch and Tensorflow make use of both vectorized CPU instructions and graphics cards (GPUs) to quickly compute the output of matrix multiplications.
 
 
-m4diff([[Code/Python/04-01-NeuronLoop.py]], [[Code/Python/04-02-NeuronDot.py]])
+m4diff([[Source/Code/Python/04-01-NeuronLoop.py]], [[Source/Code/Python/04-02-NeuronDot.py]])
 
 
 The code snippet above shows a [diff](https://en.wikipedia.org/wiki/Diff) between the previous code snippet and an updated one using the dot product. You will see many diffs throughout this document. The key points are that: (1) red indicates text or entire lines that have been removed and (2) green indicates updated or newly added lines.
@@ -100,7 +100,7 @@ In addition to using a dot-product in place of a summation, we can use a matrix 
 \end{align}
 
 
-m4diff([[Code/Python/04-02-NeuronDot.py]], [[Code/Python/04-03-NeuronVectorized.py]])
+m4diff([[Source/Code/Python/04-02-NeuronDot.py]], [[Source/Code/Python/04-03-NeuronVectorized.py]])
 
 
 m4question([[What are the dimensions of $\mathbf{z}$ and $\mathbf{a}$ (aka, $\mathbf{\hat y}$)?]], [[We are computing a single output value for each input, so, the shape of these vectors are $(N \times 1)$. PyTorch will treat these as arrays with $N$ elements instead of as column vectors.
@@ -210,10 +210,10 @@ With the two update equations shown in the previous answer we have everything we
 
 ## Neuron Batch Gradient Descent
 
-Her is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the `get_binary_mnist_one_batch` function, but you can find that [code in the repository for this guide](https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Code/Python/utilities.py#L69).
+Her is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the `get_binary_mnist_one_batch` function, but you can find that [code in the repository for this guide](https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Source/Code/Python/utilities.py#L69).
 
 
-m4code([[Code/Python/04-04-NeuronMNIST.py]])
+m4code([[Source/Code/Python/04-04-NeuronMNIST.py]])
 
 
 m4question([[Which lines of code correspond to $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[Lines 44 and 45.]])
