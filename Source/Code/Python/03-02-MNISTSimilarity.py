@@ -32,14 +32,6 @@ digit_averages = {}
 for digit in range(10):
     digit_averages[digit] = X_train[y_train == digit].mean(dim=0).squeeze()
 
-# We can now plot each of the average digit images
-fig, axes = plt.subplots(nrows=2, ncols=5, figsize=(10, 5))
-fig.subplots_adjust(wspace=0, hspace=0)
-
-for digit, ax in zip(range(10), axes.flat):
-    ax.imshow(digit_averages[digit], cmap="gray_r", aspect="auto")
-    ax.set_xticks([])
-    ax.set_yticks([])
 
 # Next up we need to compare "unknown" images to our average images
 def get_most_similar(image: torch.Tensor, averages: dict):

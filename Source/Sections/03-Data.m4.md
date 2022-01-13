@@ -96,13 +96,17 @@ Let's try to solve the following problem:
 
 m4question([[Given the MNIST dataset and also an image of an unknown digit, how would you decide which digit is represented in the unknown image?]], [[One method would be to find an "average" image for the ten separate digits, and then compare the unknown image to the ten averages and assign the unknown label as that of the closest average image.]])
 
+For reference, here is what the "average" looks like for each of the ten digits.
+
+![Average of the ten MNIST digits from the training dataset.](img/MNISTAverages.png)
+
 Before we show a solution, however, we should take a guess at how well a random guesser might perform.
 
 m4question([[What percent of the time would you be correct in guessing digits if you were guessing at random?]], [[If you are equally likely to guess any of the ten digits, then you would be right around 10% of the time ($\frac{1}{10}$). How might this change if you were to always guess the same thing? How about if the dataset has mostly ones and sevens?]])
 
 And now some code for finding the most similar digit.
 
-
+<!-- Convert to a diff? -->
 m4code([[Source/Code/Python/03-02-MNISTSimilarity.py]])
 
 
