@@ -4,7 +4,6 @@
 
 <!--
 - Generative and Adversarial Training
-- NLP, Transformers, and Attention
 - Creating ML Applications
 - Reinforcement Learning
 - Hyperparameter Tuning

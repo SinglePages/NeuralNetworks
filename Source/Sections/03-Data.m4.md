@@ -88,7 +88,22 @@ This is slightly different than what we discussed. PyTorch expects us to use thi
 ]])
 
 
-## A Non-ML Digit Classifier
+## Similarity Digit Classifier
+
+Before we get into training NNs, we will start with a non-ML classifier. This will provide a nice comparison, and show that ML must be *learning* something beyond simple comparisons.
+
+Let's try to solve the following problem:
+
+m4question([[Given the MNIST dataset and also an image of an unknown digit, how would you decide which digit is represented in the unknown image?]], [[One method would be to find an "average" image for the ten separate digits, and then compare the unknown image to the ten averages and assign the unknown label as that of the closest average image.]])
+
+Before we show a solution, however, we should take a guess at how well a random guesser might perform.
+
+m4question([[What percent of the time would you be correct in guessing digits if you were guessing at random?]], [[If you are equally likely to guess any of the ten digits, then you would be right around 10% of the time ($\frac{1}{10}$). How might this change if you were to always guess the same thing? How about if the dataset has mostly ones and sevens?]])
+
+And now some code for finding the most similar digit.
 
 
-<!-- - non-ml example -->
+m4code([[Source/Code/Python/03-02-MNISTSimilarity.py]])
+
+
+m4question([[Take a guess at the accuracy our similarity-based model.]], [[This model is correct about 66.85% of the time.]])

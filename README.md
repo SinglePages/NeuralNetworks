@@ -1,6 +1,5 @@
 # NeuralNetworks
 
-- section on initialization and input normalization
 - encourage implementing alongside
 - show how to do so with visual studio code
 

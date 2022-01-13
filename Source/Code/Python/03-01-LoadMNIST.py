@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from torch.utils.data import DataLoader
-
 from torchvision.datasets import MNIST
 from torchvision.transforms import Compose, Normalize, ToTensor
 
