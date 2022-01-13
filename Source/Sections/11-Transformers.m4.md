@@ -1,3 +1,0 @@
-# Transformers
-
-*Being revised*
