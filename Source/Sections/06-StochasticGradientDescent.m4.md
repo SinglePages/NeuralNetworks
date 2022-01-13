@@ -1,7 +1,8 @@
-# Gradient Descent
+# Stochastic Gradient Descent
 
 *Being revised*
 <!--
+
 ## Batch Gradient Descent
 
 ## Stochastic Gradient Descent
@@ -10,3 +11,5 @@
 
 - SGD
 - Mini-Batch Stochastic Gradient Descent -->
+
+<!-- Automatic Differentiation -->

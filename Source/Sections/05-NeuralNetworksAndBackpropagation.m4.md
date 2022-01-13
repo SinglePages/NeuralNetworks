@@ -1,4 +1,4 @@
-# Multi-Layer Networks
+# Neural Networks and Backpropagation
 
 <!-- - mlp
 - deep networks -->

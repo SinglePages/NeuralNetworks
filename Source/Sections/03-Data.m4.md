@@ -4,8 +4,6 @@ Perhaps the most important aspect of a neural network is the dataset. Let
 
 $$\mathcal{D} = \{X, Y\}$$
 
-<!-- TODO: address training/validation/test sets -->
-
 denote a dataset comprising input *features* $X$ and output *targets* $Y$. Although $X$ and $Y$ can come in many shapes, I am going to be opinionated here and use a specific (and consistent) convention. Let's use $N$ to denote the size of the paired dataset. (Note, not all problems have output targets, but herein I am talking about supervised learning unless otherwise specified.)
 
 We will frequently take a dataset and split it into examples used for training, validation, and evaluation. We'll discuss these terms near the end of this section.
@@ -66,7 +64,7 @@ m4question([[What are the shapes of $X_{valid}$ and $Y_{valid}$?]], [[$X_{valid}
 
 You might now wonder why we split a dataset into training/validation/evaluation partitions. It is reasonable to think that we would be better off using all 70000 images to train a neural network. However, we need some method for *measuring* how well a model is performing. That is the purpose of the validation set--to measure performance.
 
-If we measure performance directly on the training dataset, we might trick ourselves into thinking that the neural network will perform very well when it is eventually deployed as part of an application (for example, as a mobile app in which we convert an image of someones's handwritten notes into a text document), when in reality the network might only perform well specifically on the examples found in the training dataset. We will discuss this issue more in [@sec:general] when we cover overfitting and generalization.
+If we measure performance directly on the training dataset, we might trick ourselves into thinking that the neural network will perform very well when it is eventually deployed as part of an application (for example, as a mobile app in which we convert an image of someones's handwritten notes into a text document), when in reality the network might only perform well specifically on the examples found in the training dataset. We will discuss this issue more in [@sec:generalization] when we cover overfitting and generalization.
 
 Similarly, the evaluation partition is only used to compare performance after hyper-parameter tuning, which we'll discuss in [@sec:hyper].
 
@@ -88,3 +86,9 @@ Validation target shape : torch.Size([10000])
 
 This is slightly different than what we discussed. PyTorch expects us to use this dataset with a convolutional neural network. When we get to [@sec:cnns] we'll make more sense of this data format.
 ]])
+
+
+## A Non-ML Digit Classifier
+
+
+<!-- - non-ml example -->

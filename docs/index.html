@@ -255,14 +255,125 @@
 <p>I will not discuss every possible analogy, angle, or topic here. Instead, I will provide links to external resources so that you can choose which topics you want to investigate more closely. I will provide minimal code examples when appropriate.</p>
 <p><strong>Useful prior knowledge:</strong></p>
 <ul>
-<li>matrix calculus (see <a href="https://explained.ai/matrix-calculus/">The Matrix Calculus You Need For Deep Learning</a> by Terence Parr and Jeremy Howard)</li>
-<li>programming skills (I will show examples in Python)</li>
-<li>familiarity with computing tools (primarily a command line interface (CLI))</li>
+<li>matrix calculus</li>
+<li>programming skills</li>
+<li>familiarity with computing tools</li>
 </ul>
+<section id="background" class="level2" data-number="1.1">
+<h2 data-number="1.1"><span class="header-section-number">1.1</span> Background</h2>
+<p>Artificial neurons date back to the 1940s and neural networks to the 1980s. These are not new techniques, but we surprisingly still have a lot to learn about how they work and how to best create them. Research into neural networks accelerated in the late 2010s as we found ourselves with more data and more compute power.</p>
+<p>Neural networks (NN) are a type of machine learning (ML) technique. ML falls under the artificial intelligence (AI) umbrella. AI is a broad area, and it doesn’t hurt to think of it as including any system that appears to do something <em>useful</em> or <em>complex</em>. You’ll find that techniques often start out as AI, but then we remove that label after we start to better understand them. ML is just one type of AI, and it comprises all techniques that automatically learn from data. NNs learn from data, and specifically they do so using very little input from the designer.</p>
+<p><img src="img/AI.svg" /></p>
+<p>All of this is a bit vague, so let’s discuss some specific applications. Maybe we want a NN to:</p>
+<ul>
+<li>Tell us if an Amazon review is positive or negative based on text alone.</li>
+<li>Tell us if an image contains a cat or a dog.</li>
+<li>Translate an English sentence to German.</li>
+<li>Tell us where in an image we can find a boat.</li>
+<li>Automatically generate a caption for an image.</li>
+<li>Direct a robot around a building.</li>
+<li>Play a board game or a video game.</li>
+<li>Tell us about the orientation of a persons limb’s for a virtual reality game.</li>
+<li>Prevent an autonomous car from driving off the road.</li>
+<li>Group together all users of a social network that are likely to listen to the same music.</li>
+<li>Create a new piece of art.</li>
+<li>Predict the sale price of a house.</li>
+<li>Predict the future sale price of an investment.</li>
+<li>Suggest products to purchase or movies to watch.</li>
+<li>Diagnose an injury from an X-ray CT scan.</li>
+<li>Automatically summarize a news article.</li>
+<li>Label a news article as fake or real.</li>
+</ul>
+<p>This is just a small subset of what we could do. Nearly all applications have the same basic setup:</p>
+<p><img src="img/MLProgram.svg" /></p>
+<p>The core of the NN is the ability to take and input, perform some mathematical computations, and then produce the output. The “learning” part includes comparing the output to a known-to-be-correct output and then using this comparison to improve the NN. This setup, where we know the correct output, is known as “supervised learning.” Later parts of this guide will touch on “unsupervised learning” and “reinforcement learning,” but it is safe to say that most ML applications are in the area of supervised learning.</p>
+<details class="question">
+<summary>
+<strong>Question:</strong> What might be the input, output, label, and criterion if we want an NN to distinguish between pictures of cats and pictures of dogs?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> The input would be an image, the output would be a guess of cat or dog, the label would be the actual contents of the image, and the criterion should have something to do with if the output guess was correct or not.
+</div>
+</details>
+</section>
+<section id="additional-material" class="level2" data-number="1.2">
+<h2 data-number="1.2"><span class="header-section-number">1.2</span> Additional Material</h2>
+<ul>
+<li><a href="https://github.com/jakevdp/WhirlwindTourOfPython" title="A Whirlwind Tour of Python">A Whirlwind Tour of Python</a></li>
+<li><a href="https://explained.ai/matrix-calculus/">The Matrix Calculus You Need For Deep Learning</a></li>
+<li><a href="https://d2l.ai/chapter_introduction/index.html" title="Introduction — Dive into Deep Learning">Introduction — Dive into Deep Learning</a></li>
+</ul>
+</section>
 </section>
 <section id="sec:ethics" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Ethics</h1>
-<p><em>Being revised</em></p>
+<blockquote>
+<p>A bit of the maker goes into that which they make.</p>
+<p>– Unknown</p>
+</blockquote>
+<p>How is ethics important to AI? It can help us answer questions such as:</p>
+<ul>
+<li>What should we build?</li>
+<li>What should we <strong>not</strong> build?</li>
+<li>How should we build something?</li>
+</ul>
+<details class="question">
+<summary>
+<strong>Question:</strong> Who is in charge of enforcing ethics in AI?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> Everyone and no one. We do not have a special ethics force to guide us. The problem is clearly that if everyone is responsible, nobody will think they need to act.
+</div>
+</details>
+<details class="question">
+<summary>
+<strong>Question:</strong> When should you start to consider ethical implications?
+</summary>
+<div class="answer">
+<p><strong>Answer:</strong> From the very beginning. This will make it easier to:</p>
+<ul>
+<li>avoid pitfalls,</li>
+<li>analyze results from an ethical lens,</li>
+<li>avoid wasting time, and</li>
+<li>ensure the system <strong>is</strong> ethical.</li>
+</ul>
+</div>
+</details>
+<p>Ethics should be easy, but it is hard because we all come to the table with our own value systems, opinions, motivations, and power. What would you do if you were directed to build something you knew to be unethical? How does your answer change if your choices are to build or to quit?</p>
+<section id="key-topics" class="level2" data-number="2.1">
+<h2 data-number="2.1"><span class="header-section-number">2.1</span> Key Topics</h2>
+<p>This is not going to be an exhaustive discussion on ethics in AI and NNs. Instead, I’ll point you to the resources in the <a href="$additional-material-1">Additional Material</a> section. The topics below are taken from <a href="https://github.com/fastai/fastbook/blob/master/03_ethics.ipynb" title="fastbook/03_ethics.ipynb at master · fastai/fastbook">Ethics — fastbook</a>.</p>
+<p>Topics to consider:</p>
+<ol type="1">
+<li><strong>Recourse and accountability</strong>: who is responsible (and liable) for the developed system? The user, developer, manager, owner, company, other?</li>
+<li><strong>Feedback loops</strong>: does the system control creation of the next round of input data (such as a video recommendation system)?</li>
+<li><strong>Bias</strong>: all systems have bias; what bias is in your system? Is the source of bias historical, from measurement, from aggregation, from the representation, other?</li>
+<li><strong>Disinformation</strong>: can your system be used for nefarious goals?</li>
+</ol>
+</section>
+<section id="strategies" class="level2" data-number="2.2">
+<h2 data-number="2.2"><span class="header-section-number">2.2</span> Strategies</h2>
+<p>Here are some questions you can ask to prevent running into trouble (from <a href="https://ethics.fast.ai">Practical Data Ethics</a>):</p>
+<ul>
+<li>Should we even be doing this?</li>
+<li>What bias is in the data? (All data contains bias.)</li>
+<li>Can the code and data be audited?</li>
+<li>What are errors rates for different sub-groups?</li>
+<li>What is the accuracy of a simple rule-based alternative?</li>
+<li>What processes are in place to handle appeals/mistakes?</li>
+<li>How diverse is the team?</li>
+</ul>
+<p>When should you ask these questions? The Markkula Center for Applied Ethics recommends scheduling regular meeting in which you perform ethical risk sweeping. See their <a href="https://www.scu.edu/ethics-in-technology-practice/ethical-toolkit/" title="Ethical Toolkit - Markkula Center for Applied Ethics">Ethical Toolkit</a> for more information.</p>
+</section>
+<section id="additional-material-1" class="level2" data-number="2.3">
+<h2 data-number="2.3"><span class="header-section-number">2.3</span> Additional Material</h2>
+<ul>
+<li><a href="https://ethics.fast.ai">Practical Data Ethics</a></li>
+<li><a href="https://fairmlbook.org/">Fair ML Book</a></li>
+<li><a href="https://www.machine-ethics.net/podcast/">Machine Ethics Podcast</a></li>
+<li>Codes of Ethics from the <a href="https://www.acm.org/code-of-ethics">ACM</a>, <a href="https://www.ieee.org/about/corporate/governance/p7-8.html">IEEE</a>, and the <a href="https://www.datascienceassn.org/code-of-conduct.html">Data Science Association</a></li>
+</ul>
+</section>
 </section>
 <section id="sec:data" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Data</h1>
@@ -804,7 +915,7 @@ b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
 </section>
 <section id="neuron-batch-gradient-descent" class="level2" data-number="4.6">
 <h2 data-number="4.6"><span class="header-section-number">4.6</span> Neuron Batch Gradient Descent</h2>
-<p>Her is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the <code>get_binary_mnist_one_batch</code> function, but you can find that <a href="https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Source/Code/Python/utilities.py#L69">code in the repository for this guide</a>.</p>
+<p>Here is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the <code>get_binary_mnist_one_batch</code> function, but you can find that <a href="https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Source/Code/Python/utilities.py#L69">code in the repository for this guide</a>.</p>
 <div class="code-highlight">
 <pre><span style="color:#39424e;">   1</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">utilities</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">format_duration_with_prefix</span>
 <span style="color:#39424e;">   2</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timeit</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">default_timer</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timer</span>

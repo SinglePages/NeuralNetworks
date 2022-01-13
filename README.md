@@ -1,7 +1,11 @@
 # NeuralNetworks
 
+- section on initialization and input normalization
 - encourage implementing alongside
 - show how to do so with visual studio code
+
+Resources
+- https://pythonalgos.com/2021/12/06/create-a-neural-network-from-scratch-in-python-3/
 
 Ideas
 

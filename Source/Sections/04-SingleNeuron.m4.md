@@ -210,7 +210,7 @@ With the two update equations shown in the previous answer we have everything we
 
 ## Neuron Batch Gradient Descent
 
-Her is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the `get_binary_mnist_one_batch` function, but you can find that [code in the repository for this guide](https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Source/Code/Python/utilities.py#L69).
+Here is a complete example in which we train a neuron to classify images as either being of the digit 1 or the digit 7. Data processing details are hidden in the `get_binary_mnist_one_batch` function, but you can find that [code in the repository for this guide](https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Source/Code/Python/utilities.py#L69).
 
 
 m4code([[Source/Code/Python/04-04-NeuronMNIST.py]])

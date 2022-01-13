@@ -1,3 +1,3 @@
-# Overfitting and Generalization
+# Overfitting and Generalization {#sec:generalization}
 
 *Being revised*
