@@ -42,7 +42,7 @@ m4question([[Why do $w_k$ and $b$ not have superscripts?]], [[The parameters $w_
 
 ## Neuron with Python Standard Libraries
 
-This code does not include any "learning" (i.e., optimization), but it is worth showing just how simple it is to write a single neuron from scratch. Most of the code below is necessary only to create some faked input data.
+This code does **not** include any "learning" (i.e., optimization), but it is worth showing just how simple it is to write a single neuron from scratch. Most of the code below is necessary only to create some faked input data.
 
 
 m4code(Source/Code/Python/04-01-NeuronLoop.py)
@@ -123,7 +123,7 @@ We must find values for parameters $\mathbf{w}$ and $b$ to make $\hat y^{(i)} \a
 
 But what is an appropriate objective function (I'll refer to this as the *loss* function going forward)? How about the **mean-difference**?
 
-$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \sum_{i=1}^N \hat y^{(i)} - y^{(i)} \quad \color{red}{\text{Don't use this loss function.}}$$
+$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = \sum_{i=1}^N \hat y^{(i)} - y^{(i)} \quad \color{red}{\text{Don't use this loss function.}}$$
 
 m4question([[What is problematic about this loss function?]], [[
 
@@ -136,23 +136,37 @@ Let's start by looking at the output of the function for different values of the
    0.9                 0        0.9
    0.9                 1       -0.1
 
-The table indicates that loss can be positive or negative. But how should we interpret negative loss? We see that $ℒ$ is minimized in row 2 of the table, but this is not an ideal result. The sign of loss is not helpful--as we'll see shortly, we will use the sign of the derivative.]])
+The table indicates that loss can be positive or negative. But how should we interpret negative loss? We see that $ℒ$ is minimized in row 2 of the table, but this is not an ideal result. The sign of loss is not helpful---as we'll see shortly, we will use the sign of the derivative.]])
 
 A quick "fix" for the above loss function is to change it into the **mean-absolute-error** (MAE):
 
-$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \sum_{i=1}^N |\hat y^{(i)} - y^{(i)}| \quad \text{MAE works well with outliers.}$$
+\begin{align}
+ℒ(\mathbf{\hat{y}}, \mathbf{y}) &= \sum_{i=1}^N |\hat y^{(i)} - y^{(i)}|\\
+&= ||\mathbf{\hat{y}} - \mathbf{y}||_1
+\end{align}
+
+The second line shows a vectorized version using the L1-norm, which is the sum of the absolute values of the given vector. MAE is a good choice if your dataset includes outliers. MAE is also simple to interpret: it is the average deviation between your models guess and the correct answer.
 
 A common choice for a loss function when training a regression model is **Half mean-square-error** (Half-MSE):
 
-$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = \frac{1}{2N} \sum_{i=1}^N (\hat y^{(i)} - y^{(i)})^2$$
+\begin{align}
+ℒ(\mathbf{\hat{y}}, \mathbf{y}) &= \frac{1}{2N} \sum_{i=1}^N (\hat y^{(i)} - y^{(i)})^2\\
+&= \frac{1}{2N} ||(\mathbf{\hat{y}} - \mathbf{y})^2||_1
+\end{align}
+
+We are again using the L1-norm, but this time the vector we are norming is the element-wise squared values of the difference between the vectors $\mathbf{\hat y}$ and $\mathbf{y}$. Interpreting Half-MSE is a bit harder than MAE---you should multiply the result by two and then take the square-root.
+
+m4question([[Why might we compute the half-MSE instead of MSE or sum-square-error (SSE)?]], [[The \frac{1}{2} factor cancels out when we take the derivative. This scaling factor is unimportant since we will later multiply it by a learning rate, and can use that to achieve whatever effect we want.]])
 
 
-m4question([[Why might we compute the half-MSE instead of MSE?]], [[The \frac{1}{2} factor cancels out when we take the derivative. This scaling factor is unimportant since we will later multiply it by a learning rate.]])
+The standard choice when performing classification with a neuron is **binary cross-entropy** (BCE):
 
+\begin{align}
+ℒ(\mathbf{\hat{y}}, \mathbf{y}) &= - \sum_{i=1}^N (y^{(i)} \log{\hat y^{(i)}} + (1 - y^{(i)})\log{(1-\hat y^{(i)})})\\
+&= -||\mathbf{y} \cdot \log{ \mathbf{\hat y}} + (1 - \mathbf{y}) \cdot \log{(1- \mathbf{\hat y})}||_1
+\end{align}
 
-The standard choice when performing classification with a neuron is **binary cross-entropy**:
-
-$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = - \sum_{i=1}^N (y \log{\hat y^{(i)}} + (1 - y)\log{(1-\hat y^{(i)})})$$
+In the vectorized version, a "$\cdot$" denotes an element-wise multiplication.
 
 m4question([[Take some time to examine this loss function. What happens for various values of $\hat y^{(i)}$, $y^{(i)}$?]], [[
 
@@ -169,34 +183,80 @@ The tables shows that a larger difference between $\hat y^{(i)}$ and $y^{(i)}$ (
 
 Let's move forward using binary cross-entropy loss and the sigmoid activation function.
 
-We can only reduce loss by adjusting parameters (it doesn't make sense, for example, to minimize loss by changing the input values $X$ or the output targets $Y$). To determine **how** we should adjust parameters, we take the partial derivative of loss with respect to each parameter. We can do this using the chain rule in matrix form as follows:
+We can only reduce loss by adjusting parameters. It doesn't make sense, for example, to minimize loss by changing the input values $X$ or the output targets $Y$. Take a look at the following fictitious loss landscape.
+
+
+![The effect on loss $ℒ$ of adjusting parameter $w_k$.](img/LossLandscape.svg)
+
+The diagram above shows a curve for loss as a function of a single parameter, $w_k$. For this figure, we'll momentarily ignore that we might have dozens (or thousands or millions) of parameters. We want to find a new value for $w_k$ such that loss is reduced. You might wonder why I said "loss is reduced" instead of "loss is minimized." You might be familiar with techniques for finding an **exact** answer using an analytical (aka closed-form) solution.
+
+m4question([[What should we do if we wanted to **minimize** loss with respect to the parameter using an analytical solution?]], [[We should take the derivative, set it equal to zero, and then solve the set of linear equations. Here is an example using linear regression, which is very similar to our single neuron. Here is our model:
+
+$$\mathbf{\hat y} = X \mathbf{\theta},$$
+
+where $\theta$ is our vector of parameters. Here is our loss function (half-SSE):
+
+$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = \frac{1}{2} ||(\mathbf{\hat{y}} - \mathbf{y})^2||_1.$$
+
+Now we can take the partial derivative of loss with respect to parameters $\theta$. (Note that I substitute for $\mathbf{\hat y}$ on the third line.)
+
+\begin{align}
+\frac{\partial ℒ}{\partial \mathbf{\theta}} &=
+  \frac{\partial ||\frac{1}{2} (\mathbf{\hat{y}} - \mathbf{y})^2||_1}{\partial \mathbf{\theta}} \\
+&= ||\mathbf{\hat{y}} - \mathbf{y}||_1 \frac{\partial \mathbf{\hat y}}{\partial \mathbf{\theta}} \\
+&= ||X \mathbf{\theta} - \mathbf{y}||_1 \frac{\partial X \mathbf{\theta}}{\partial \mathbf{\theta}} \\
+&= ||X \mathbf{\theta} - \mathbf{y}||_1 X \\
+&= X^T X \mathbf{\theta} - X^T \mathbf{y}
+\end{align}
+
+We can now set this derivative to zero and solve for $\mathbf{\theta}$.
+
+\begin{align}
+\frac{\partial ℒ}{\partial \mathbf{\theta}} &= 0 \\
+X^T X \mathbf{\theta} - X^T \mathbf{y} &= 0 \\
+X^T X \mathbf{\theta} &= X^T \mathbf{y}
+\end{align}
+
+And now assuming that $X^T X$ is invertible (that the columns are linearly independent).
+
+$$\mathbf{\theta}^* = (X^T X)^{-1} X^T \mathbf{y}$$
+
+We now have an optimal solution (called $\mathbf{\theta}^*$) that minimizes loss. (See [Ordinary least squares - Wikipedia](https://en.wikipedia.org/wiki/Ordinary_least_squares "Ordinary least squares - Wikipedia") for more details.)
+]])
+
+For complex models, such as a neural network, analytical solutions are sometimes too slow or complicated to compute. Instead, we use an iterative (aka numerical) solution. You can think of numerical solutions as finding a good enough approximate solution as opposed to the exact correct solution. Surprisingly, the numerical solution is often more general than the exact solution---we'll discuss this in later sections.
+
+To determine **how** we should adjust parameters, we start the same way as finding the exact location and take the partial derivative of loss with respect to each parameter. Taking the single neuron, binary cross-entropy loss, and the sigmoid activation function the chain rule in matrix form is as follows.
 
 \begin{align}
 \frac{\partial ℒ}{\partial \mathbf{w}} &=
-    \frac{\partial ℒ}{\partial \hat{\mathbf{y}}}
-    \frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{z}}
+    \frac{\partial ℒ}{\partial \mathbf{\hat{y}}}
+    \frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}
     \frac{\partial \mathbf{z}}{\partial \mathbf{w}} \\
-&= \frac{1}{N}(\hat{\mathbf{y}} - \mathbf{y})X\\\\
+&= \frac{1}{N}(\mathbf{\hat{y}} - \mathbf{y})X\\\\
 \frac{\partial ℒ}{\partial b} &=
-    \frac{\partial ℒ}{\partial \hat{\mathbf{y}}}
-    \frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{z}}
+    \frac{\partial ℒ}{\partial \mathbf{\hat{y}}}
+    \frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}
     \frac{\partial \mathbf{z}}{\partial b} \\
 &= \frac{1}{N}\sum_{i=1}^N (\hat y^{(i)} - y^{(i)})
 \end{align}
 
 
-m4question([[Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?]], [[First, we cannot directly compute the partial derivative of $ℒ$ with respect to $\mathbf{w}$ (or $b$). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator ($\mathbf{w}$ and $b$). It is useful to look at the loss function when we substitute in values for $\hat y$ and $z$.
+m4question([[Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?]], [[First, we cannot directly compute the partial derivative of $ℒ$ with respect to $\mathbf{w}$ (or $b$). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator ($\mathbf{w}$ and $b$). It is useful to look at the loss function when we substitute in values for $\mathbf{\hat y}$ and $\mathbf{z}$.
 
-$$ℒ(\hat{\mathbf{y}}, \mathbf{y}) = - \sum_{i=1}^N (y \log{\sigma(X \mathbf{w} + \mathbf{1} b)} + (1 - y)\log{(1-\sigma(X \mathbf{w} + \mathbf{1} b))})$$
+$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = -||\mathbf{y} \cdot \log{\sigma(X \mathbf{w} + \mathbf{1} b)} + (1 - \mathbf{y}) \cdot \log{(1-\sigma(X \mathbf{w} + \mathbf{1} b))}||_1$$
 
-In the above equation we can more easily see how the chain-rule comes into play. The parameter $\mathbf{w}$ is nested within a call to $\sigma$ which is nested within a call to $\log$ when computing \frac{\partial ℒ}{\partial \mathbf{w}}.
+
+
+
+In the above equation we can more easily see how the chain-rule comes into play. The parameter $\mathbf{w}$ is nested within a call to $\sigma$ which is nested within a call to $\log$ when computing $\frac{\partial ℒ}{\partial \mathbf{w}}$.
 ]])
 
 
-m4question([[What do we do with the partial derivatives $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[We use these terms to update parameters
+m4question([[What do we do with the partial derivatives $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[We use these terms to update model parameters.
 
 \begin{align}
-w &:= w - \alpha \frac{\partial ℒ}{\partial \mathbf{w}} \\
+\mathbf{w} &:= \mathbf{w} - \alpha \frac{\partial ℒ}{\partial \mathbf{w}} \\
 b &:= b - \alpha \frac{\partial ℒ}{\partial b}
 \end{align}
 

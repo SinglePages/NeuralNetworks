@@ -5,13 +5,13 @@
 > -- Unknown
 
 
-How is ethics important to AI? It can help us answer questions such as:
+How is ethics important to NN (and AI in general)? It can help us answer questions such as:
 
 - What should we build?
 - What should we **not** build?
 - How should we build something?
 
-m4question([[Who is in charge of enforcing ethics in AI?]], [[Everyone and no one. We do not have a special ethics force to guide us. The problem is clearly that if everyone is responsible, nobody will think they need to act.]])
+m4question([[Who is in charge of enforcing ethics in AI?]], [[Everyone and no one. We do not have a special *ethics force* to guide us. The problem is clearly that if everyone is responsible, nobody will think they need to act.]])
 
 m4question([[When should you start to consider ethical implications?]], [[From the very beginning. This will make it easier to:
 
@@ -21,11 +21,11 @@ m4question([[When should you start to consider ethical implications?]], [[From t
 - ensure the system **is** ethical.
 ]])
 
-Ethics should be easy, but it is hard because we all come to the table with our own value systems, opinions, motivations, and power. What would you do if you were directed to build something you knew to be unethical? How does your answer change if your choices are to build or to quit?
+Being ethical sounds like it should be easy, however we all come to the table with our own value systems, opinions, motivations, and power. What would you do if you were directed to build something you knew to be unethical? How does your answer change if your choices are to build or to quit?
 
 ## Key Topics
 
-This is not going to be an exhaustive discussion on ethics in AI and NNs. Instead, I'll point you to the resources in the [Additional Material]($additional-material-1) section. The topics below are taken from [Ethics — fastbook](https://github.com/fastai/fastbook/blob/master/03_ethics.ipynb "fastbook/03_ethics.ipynb at master · fastai/fastbook").
+This is not going to be an exhaustive discussion on ethics in AI and NNs. Instead, I'll point you to the resources in the [Additional Material](#additional-material-1) section. The topics below are taken from [Ethics — fastbook](https://github.com/fastai/fastbook/blob/master/03_ethics.ipynb "fastbook/03_ethics.ipynb at master · fastai/fastbook").
 
 Topics to consider:
 
@@ -36,15 +36,27 @@ Topics to consider:
 
 ## Strategies
 
-Here are some questions you can ask to prevent running into trouble (from [Practical Data Ethics](https://ethics.fast.ai)):
+Here are some questions you can ask to prevent running into trouble:
 
-- Should we even be doing this?
-- What bias is in the data? (All data contains bias.)
-- Can the code and data be audited?
-- What are errors rates for different sub-groups?
-- What is the accuracy of a simple rule-based alternative?
-- What processes are in place to handle appeals/mistakes?
-- How diverse is the team?
+- General Questions:
+
+    + Should we even be doing this?
+    + What might be the accuracy of a simple non-ML alternative?
+    + What processes will we use to handle appeals/mistakes?
+    + How diverse is our team?
+
+- Data Questions:
+
+    + Is our data valid for its intended use?
+    + What bias could be in our data? (All data contains bias.)
+    + How could we minimize bias in our data and model?
+    + How should we “audit” our code and data?
+
+- Impact Questions:
+
+    + Do we expect different errors rates for different sub-groups in the data?
+    + What are likely misinterpretations of the results and what can be done to prevent those misinterpretations?
+    + How might we impinge individuals' privacy and/or anonymity?
 
 When should you ask these questions? The Markkula Center for Applied Ethics recommends scheduling regular meeting in which you perform ethical risk sweeping. See their [Ethical Toolkit](https://www.scu.edu/ethics-in-technology-practice/ethical-toolkit/ "Ethical Toolkit - Markkula Center for Applied Ethics") for more information.
 

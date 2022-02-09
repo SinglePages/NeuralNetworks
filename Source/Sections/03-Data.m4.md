@@ -1,5 +1,12 @@
 # Data {#sec:data}
 
+
+
+> Tidy datasets are all alike but every messy dataset is messy in its own way.
+>
+> -- [Hadley Wickham](https://www.jstatsoft.org/article/view/v059i10/)
+
+
 Perhaps the most important aspect of a neural network is the dataset. Let
 
 $$\mathcal{D} = \{X, Y\}$$
