@@ -921,6 +921,15 @@ similarity-based model.
 <section id="single-neuron" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Single
 Neuron</h1>
+<blockquote>
+<p>A single neuron in the brain is an incredibly complex machine that
+even today we don’t understand. A single “neuron” in a neural network is
+an incredibly simple mathematical function that captures a minuscule
+fraction of the complexity of a biological neuron.</p>
+<p>– <a
+href="https://www.wired.com/2015/02/google-brains-co-inventor-tells-why-hes-building-chinese-neural-networks/">Andrew
+Ng</a></p>
+</blockquote>
 <p>When our model is a single neuron we can only produce a single
 output. So, <span class="math inline">\(n_y=1\)</span> for this section.
 Sticking to our MNSIT digits example from above, we could train a single
@@ -1104,44 +1113,6 @@ graphics cards (GPUs) to quickly compute the output of matrix
 multiplications.</p>
 <div class="code-highlight">
 <pre>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 1  </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 1  </span><span style="color:#0000ee;">│</span><span style="color:#75715e;">#!/usr/bin/env python</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 2  </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 2  </span><span style="color:#0000ee;">│</span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 3  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">from</span><span style="color:#f8f8f2;background-color:#a61719;"> math </span><span style="color:#f92672;background-color:#a61719;">import</span><span style="color:#f8f8f2;background-color:#a61719;"> exp</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 4  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">from</span><span style="color:#f8f8f2;background-color:#a61719;"> random </span><span style="color:#f92672;background-color:#a61719;">import</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 5  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 6  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 7  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">def</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#a6e22e;background-color:#a61719;">sigmoid</span><span style="color:#f8f8f2;background-color:#a61719;">(</span><span style="color:#fd971f;background-color:#a61719;">z</span><span style="color:#f8f8f2;background-color:#a61719;">: </span><span style="color:#a6e22e;background-color:#a61719;">float</span><span style="color:#f8f8f2;background-color:#a61719;">) -&gt; </span><span style="color:#a6e22e;background-color:#a61719;">float</span><span style="color:#f8f8f2;background-color:#a61719;">:</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 8  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">    </span><span style="color:#75715e;background-color:#a61719;">&quot;&quot;&quot;The sigmoid/logistic activation function.&quot;&quot;&quot;</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 9  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">    </span><span style="color:#f92672;background-color:#a61719;">return</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">/</span><span style="color:#f8f8f2;background-color:#a61719;"> (</span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> exp(</span><span style="color:#f92672;background-color:#a61719;">-</span><span style="color:#f8f8f2;background-color:#a61719;">z))</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 3  </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#22a322;">import</span><span style="color:#f8f8f2;background-color:#22a322;"> torch</span><span style="background-color:#22a322;"></span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 10 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 4  </span><span style="color:#0000ee;">│</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 11 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 5  </span><span style="color:#0000ee;">│</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 12 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 6  </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># The number of examples in our dataset</span>
-
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 14 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 8  </span><span style="color:#0000ee;">│</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 15 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 9  </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># Randomly generate some input data</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 10 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;">nx </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> </span><span style="color:#be84ff;">4</span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">x1 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> [gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">) </span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#ffffff;background-color:#a61719;">_</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">range</span><span style="color:#f8f8f2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 18 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">x2 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> [gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">) </span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#ffffff;background-color:#a61719;">_</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">range</span><span style="color:#f8f8f2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 19 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">x3 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> [gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">) </span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#ffffff;background-color:#a61719;">_</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">range</span><span style="color:#f8f8f2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">x4 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> [gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">) </span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#ffffff;background-color:#a61719;">_</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">range</span><span style="color:#f8f8f2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 11 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#22a322;">X </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> torch.randn(N, nx)</span><span style="background-color:#22a322;"></span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 21 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 12 </span><span style="color:#0000ee;">│</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 22 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 13 </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># Generate random neuron parameters</span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 23 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">w1 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 24 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">w2 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 25 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">w3 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 26 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">w4 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 14 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#22a322;">w </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> torch.randn(nx)</span><span style="background-color:#22a322;"></span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 27 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 15 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;">b </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> </span><span style="color:#be84ff;">0</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 28 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 29 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># Compute neuron output for each of the N examples</span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 30 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> x1i, x2i, x3i, x4i </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">zip</span><span style="color:#f8f8f2;background-color:#a61719;">(x1, x2, x3, x4):</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 31 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">    zi </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> w1 </span><span style="color:#f92672;background-color:#a61719;">*</span><span style="color:#f8f8f2;background-color:#a61719;"> x1i </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> w2 </span><span style="color:#f92672;background-color:#a61719;">*</span><span style="color:#f8f8f2;background-color:#a61719;"> x2i </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> w3 </span><span style="color:#f92672;background-color:#a61719;">*</span><span style="color:#f8f8f2;background-color:#a61719;"> x3i </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> w4 </span><span style="color:#f92672;background-color:#a61719;">*</span><span style="color:#f8f8f2;background-color:#a61719;"> x4i </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> b</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 32 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">    ai </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> sigmoid(zi)</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 18 </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#22a322;">for</span><span style="color:#f8f8f2;background-color:#22a322;"> xi </span><span style="color:#f92672;background-color:#22a322;">in</span><span style="color:#f8f8f2;background-color:#22a322;"> X:</span><span style="background-color:#22a322;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 19 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#22a322;">    zi </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> xi </span><span style="color:#f92672;background-color:#22a322;">&#64;</span><span style="color:#f8f8f2;background-color:#22a322;"> w </span><span style="color:#f92672;background-color:#22a322;">+</span><span style="color:#f8f8f2;background-color:#22a322;"> b</span><span style="background-color:#22a322;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#22a322;">    ai </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> </span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">torch.</span><span style="color:#f8f8f2;background-color:#22a322;">sigmoid(zi)</span><span style="background-color:#22a322;"></span>
 </pre>
 <div class="code-caption">
 <a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-02-NeuronDot.py">Link
@@ -1173,14 +1144,6 @@ operations.</p>
 \end{align}\]</span></p>
 <div class="code-highlight">
 <pre>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 15 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 15 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;">b </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> </span><span style="color:#be84ff;">0</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span>
-<span style="color:#0000ee;"></span><span style="color:#444444;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># Compute neuron output for each of the N examples</span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 18 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> xi </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> X:</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 19 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#f8f8f2;background-color:#901011;">    zi </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="font-weight:bold;color:#7f7f7f;background-color:#901011;">xi</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">&#64;</span><span style="color:#f8f8f2;background-color:#a61719;"> w </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> b</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#f8f8f2;background-color:#901011;">    ai </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> torch.sigmoid(</span><span style="font-weight:bold;color:#7f7f7f;background-color:#901011;">zi</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 18 </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#f8f8f2;background-color:#006000;">z </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> </span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">X</span><span style="color:#f8f8f2;background-color:#22a322;"> </span><span style="color:#f92672;background-color:#22a322;">&#64;</span><span style="color:#f8f8f2;background-color:#22a322;"> w </span><span style="color:#f92672;background-color:#22a322;">+</span><span style="color:#f8f8f2;background-color:#22a322;"> b</span><span style="background-color:#22a322;"></span>
-<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 19 </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#f8f8f2;background-color:#006000;">yhat </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> torch.sigmoid(</span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">z</span><span style="color:#f8f8f2;background-color:#22a322;">)</span><span style="background-color:#22a322;"></span>
 </pre>
 <div class="code-caption">
 <a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-03-NeuronVectorized.py">Link
@@ -1694,8 +1657,15 @@ Accuracy before training: 0.54
 data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Neural
 Networks and Backpropagation</h1>
-<p>Below is our first neural network. We’ll start by using this diagram
-to formulate terminology and conventions.</p>
+<blockquote>
+<p>Once your computer is pretending to be a neural net, you get it to be
+able to do a particular task by just showing it a whole lot of
+examples.</p>
+<p>– Geoffrey Hinton</p>
+</blockquote>
+<p>Below is our first neural network (aka multi-layer perceptron). We’ll
+start by using this diagram to formulate terminology and
+conventions.</p>
 <figure>
 <img src="img/2LayerNetwork.svg" alt="A two-layer neural network." />
 <figcaption aria-hidden="true">A two-layer neural network.</figcaption>
@@ -1765,10 +1735,12 @@ W^{[l]} &amp;=
     b_{n_l}^{[l]} \\
 \end{bmatrix}
 \end{align}\]</span></p>
-<p>Before continuing, you should compare these equations to the diagram
-above.</p>
-<p>Next we have linear values and activations for each neuron in a layer
-(these are for all training examples):</p>
+<p>Compare these equations to the diagram above. Notice how the top
+neuron in layer 1 would have its associated parameters in the first row
+of <span class="math inline">\(W^{[1]}\)</span> and the first value in
+<span class="math inline">\(\mathbf{b}^{[1]}\)</span>.</p>
+<p>Next we have the vectorized linear and activation equations for each
+neuron in a layer (these are for all training examples):</p>
 <p><span class="math display">\[\begin{align}
 Z^{[l]} &amp;= A^{[l-1]} W^{[l]T} + \mathbf{1} \mathbf{b}^{[l]T}\\
 A^{[l]} &amp;= g^{[l]}(Z^{[l]})
@@ -1787,6 +1759,9 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.randn(nl, <span class="dv">1</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>ONE <span class="op">=</span> torch.ones(N, <span class="dv">1</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ONE <span class="op">@</span> b.T)</span></code></pre></div>
+<p>Note that most neural network frameworks handle this for you in the
+form of <a
+href="https://pytorch.org/docs/stable/notes/broadcasting.html">broadcasting</a>.</p>
 </div>
 </details>
 <details class="question">
@@ -1879,41 +1854,71 @@ class="math inline">\(\mathbf{w}_{j}^{[l]}\)</span>.</p>
 Backpropagation</h2>
 <p>Just like for the single neuron, we want to find values for <span
 class="math inline">\(W^{[l]}\)</span> and <span
-class="math inline">\(b^{[l]}\)</span> (for <span
+class="math inline">\(\mathbf{b}^{[l]}\)</span> (for <span
 class="math inline">\(l = 1, 2, ..., L\)</span>) such that <span
-class="math inline">\(\hat Y \approx Y\)</span>. Instead of looking at a
-more general case, let’s work through gradient descent for the network
-above where</p>
+class="math inline">\(A^{[L]} \approx Y\)</span> (<span
+class="math inline">\(A^{[L]}\)</span> is another name for <span
+class="math inline">\(\hat Y\)</span>). Instead of looking at a more
+general case, let’s work through gradient descent for the two-layer
+network above where we</p>
 <ul>
-<li>We have three inputs (<span
-class="math inline">\(n_0=3\)</span>)</li>
-<li>We have two neurons in layer 1 (<span
-class="math inline">\(n_1=2\)</span>)</li>
-<li>We have three neurons in layer 2 (<span
-class="math inline">\(n_2=3\)</span>)</li>
-<li>We are using sigmoid activations for all neurons</li>
-<li>We are using the mean-square-error loss function</li>
+<li>have three inputs (<span
+class="math inline">\(n_x=n_0=3\)</span>),</li>
+<li>have two neurons in layer 1 (<span
+class="math inline">\(n_1=2\)</span>),</li>
+<li>have three neurons in layer 2 (<span
+class="math inline">\(n_y=n_2=3\)</span>),</li>
+<li>are using sigmoid activations for all neurons, and</li>
+<li>are using the binary-cross-entropy (BCE) loss function.</li>
 </ul>
-<p>For this network, we need to compute these partial derivatives:</p>
+<p>You can imagine that we are performing multi-label classification.
+For this network, we need to compute these partial derivatives:</p>
 <p><span class="math display">\[
 \frac{\partial{ℒ}}{\partial{W^{[1]}}}^①,
-\frac{\partial{ℒ}}{\partial{b^{[1]}}}^②,
+\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[1]}}}^②,
 \frac{\partial{ℒ}}{\partial{W^{[2]}}}^③,
-\frac{\partial{ℒ}}{\partial{b^{[2]}}}^④
+\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[2]}}}^④
 \]</span></p>
 <p>We are going to start at layer 2 and work backward through the
 network to layer 1. As we compute these derivatives answer for yourself
 “why do we work backward through the network?”</p>
 <p>This process of computing derivatives backward through the network is
 why this process if referred to as backpropagation–we’ll compute values
-and propagate them backward to earlier layers in the network.</p>
-<p>TODO: compute graph</p>
+and propagate them backward to earlier layers in the network. This is
+easier to see when viewing the compute graph.</p>
 <figure>
 <img src="img/ComputeGraph.svg"
-alt="Compute graph for 2-layer network." />
-<figcaption aria-hidden="true">Compute graph for 2-layer
+alt="Compute graph for two-layer network." />
+<figcaption aria-hidden="true">Compute graph for two-layer
 network.</figcaption>
 </figure>
+<p>Notice how the input flows forward from top-to-bottom, but gradients
+flow backward (from bottom-to-top). This image corresponds to the
+network above if you rotate it 90 degrees anti-clockwise. Let’s start
+with the term labeled ④ above. By the chain-rule, we can break it into
+three components.</p>
+<p><span class="math display">\[
+\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[2]}}}^④ =
+    \frac{\partial{ℒ}}{\partial{A^{[2]}}}
+    \frac{\partial{A^{[2]}}}{\partial{Z^{[2]}}}
+    \frac{\partial{Z^{[2]}}}{\partial{\mathbf{b}^{[2]}}}
+\]</span></p>
+<p><span class="math display">\[\begin{align}
+\frac{\partial{ℒ}}{\partial{A^{[2]}}} &amp;=
+    \frac{-\partial}{\partial{A^{[2]}}} ||Y \cdot \log{A^{[2]}} + (1 -
+Y) \cdot \log{(1 - A^{[2]})}||_1\\
+    &amp;= \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\\[20pt]
+
+\frac{\partial{A^{[2]}}}{\partial{Z^{[2]}}} &amp;=
+    \frac{\partial}{\partial{Z^{[2]}}} \sigma(Z^{[2]})\\
+    &amp;= \sigma(Z^{[2]})(1 - \sigma(Z^{[2]}))\\
+    &amp;= A^{[2]}(1 - A^{[2]})\\[20pt]
+
+\frac{\partial{Z^{[2]}}}{\partial{\mathbf{b}^{[2]}}} &amp;=
+    \frac{\partial}{\partial{\mathbf{b}^{[2]}}} A^{[1]} W^{[2]T} +
+\mathbf{1} \mathbf{b}^{[2]T}\\
+    &amp;= \mathbf{1}
+\end{align}\]</span></p>
 </section>
 </section>
 <section id="stochastic-gradient-descent" class="level1"

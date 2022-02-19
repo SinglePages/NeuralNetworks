@@ -1,9 +1,11 @@
 # Neural Networks and Backpropagation
 
-<!-- - mlp
-- deep networks -->
+> Once your computer is pretending to be a neural net, you get it to be able to do a particular task by just showing it a whole lot of examples.
+>
+> -- Geoffrey Hinton
 
-Below is our first neural network. We'll start by using this diagram to formulate terminology and conventions.
+
+Below is our first neural network (aka multi-layer perceptron). We'll start by using this diagram to formulate terminology and conventions.
 
 
 ![A two-layer neural network.](img/2LayerNetwork.svg)
@@ -38,9 +40,9 @@ Let's start with showing the notation for parameters from any layer $l = 1, 2, .
 W^{[l]} &= m4matrix([["w_{row,col}^{[l]}"]], "n_l", "n_{l-1}") \\
 \mathbf{b}^{[l]} &= m4colvec("b_{row}^{[l]}", "n_l")\end{align}
 
-Before continuing, you should compare these equations to the diagram above.
+Compare these equations to the diagram above. Notice how the top neuron in layer 1 would have its associated parameters in the first row of $W^{[1]}$ and the first value in $\mathbf{b}^{[1]}$.
 
-Next we have linear values and activations for each neuron in a layer (these are for all training examples):
+Next we have the vectorized linear and activation equations for each neuron in a layer (these are for all training examples):
 
 
 \begin{align}
@@ -57,7 +59,12 @@ b = torch.randn(nl, 1)
 ONE = torch.ones(N, 1)
 print(ONE @ b.T)
 ```
+
+Note that most neural network frameworks handle this for you in the form of [broadcasting](https://pytorch.org/docs/stable/notes/broadcasting.html).
 ]])
+
+
+
 
 m4question([[What is the shape of $Z^{[l]}$?]], [[$Z^{[l]}$ is $(N \times n_l)$.
 $$Z^{[l]} = m4matrix("z_{col}^{[l](row)}", "N", "n_l")$$
@@ -82,31 +89,56 @@ You should also think about the shapes of $\mathbf{a}^{[l-1](i)}$ and $\mathbf{w
 
 ## Backpropagation
 
-Just like for the single neuron, we want to find values for $W^{[l]}$ and $b^{[l]}$ (for $l = 1, 2, ..., L$) such that $\hat Y \approx Y$. Instead of looking at a more general case, let's work through gradient descent for the network above where
+Just like for the single neuron, we want to find values for $W^{[l]}$ and $\mathbf{b}^{[l]}$ (for $l = 1, 2, ..., L$) such that $A^{[L]} \approx Y$ ($A^{[L]}$ is another name for $\hat Y$). Instead of looking at a more general case, let's work through gradient descent for the two-layer network above where we
 
-- We have three inputs ($n_0=3$)
-- We have two neurons in layer 1 ($n_1=2$)
-- We have three neurons in layer 2 ($n_2=3$)
-- We are using sigmoid activations for all neurons
-- We are using the mean-square-error loss function
+- have three inputs ($n_x=n_0=3$),
+- have two neurons in layer 1 ($n_1=2$),
+- have three neurons in layer 2 ($n_y=n_2=3$),
+- are using sigmoid activations for all neurons, and
+- are using the binary-cross-entropy (BCE) loss function.
 
-For this network, we need to compute these partial derivatives:
+<!-- TODO: multi-label in terms. -->
+
+You can imagine that we are performing multi-label classification. For this network, we need to compute these partial derivatives:
 
 $$
 \frac{\partial{ℒ}}{\partial{W^{[1]}}}^①,
-\frac{\partial{ℒ}}{\partial{b^{[1]}}}^②,
+\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[1]}}}^②,
 \frac{\partial{ℒ}}{\partial{W^{[2]}}}^③,
-\frac{\partial{ℒ}}{\partial{b^{[2]}}}^④
+\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[2]}}}^④
 $$
 
 We are going to start at layer 2 and work backward through the network to layer 1. As we compute these derivatives answer for yourself "why do we work backward through the network?"
 
-This process of computing derivatives backward through the network is why this process if referred to as backpropagation--we'll compute values and propagate them backward to earlier layers in the network.
+This process of computing derivatives backward through the network is why this process if referred to as backpropagation--we'll compute values and propagate them backward to earlier layers in the network. This is easier to see when viewing the compute graph.
 
-TODO: compute graph
 
-![Compute graph for 2-layer network.](img/ComputeGraph.svg)
+![Compute graph for two-layer network.](img/ComputeGraph.svg)
 
+
+Notice how the input flows forward from top-to-bottom, but gradients flow backward (from bottom-to-top). This image corresponds to the network above if you rotate it 90 degrees anti-clockwise. Let's start with the term labeled ④ above. By the chain-rule, we can break it into three components.
+
+$$
+\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[2]}}}^④ = 
+	\frac{\partial{ℒ}}{\partial{A^{[2]}}}
+	\frac{\partial{A^{[2]}}}{\partial{Z^{[2]}}}
+	\frac{\partial{Z^{[2]}}}{\partial{\mathbf{b}^{[2]}}}
+$$
+
+\begin{align}
+\frac{\partial{ℒ}}{\partial{A^{[2]}}} &=
+	\frac{-\partial}{\partial{A^{[2]}}} ||Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1 - A^{[2]})}||_1\\
+	&= \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\\[20pt]
+
+\frac{\partial{A^{[2]}}}{\partial{Z^{[2]}}} &=
+	\frac{\partial}{\partial{Z^{[2]}}} \sigma(Z^{[2]})\\
+	&= \sigma(Z^{[2]})(1 - \sigma(Z^{[2]}))\\
+	&= A^{[2]}(1 - A^{[2]})\\[20pt]
+
+\frac{\partial{Z^{[2]}}}{\partial{\mathbf{b}^{[2]}}} &=
+	\frac{\partial}{\partial{\mathbf{b}^{[2]}}} A^{[1]} W^{[2]T} + \mathbf{1} \mathbf{b}^{[2]T}\\
+	&= \mathbf{1}
+\end{align}
 
 <!--
 ## Input Normalization
