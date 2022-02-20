@@ -128,7 +128,7 @@ We must find values for parameters $\mathbf{w}$ and $b$ to make $\hat y^{(i)} \a
 
 But what is an appropriate objective function (I'll refer to this as the *loss* function going forward)? How about the **mean-difference**?
 
-$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = \sum_{i=1}^N \hat y^{(i)} - y^{(i)} \quad \color{red}{\text{Don't use this loss function.}}$$
+$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = \sum_{i=1}^N (\hat y^{(i)} - y^{(i)}) \quad \color{red}{\text{Don't use this loss function.}}$$
 
 m4question([[What is problematic about this loss function?]], [[
 
@@ -206,10 +206,10 @@ $$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = \frac{1}{2} ||(\mathbf{\hat{y}} - \mathbf{
 Now we can take the partial derivative of loss with respect to parameters $\theta$. (Note that I substitute for $\mathbf{\hat y}$ on the third line.)
 
 \begin{align}
-\frac{\partial ℒ}{\partial \mathbf{\theta}} &=
-  \frac{\partial ||\frac{1}{2} (\mathbf{\hat{y}} - \mathbf{y})^2||_1}{\partial \mathbf{\theta}} \\
-&= ||\mathbf{\hat{y}} - \mathbf{y}||_1 \frac{\partial \mathbf{\hat y}}{\partial \mathbf{\theta}} \\
-&= ||X \mathbf{\theta} - \mathbf{y}||_1 \frac{\partial X \mathbf{\theta}}{\partial \mathbf{\theta}} \\
+\frac{∂ ℒ}{∂ \mathbf{\theta}} &=
+  \frac{∂ ||\frac{1}{2} (\mathbf{\hat{y}} - \mathbf{y})^2||_1}{∂ \mathbf{\theta}} \\
+&= ||\mathbf{\hat{y}} - \mathbf{y}||_1 \frac{∂ \mathbf{\hat y}}{∂ \mathbf{\theta}} \\
+&= ||X \mathbf{\theta} - \mathbf{y}||_1 \frac{∂ X \mathbf{\theta}}{∂ \mathbf{\theta}} \\
 &= ||X \mathbf{\theta} - \mathbf{y}||_1 X \\
 &= X^T X \mathbf{\theta} - X^T \mathbf{y}
 \end{align}
@@ -217,7 +217,7 @@ Now we can take the partial derivative of loss with respect to parameters $\thet
 We can now set this derivative to zero and solve for $\mathbf{\theta}$.
 
 \begin{align}
-\frac{\partial ℒ}{\partial \mathbf{\theta}} &= 0 \\
+\frac{∂ ℒ}{∂ \mathbf{\theta}} &= 0 \\
 X^T X \mathbf{\theta} - X^T \mathbf{y} &= 0 \\
 X^T X \mathbf{\theta} &= X^T \mathbf{y}
 \end{align}
@@ -234,41 +234,56 @@ For complex models, such as a neural network, analytical solutions are sometimes
 To determine **how** we should adjust parameters, we start the same way as finding the exact location and take the partial derivative of loss with respect to each parameter. Taking the single neuron, binary cross-entropy loss, and the sigmoid activation function the chain rule in matrix form is as follows.
 
 \begin{align}
-\frac{\partial ℒ}{\partial \mathbf{w}} &=
-    \frac{\partial ℒ}{\partial \mathbf{\hat{y}}}
-    \frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}
-    \frac{\partial \mathbf{z}}{\partial \mathbf{w}} \\
-&= \frac{1}{N}(\mathbf{\hat{y}} - \mathbf{y})X\\\\
-\frac{\partial ℒ}{\partial b} &=
-    \frac{\partial ℒ}{\partial \mathbf{\hat{y}}}
-    \frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}
-    \frac{\partial \mathbf{z}}{\partial b} \\
+\frac{∂ ℒ}{∂ \mathbf{w}} &=
+    \frac{∂ ℒ}{∂ \mathbf{\hat{y}}}
+    \frac{∂ \mathbf{\hat{y}}}{∂ \mathbf{z}}
+    \frac{∂ \mathbf{z}}{∂ \mathbf{w}} \\
+&= \frac{1}{N}||\mathbf{\hat{y}} - \mathbf{y}||_1X\\[20pt]
+\frac{∂ ℒ}{∂ b} &=
+    \frac{∂ ℒ}{∂ \mathbf{\hat{y}}}
+    \frac{∂ \mathbf{\hat{y}}}{∂ \mathbf{z}}
+    \frac{∂ \mathbf{z}}{∂ b} \\
 &= \frac{1}{N}\sum_{i=1}^N (\hat y^{(i)} - y^{(i)})
 \end{align}
 
 
 m4question([[Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?]], [[First, we cannot directly compute the partial derivative of $ℒ$ with respect to $\mathbf{w}$ (or $b$). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator ($\mathbf{w}$ and $b$). It is useful to look at the loss function when we substitute in values for $\mathbf{\hat y}$ and $\mathbf{z}$.
 
-$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = -||\mathbf{y} \cdot \log{\sigma(X \mathbf{w} + \mathbf{1} b)} + (1 - \mathbf{y}) \cdot \log{(1-\sigma(X \mathbf{w} + \mathbf{1} b))}||_1$$
+$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = -||\mathbf{y} \cdot \log{σ(X \mathbf{w} + \mathbf{1} b)} + (1 - \mathbf{y}) \cdot \log{(1-σ(X \mathbf{w} + \mathbf{1} b))}||_1$$
 
 
 
 
-In the above equation we can more easily see how the chain-rule comes into play. The parameter $\mathbf{w}$ is nested within a call to $\sigma$ which is nested within a call to $\log$ when computing $\frac{\partial ℒ}{\partial \mathbf{w}}$.
+In the above equation we can more easily see how the chain-rule comes into play. The parameter $\mathbf{w}$ is nested within a call to $σ$ which is nested within a call to $\log$ when computing $\frac{∂ ℒ}{∂ \mathbf{w}}$.
 ]])
 
 
-m4question([[What do we do with the partial derivatives $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[We use these terms to update model parameters.
+m4question([[What do we do with the partial derivatives $\frac{∂ ℒ}{∂ \mathbf{w}}$ and $\frac{∂ ℒ}{∂ b}$?]], [[We use these terms to update model parameters.
 
 \begin{align}
-\mathbf{w} &:= \mathbf{w} - \alpha \frac{\partial ℒ}{\partial \mathbf{w}} \\
-b &:= b - \alpha \frac{\partial ℒ}{\partial b}
+\mathbf{w} &:= \mathbf{w} - \alpha \frac{∂ ℒ}{∂ \mathbf{w}} \\
+b &:= b - \alpha \frac{∂ ℒ}{∂ b}
 \end{align}
 
 ]])
 
 
-m4question([[What is the derivative of the sigmoid function, $\sigma$?]], [[TODO: sigmoid derivation]])
+m4question([[What is the derivative of the sigmoid function, $σ$?]], [[
+
+\begin{align}
+\frac{d}{dz} σ(z) &= 
+  \frac{d}{dz} \left(\frac{1}{1 + e^{-z}}\right) \\
+&= \frac{d}{dz} \left(1 + e^{-z} \right)^{-1} \\
+&= -(1 + e^{-z})^{-2}(-e^{-z}) \\
+&= \frac{e^{-z}}{\left(1 + e^{-z}\right)^2} \\
+&= \frac{1}{1 + e^{-z}\ } \cdot \frac{e^{-z}}{1 + e^{-z}}  \\
+&= \frac{1}{1 + e^{-z}\ } \cdot \frac{e^{-z} + 1 - 1}{1 + e^{-z}}  \\
+&= \frac{1}{1 + e^{-z}\ } \cdot \left( \frac{1 + e^{-z}}{1 + e^{-z}} - \frac{1}{1 + e^{-z}} \right) \\
+&= \frac{1}{1 + e^{-z}\ } \cdot \left( 1 - \frac{1}{1 + e^{-z}} \right) \\
+&= σ(z) \cdot (1 - σ(z))
+\end{align}
+
+]])
 
 
 With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of $\alpha$ (i.e., the "learning rate"). This factor enables us to tune how fast or slow we learn. If $\alpha$ is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly. We will go into more details on optimization in [@sec:opti].
@@ -281,7 +296,7 @@ Here is a complete example in which we train a neuron to classify images as eith
 m4code([[Source/Code/Python/04-04-NeuronMNIST.py]])
 
 
-m4question([[Which lines of code correspond to $\frac{\partial ℒ}{\partial \mathbf{w}}$ and $\frac{\partial ℒ}{\partial b}$?]], [[Lines 44 and 45.]])
+m4question([[Which lines of code correspond to $\frac{∂ ℒ}{∂ \mathbf{w}}$ and $\frac{∂ ℒ}{∂ b}$?]], [[Lines 44 and 45.]])
 
 
 m4question([[What is an epoch?]], [[It turns out that we might need to update our weights more than once to get useful results. Each time we update parameters based on all training examples we mark the end of an epoch. In the code above we iterate through four epochs.]])

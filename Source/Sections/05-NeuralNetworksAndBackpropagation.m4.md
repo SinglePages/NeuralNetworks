@@ -102,10 +102,10 @@ Just like for the single neuron, we want to find values for $W^{[l]}$ and $\math
 You can imagine that we are performing multi-label classification. For this network, we need to compute these partial derivatives:
 
 $$
-\frac{\partial{ℒ}}{\partial{W^{[1]}}}^①,
-\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[1]}}}^②,
-\frac{\partial{ℒ}}{\partial{W^{[2]}}}^③,
-\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[2]}}}^④
+\frac{∂ℒ}{∂ W^{[1]}}^①,
+\frac{∂ℒ}{∂ \mathbf{b}^{[1]}}^②,
+\frac{∂ℒ}{∂ W^{[2]}}^③,
+\frac{∂ℒ}{∂ \mathbf{b}^{[2]}}^④
 $$
 
 We are going to start at layer 2 and work backward through the network to layer 1. As we compute these derivatives answer for yourself "why do we work backward through the network?"
@@ -116,29 +116,77 @@ This process of computing derivatives backward through the network is why this p
 ![Compute graph for two-layer network.](img/ComputeGraph.svg)
 
 
-Notice how the input flows forward from top-to-bottom, but gradients flow backward (from bottom-to-top). This image corresponds to the network above if you rotate it 90 degrees anti-clockwise. Let's start with the term labeled ④ above. By the chain-rule, we can break it into three components.
+Notice how the input flows forward from top-to-bottom, but gradients flow backward (from bottom-to-top). This image corresponds to the network above if you rotate it 90 degrees anti-clockwise. Let's start with the term labeled ④ above. The chain-rule requires us to derive three components.
 
 $$
-\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[2]}}}^④ = 
-	\frac{\partial{ℒ}}{\partial{A^{[2]}}}
-	\frac{\partial{A^{[2]}}}{\partial{Z^{[2]}}}
-	\frac{\partial{Z^{[2]}}}{\partial{\mathbf{b}^{[2]}}}
+\frac{∂ ℒ}{∂ \mathbf{b}^{[2]}}^④ = 
+	\frac{∂ ℒ}{∂ A^{[2]}}
+	\frac{∂ A^{[2]}}{∂ Z^{[2]}}
+	\frac{∂ Z^{[2]}}{∂ \mathbf{b}^{[2]}}
 $$
+
+Here are the derivations.
 
 \begin{align}
-\frac{\partial{ℒ}}{\partial{A^{[2]}}} &=
-	\frac{-\partial}{\partial{A^{[2]}}} ||Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1 - A^{[2]})}||_1\\
+\frac{∂ ℒ}{∂ A^{[2]}} &=
+	\frac{-∂}{∂ A^{[2]}} ||Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1 - A^{[2]})}||_1\\
 	&= \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\\[20pt]
 
-\frac{\partial{A^{[2]}}}{\partial{Z^{[2]}}} &=
-	\frac{\partial}{\partial{Z^{[2]}}} \sigma(Z^{[2]})\\
-	&= \sigma(Z^{[2]})(1 - \sigma(Z^{[2]}))\\
+\frac{∂ A^{[2]}}{∂ Z^{[2]}} &=
+	\frac{∂}{∂ Z^{[2]}} σ(Z^{[2]})\\
+	&= σ(Z^{[2]})(1 - σ(Z^{[2]}))\\
 	&= A^{[2]}(1 - A^{[2]})\\[20pt]
 
-\frac{\partial{Z^{[2]}}}{\partial{\mathbf{b}^{[2]}}} &=
-	\frac{\partial}{\partial{\mathbf{b}^{[2]}}} A^{[1]} W^{[2]T} + \mathbf{1} \mathbf{b}^{[2]T}\\
+\frac{∂ Z^{[2]}}{∂ \mathbf{b}^{[2]}} &=
+	\frac{∂}{∂ \mathbf{b}^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1} \mathbf{b}^{[2]T}\\
 	&= \mathbf{1}
 \end{align}
+
+Substituting back in.
+
+\begin{align}
+\frac{∂ ℒ}{∂ \mathbf{b}^{[2]}}^④ &=
+	(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}})
+	A^{[2]}(1 - A^{[2]})
+	\mathbf{1}\\
+&= (1-Y)A^{[2]} - Y(1 - A^{[2]})\\
+&= A^{[2]} - YA^{[2]} - Y + YA^{[2]}\\
+&= A^{[2]} - Y
+\end{align}
+
+
+Similarly, for ③ we have:
+
+$$
+\frac{∂ ℒ}{∂ W^{[2]}}^③ = 
+	\frac{∂ ℒ}{∂ A^{[2]}}
+	\frac{∂ A^{[2]}}{∂ Z^{[2]}}
+	\frac{∂ Z^{[2]}}{∂ W^{[2]}}
+$$
+
+The first two terms are identical to our previous derivation. In fact, we'll see these again for the first layer; so, it makes sense to give them their own symbol, $∂_{Z^{[2]}}$. We do still need to derive the third term.
+
+\begin{align}
+\frac{∂ Z^{[2]}}{∂ W^{[2]}} &=
+	\frac{∂}{∂ W^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1} \mathbf{b}^{[2]T}\\ 
+	&= A^{[1]}
+\end{align}
+
+TODO:
+
+- dw2, db2 (using dz)
+- dw1, db1
+
+
+We can now write our update equations for all network parameters.
+
+\begin{align}
+W^{[1]}          &:= W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
+\mathbf{b}^{[1]} &:= \mathbf{b}^{[1]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[1]}} \\
+W^{[2]}          &:= W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
+\mathbf{b}^{[2]} &:= \mathbf{b}^{[2]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[2]}}
+\end{align}
+
 
 <!--
 ## Input Normalization
@@ -172,4 +220,15 @@ TODO: why can we start b at 0 by not \mathbf{w}?
 
 https://nbviewer.jupyter.org/gist/joshfp/85d96f07aaa5f4d2c9eb47956ccdcc88/lesson2-sgd-in-action.ipynb
 
+
+
+Autodiff
+- symbolic (apply a sequence of of rules)
+- [Numerical differentiation - Wikipedia](https://en.wikipedia.org/wiki/Numerical_differentiation "Numerical differentiation - Wikipedia")
+- [Computer algebra - Wikipedia](https://en.wikipedia.org/wiki/Computer_algebra "Computer algebra - Wikipedia")
+
+- dual numbers
+- forward mode
+- reverse mode
+- Wengert list
 -->

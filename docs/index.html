@@ -1222,7 +1222,7 @@ compute some derivatives.</p>
 the <em>loss</em> function going forward)? How about the
 <strong>mean-difference</strong>?</p>
 <p><span class="math display">\[ℒ(\mathbf{\hat{y}}, \mathbf{y}) =
-\sum_{i=1}^N \hat y^{(i)} - y^{(i)} \quad \color{red}{\text{Don&#39;t
+\sum_{i=1}^N (\hat y^{(i)} - y^{(i)}) \quad \color{red}{\text{Don&#39;t
 use this loss function.}}\]</span></p>
 <details class="question">
 <summary>
@@ -1423,20 +1423,20 @@ parameters <span class="math inline">\(\theta\)</span>. (Note that I
 substitute for <span class="math inline">\(\mathbf{\hat y}\)</span> on
 the third line.)</p>
 <p><span class="math display">\[\begin{align}
-\frac{\partial ℒ}{\partial \mathbf{\theta}} &amp;=
-  \frac{\partial ||\frac{1}{2} (\mathbf{\hat{y}} -
-\mathbf{y})^2||_1}{\partial \mathbf{\theta}} \\
-&amp;= ||\mathbf{\hat{y}} - \mathbf{y}||_1 \frac{\partial \mathbf{\hat
-y}}{\partial \mathbf{\theta}} \\
-&amp;= ||X \mathbf{\theta} - \mathbf{y}||_1 \frac{\partial X
-\mathbf{\theta}}{\partial \mathbf{\theta}} \\
+\frac{∂ ℒ}{∂ \mathbf{\theta}} &amp;=
+  \frac{∂ ||\frac{1}{2} (\mathbf{\hat{y}} - \mathbf{y})^2||_1}{∂
+\mathbf{\theta}} \\
+&amp;= ||\mathbf{\hat{y}} - \mathbf{y}||_1 \frac{∂ \mathbf{\hat y}}{∂
+\mathbf{\theta}} \\
+&amp;= ||X \mathbf{\theta} - \mathbf{y}||_1 \frac{∂ X \mathbf{\theta}}{∂
+\mathbf{\theta}} \\
 &amp;= ||X \mathbf{\theta} - \mathbf{y}||_1 X \\
 &amp;= X^T X \mathbf{\theta} - X^T \mathbf{y}
 \end{align}\]</span></p>
 <p>We can now set this derivative to zero and solve for <span
 class="math inline">\(\mathbf{\theta}\)</span>.</p>
 <p><span class="math display">\[\begin{align}
-\frac{\partial ℒ}{\partial \mathbf{\theta}} &amp;= 0 \\
+\frac{∂ ℒ}{∂ \mathbf{\theta}} &amp;= 0 \\
 X^T X \mathbf{\theta} - X^T \mathbf{y} &amp;= 0 \\
 X^T X \mathbf{\theta} &amp;= X^T \mathbf{y}
 \end{align}\]</span></p>
@@ -1464,15 +1464,15 @@ derivative of loss with respect to each parameter. Taking the single
 neuron, binary cross-entropy loss, and the sigmoid activation function
 the chain rule in matrix form is as follows.</p>
 <p><span class="math display">\[\begin{align}
-\frac{\partial ℒ}{\partial \mathbf{w}} &amp;=
-    \frac{\partial ℒ}{\partial \mathbf{\hat{y}}}
-    \frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}
-    \frac{\partial \mathbf{z}}{\partial \mathbf{w}} \\
-&amp;= \frac{1}{N}(\mathbf{\hat{y}} - \mathbf{y})X\\\\
-\frac{\partial ℒ}{\partial b} &amp;=
-    \frac{\partial ℒ}{\partial \mathbf{\hat{y}}}
-    \frac{\partial \mathbf{\hat{y}}}{\partial \mathbf{z}}
-    \frac{\partial \mathbf{z}}{\partial b} \\
+\frac{∂ ℒ}{∂ \mathbf{w}} &amp;=
+    \frac{∂ ℒ}{∂ \mathbf{\hat{y}}}
+    \frac{∂ \mathbf{\hat{y}}}{∂ \mathbf{z}}
+    \frac{∂ \mathbf{z}}{∂ \mathbf{w}} \\
+&amp;= \frac{1}{N}||\mathbf{\hat{y}} - \mathbf{y}||_1X\\[20pt]
+\frac{∂ ℒ}{∂ b} &amp;=
+    \frac{∂ ℒ}{∂ \mathbf{\hat{y}}}
+    \frac{∂ \mathbf{\hat{y}}}{∂ \mathbf{z}}
+    \frac{∂ \mathbf{z}}{∂ b} \\
 &amp;= \frac{1}{N}\sum_{i=1}^N (\hat y^{(i)} - y^{(i)})
 \end{align}\]</span></p>
 <details class="question">
@@ -1492,42 +1492,54 @@ function when we substitute in values for <span
 class="math inline">\(\mathbf{\hat y}\)</span> and <span
 class="math inline">\(\mathbf{z}\)</span>.</p>
 <p><span class="math display">\[ℒ(\mathbf{\hat{y}}, \mathbf{y}) =
--||\mathbf{y} \cdot \log{\sigma(X \mathbf{w} + \mathbf{1} b)} + (1 -
-\mathbf{y}) \cdot \log{(1-\sigma(X \mathbf{w} + \mathbf{1}
+-||\mathbf{y} \cdot \log{σ(X \mathbf{w} + \mathbf{1} b)} + (1 -
+\mathbf{y}) \cdot \log{(1-σ(X \mathbf{w} + \mathbf{1}
 b))}||_1\]</span></p>
 <p>In the above equation we can more easily see how the chain-rule comes
 into play. The parameter <span class="math inline">\(\mathbf{w}\)</span>
-is nested within a call to <span class="math inline">\(\sigma\)</span>
-which is nested within a call to <span
-class="math inline">\(\log\)</span> when computing <span
-class="math inline">\(\frac{\partial ℒ}{\partial
+is nested within a call to <span class="math inline">\(σ\)</span> which
+is nested within a call to <span class="math inline">\(\log\)</span>
+when computing <span class="math inline">\(\frac{∂ ℒ}{∂
 \mathbf{w}}\)</span>.</p>
 </div>
 </details>
 <details class="question">
 <summary>
 <strong>Question:</strong> What do we do with the partial derivatives
-<span class="math inline">\(\frac{\partial ℒ}{\partial
-\mathbf{w}}\)</span> and <span class="math inline">\(\frac{\partial
-ℒ}{\partial b}\)</span>?
+<span class="math inline">\(\frac{∂ ℒ}{∂ \mathbf{w}}\)</span> and <span
+class="math inline">\(\frac{∂ ℒ}{∂ b}\)</span>?
 </summary>
 <div class="answer">
 <p><strong>Answer:</strong> We use these terms to update model
 parameters.</p>
 <p><span class="math display">\[\begin{align}
-\mathbf{w} &amp;:= \mathbf{w} - \alpha \frac{\partial ℒ}{\partial
-\mathbf{w}} \\
-b &amp;:= b - \alpha \frac{\partial ℒ}{\partial b}
+\mathbf{w} &amp;:= \mathbf{w} - \alpha \frac{∂ ℒ}{∂ \mathbf{w}} \\
+b &amp;:= b - \alpha \frac{∂ ℒ}{∂ b}
 \end{align}\]</span></p>
 </div>
 </details>
 <details class="question">
 <summary>
 <strong>Question:</strong> What is the derivative of the sigmoid
-function, <span class="math inline">\(\sigma\)</span>?
+function, <span class="math inline">\(σ\)</span>?
 </summary>
 <div class="answer">
-<strong>Answer:</strong> TODO: sigmoid derivation
+<p><strong>Answer:</strong></p>
+<p><span class="math display">\[\begin{align}
+\frac{d}{dz} σ(z) &amp;=
+  \frac{d}{dz} \left(\frac{1}{1 + e^{-z}}\right) \\
+&amp;= \frac{d}{dz} \left(1 + e^{-z} \right)^{-1} \\
+&amp;= -(1 + e^{-z})^{-2}(-e^{-z}) \\
+&amp;= \frac{e^{-z}}{\left(1 + e^{-z}\right)^2} \\
+&amp;= \frac{1}{1 + e^{-z}\ } \cdot \frac{e^{-z}}{1 + e^{-z}}  \\
+&amp;= \frac{1}{1 + e^{-z}\ } \cdot \frac{e^{-z} + 1 - 1}{1 +
+e^{-z}}  \\
+&amp;= \frac{1}{1 + e^{-z}\ } \cdot \left( \frac{1 + e^{-z}}{1 + e^{-z}}
+- \frac{1}{1 + e^{-z}} \right) \\
+&amp;= \frac{1}{1 + e^{-z}\ } \cdot \left( 1 - \frac{1}{1 + e^{-z}}
+\right) \\
+&amp;= σ(z) \cdot (1 - σ(z))
+\end{align}\]</span></p>
 </div>
 </details>
 <p>With the two update equations shown in the previous answer we have
@@ -1618,8 +1630,8 @@ to code.</a>
 <details class="question">
 <summary>
 <strong>Question:</strong> Which lines of code correspond to <span
-class="math inline">\(\frac{\partial ℒ}{\partial \mathbf{w}}\)</span>
-and <span class="math inline">\(\frac{\partial ℒ}{\partial b}\)</span>?
+class="math inline">\(\frac{∂ ℒ}{∂ \mathbf{w}}\)</span> and <span
+class="math inline">\(\frac{∂ ℒ}{∂ b}\)</span>?
 </summary>
 <div class="answer">
 <strong>Answer:</strong> Lines 44 and 45.
@@ -1874,10 +1886,10 @@ class="math inline">\(n_y=n_2=3\)</span>),</li>
 <p>You can imagine that we are performing multi-label classification.
 For this network, we need to compute these partial derivatives:</p>
 <p><span class="math display">\[
-\frac{\partial{ℒ}}{\partial{W^{[1]}}}^①,
-\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[1]}}}^②,
-\frac{\partial{ℒ}}{\partial{W^{[2]}}}^③,
-\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[2]}}}^④
+\frac{∂ℒ}{∂ W^{[1]}}^①,
+\frac{∂ℒ}{∂ \mathbf{b}^{[1]}}^②,
+\frac{∂ℒ}{∂ W^{[2]}}^③,
+\frac{∂ℒ}{∂ \mathbf{b}^{[2]}}^④
 \]</span></p>
 <p>We are going to start at layer 2 and work backward through the
 network to layer 1. As we compute these derivatives answer for yourself
@@ -1895,29 +1907,72 @@ network.</figcaption>
 <p>Notice how the input flows forward from top-to-bottom, but gradients
 flow backward (from bottom-to-top). This image corresponds to the
 network above if you rotate it 90 degrees anti-clockwise. Let’s start
-with the term labeled ④ above. By the chain-rule, we can break it into
+with the term labeled ④ above. The chain-rule requires us to derive
 three components.</p>
 <p><span class="math display">\[
-\frac{\partial{ℒ}}{\partial{\mathbf{b}^{[2]}}}^④ =
-    \frac{\partial{ℒ}}{\partial{A^{[2]}}}
-    \frac{\partial{A^{[2]}}}{\partial{Z^{[2]}}}
-    \frac{\partial{Z^{[2]}}}{\partial{\mathbf{b}^{[2]}}}
+\frac{∂ ℒ}{∂ \mathbf{b}^{[2]}}^④ =
+    \frac{∂ ℒ}{∂ A^{[2]}}
+    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ \mathbf{b}^{[2]}}
 \]</span></p>
+<p>Here are the derivations.</p>
 <p><span class="math display">\[\begin{align}
-\frac{\partial{ℒ}}{\partial{A^{[2]}}} &amp;=
-    \frac{-\partial}{\partial{A^{[2]}}} ||Y \cdot \log{A^{[2]}} + (1 -
-Y) \cdot \log{(1 - A^{[2]})}||_1\\
+\frac{∂ ℒ}{∂ A^{[2]}} &amp;=
+    \frac{-∂}{∂ A^{[2]}} ||Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1
+- A^{[2]})}||_1\\
     &amp;= \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\\[20pt]
 
-\frac{\partial{A^{[2]}}}{\partial{Z^{[2]}}} &amp;=
-    \frac{\partial}{\partial{Z^{[2]}}} \sigma(Z^{[2]})\\
-    &amp;= \sigma(Z^{[2]})(1 - \sigma(Z^{[2]}))\\
+\frac{∂ A^{[2]}}{∂ Z^{[2]}} &amp;=
+    \frac{∂}{∂ Z^{[2]}} σ(Z^{[2]})\\
+    &amp;= σ(Z^{[2]})(1 - σ(Z^{[2]}))\\
     &amp;= A^{[2]}(1 - A^{[2]})\\[20pt]
 
-\frac{\partial{Z^{[2]}}}{\partial{\mathbf{b}^{[2]}}} &amp;=
-    \frac{\partial}{\partial{\mathbf{b}^{[2]}}} A^{[1]} W^{[2]T} +
-\mathbf{1} \mathbf{b}^{[2]T}\\
+\frac{∂ Z^{[2]}}{∂ \mathbf{b}^{[2]}} &amp;=
+    \frac{∂}{∂ \mathbf{b}^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1}
+\mathbf{b}^{[2]T}\\
     &amp;= \mathbf{1}
+\end{align}\]</span></p>
+<p>Substituting back in.</p>
+<p><span class="math display">\[\begin{align}
+\frac{∂ ℒ}{∂ \mathbf{b}^{[2]}}^④ &amp;=
+    (\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}})
+    A^{[2]}(1 - A^{[2]})
+    \mathbf{1}\\
+&amp;= (1-Y)A^{[2]} - Y(1 - A^{[2]})\\
+&amp;= A^{[2]} - YA^{[2]} - Y + YA^{[2]}\\
+&amp;= A^{[2]} - Y
+\end{align}\]</span></p>
+<p>Similarly, for ③ we have:</p>
+<p><span class="math display">\[
+\frac{∂ ℒ}{∂ W^{[2]}}^③ =
+    \frac{∂ ℒ}{∂ A^{[2]}}
+    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ W^{[2]}}
+\]</span></p>
+<p>The first two terms are identical to our previous derivation. In
+fact, we’ll see these again for the first layer; so, it makes sense to
+give them their own symbol, <span
+class="math inline">\(∂_{Z^{[2]}}\)</span>. We do still need to derive
+the third term.</p>
+<p><span class="math display">\[\begin{align}
+\frac{∂ Z^{[2]}}{∂ W^{[2]}} &amp;=
+    \frac{∂}{∂ W^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1}
+\mathbf{b}^{[2]T}\\
+    &amp;= A^{[1]}
+\end{align}\]</span></p>
+<p>TODO:</p>
+<ul>
+<li>dw2, db2 (using dz)</li>
+<li>dw1, db1</li>
+</ul>
+<p>We can now write our update equations for all network parameters.</p>
+<p><span class="math display">\[\begin{align}
+W^{[1]}          &amp;:= W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
+\mathbf{b}^{[1]} &amp;:= \mathbf{b}^{[1]} - α\frac{∂ℒ}{∂
+\mathbf{b}^{[1]}} \\
+W^{[2]}          &amp;:= W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
+\mathbf{b}^{[2]} &amp;:= \mathbf{b}^{[2]} - α\frac{∂ℒ}{∂
+\mathbf{b}^{[2]}}
 \end{align}\]</span></p>
 </section>
 </section>
