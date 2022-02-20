@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from utilities import get_binary_mnist_one_batch, format_duration_with_prefix
 from timeit import default_timer as timer
 import torch

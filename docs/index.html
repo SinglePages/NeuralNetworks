@@ -1935,7 +1935,7 @@ three components.</p>
 <p>Substituting back in.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ ℒ}{∂ \mathbf{b}^{[2]}}^④ &amp;=
-    (\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}})
+    \left(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\right)
     A^{[2]}(1 - A^{[2]})
     \mathbf{1}\\
 &amp;= (1-Y)A^{[2]} - Y(1 - A^{[2]})\\
@@ -1952,8 +1952,9 @@ three components.</p>
 <p>The first two terms are identical to our previous derivation. In
 fact, we’ll see these again for the first layer; so, it makes sense to
 give them their own symbol, <span
-class="math inline">\(∂_{Z^{[2]}}\)</span>. We do still need to derive
-the third term.</p>
+class="math inline">\(∂_{Z^{[2]}}=\frac{∂ ℒ}{∂ A^{[2]}}\frac{∂
+A^{[2]}}{∂ Z^{[2]}}\)</span>. We do still need to derive the third
+term.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ Z^{[2]}}{∂ W^{[2]}} &amp;=
     \frac{∂}{∂ W^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1}
@@ -1964,15 +1965,70 @@ the third term.</p>
 <ul>
 <li>dw2, db2 (using dz)</li>
 <li>dw1, db1</li>
+<li>color code?</li>
 </ul>
+<p><span class="math display">\[\begin{align}
+\frac{∂ ℒ}{∂ \mathbf{b}^{[1]}}^② &amp;=
+    \frac{∂ ℒ}{∂ A^{[2]}}
+    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
+    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}}\\
+&amp;= ∂_{Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
+    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}}
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\frac{∂ Z^{[2]}}{∂ A^{[1]}} &amp;=
+    \frac{∂}{A^{[1]}} A^{[1]} W^{[2]T} + \mathbf{1} \mathbf{b}^{[2]T}\\
+    &amp;= W^{[2]}\\[20pt]
+
+\frac{∂ A^{[1]}}{∂ Z^{[1]}} &amp;= \frac{∂}{Z^{[1]}}\\
+    &amp;= σ(Z^{[1]})\\
+    &amp;= σ(Z^{[1]})(1-σ(Z^{[1]})\\
+    &amp;= A^{[1]}(1-A^{[1]})\\[20pt]
+
+\frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}} &amp;=
+    \frac{∂}{\mathbf{b}^{[1]}} A^{[0]} W^{[1]T} + \mathbf{1}
+\mathbf{b}^{[1]T}\\
+    &amp;= \mathbf{1}\\[20pt]
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\frac{∂ ℒ}{∂ W^{[1]}}^② &amp;=
+    \frac{∂ ℒ}{∂ A^{[2]}}
+    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
+    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \frac{∂ Z^{[1]}}{∂ W^{[1]}}\\
+&amp;= ∂_{Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
+    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \frac{∂ Z^{[1]}}{∂ W^{[1]}}
+\end{align}\]</span></p>
+<p>Blah blah is <span
+class="math inline">\(∂_{Z^{[1]}}=∂_{Z^{[2]}}\frac{∂ Z^{[2]}}{∂
+A^{[1]}}\frac{∂ A^{[1]}}{∂ Z^{[1]}}\)</span></p>
+<p><span class="math display">\[\begin{align}
+\frac{∂ Z^{[1]}}{∂ W^{[1]}} &amp;=
+    \frac{∂}{∂ W^{[1]}} A^{[0]} W^{[1]T} + \mathbf{1}
+\mathbf{b}^{[1]T}\\
+    &amp;= A^{[0]}
+\end{align}\]</span></p>
 <p>We can now write our update equations for all network parameters.</p>
 <p><span class="math display">\[\begin{align}
-W^{[1]}          &amp;:= W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
-\mathbf{b}^{[1]} &amp;:= \mathbf{b}^{[1]} - α\frac{∂ℒ}{∂
-\mathbf{b}^{[1]}} \\
-W^{[2]}          &amp;:= W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
-\mathbf{b}^{[2]} &amp;:= \mathbf{b}^{[2]} - α\frac{∂ℒ}{∂
-\mathbf{b}^{[2]}}
+W^{[1]} &amp;:=
+    W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
+    &amp;:=\\[20pt]
+\mathbf{b}^{[1]} &amp;:=
+    \mathbf{b}^{[1]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[1]}} \\
+    &amp;:=\\[20pt]
+W^{[2]} &amp;:=
+    W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
+    &amp;:=\\[20pt]
+\mathbf{b}^{[2]} &amp;:=
+    \mathbf{b}^{[2]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[2]}} \\
+    &amp;:=\\
 \end{align}\]</span></p>
 </section>
 </section>

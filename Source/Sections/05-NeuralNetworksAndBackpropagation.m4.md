@@ -146,7 +146,7 @@ Substituting back in.
 
 \begin{align}
 \frac{∂ ℒ}{∂ \mathbf{b}^{[2]}}^④ &=
-	(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}})
+	\left(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\right)
 	A^{[2]}(1 - A^{[2]})
 	\mathbf{1}\\
 &= (1-Y)A^{[2]} - Y(1 - A^{[2]})\\
@@ -164,7 +164,7 @@ $$
 	\frac{∂ Z^{[2]}}{∂ W^{[2]}}
 $$
 
-The first two terms are identical to our previous derivation. In fact, we'll see these again for the first layer; so, it makes sense to give them their own symbol, $∂_{Z^{[2]}}$. We do still need to derive the third term.
+The first two terms are identical to our previous derivation. In fact, we'll see these again for the first layer; so, it makes sense to give them their own symbol, $∂_{Z^{[2]}}=\frac{∂ ℒ}{∂ A^{[2]}}\frac{∂ A^{[2]}}{∂ Z^{[2]}}$. We do still need to derive the third term.
 
 \begin{align}
 \frac{∂ Z^{[2]}}{∂ W^{[2]}} &=
@@ -176,53 +176,91 @@ TODO:
 
 - dw2, db2 (using dz)
 - dw1, db1
+- color code?
+- norm instead of sum
+
+
+\begin{align}
+\frac{∂ ℒ}{∂ \mathbf{b}^{[1]}}^② &= 
+	\frac{∂ ℒ}{∂ A^{[2]}}
+	\frac{∂ A^{[2]}}{∂ Z^{[2]}}
+	\frac{∂ Z^{[2]}}{∂ A^{[1]}}
+	\frac{∂ A^{[1]}}{∂ Z^{[1]}}
+	\frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}}\\
+&= ∂_{Z^{[2]}}
+	\frac{∂ Z^{[2]}}{∂ A^{[1]}}
+	\frac{∂ A^{[1]}}{∂ Z^{[1]}}
+	\frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}}
+\end{align}
+
+
+\begin{align}
+\frac{∂ Z^{[2]}}{∂ A^{[1]}} &= 
+	\frac{∂}{A^{[1]}} A^{[1]} W^{[2]T} + \mathbf{1} \mathbf{b}^{[2]T}\\
+	&= W^{[2]}\\[20pt]
+
+\frac{∂ A^{[1]}}{∂ Z^{[1]}} &= \frac{∂}{Z^{[1]}}\\
+	&= σ(Z^{[1]})\\
+	&= σ(Z^{[1]})(1-σ(Z^{[1]})\\
+	&= A^{[1]}(1-A^{[1]})\\[20pt]
+
+\frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}} &= 
+	\frac{∂}{\mathbf{b}^{[1]}} A^{[0]} W^{[1]T} + \mathbf{1} \mathbf{b}^{[1]T}\\
+	&= \mathbf{1}\\[20pt]
+\end{align}
+
+
+
+\begin{align}
+\frac{∂ ℒ}{∂ W^{[1]}}^② &= 
+	\frac{∂ ℒ}{∂ A^{[2]}}
+	\frac{∂ A^{[2]}}{∂ Z^{[2]}}
+	\frac{∂ Z^{[2]}}{∂ A^{[1]}}
+	\frac{∂ A^{[1]}}{∂ Z^{[1]}}
+	\frac{∂ Z^{[1]}}{∂ W^{[1]}}\\
+&= ∂_{Z^{[2]}}
+	\frac{∂ Z^{[2]}}{∂ A^{[1]}}
+	\frac{∂ A^{[1]}}{∂ Z^{[1]}}
+	\frac{∂ Z^{[1]}}{∂ W^{[1]}}
+\end{align}
+
+
+Blah blah is $∂_{Z^{[1]}}=∂_{Z^{[2]}}\frac{∂ Z^{[2]}}{∂ A^{[1]}}\frac{∂ A^{[1]}}{∂ Z^{[1]}}$
+
+\begin{align}
+\frac{∂ Z^{[1]}}{∂ W^{[1]}} &=
+	\frac{∂}{∂ W^{[1]}} A^{[0]} W^{[1]T} + \mathbf{1} \mathbf{b}^{[1]T}\\ 
+	&= A^{[0]}
+\end{align}
 
 
 We can now write our update equations for all network parameters.
 
 \begin{align}
-W^{[1]}          &:= W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
-\mathbf{b}^{[1]} &:= \mathbf{b}^{[1]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[1]}} \\
-W^{[2]}          &:= W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
-\mathbf{b}^{[2]} &:= \mathbf{b}^{[2]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[2]}}
+W^{[1]} &:= 
+	W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
+	&:=\\[20pt]
+\mathbf{b}^{[1]} &:= 
+	\mathbf{b}^{[1]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[1]}} \\
+	&:=\\[20pt]
+W^{[2]} &:= 
+	W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
+	&:=\\[20pt]
+\mathbf{b}^{[2]} &:= 
+	\mathbf{b}^{[2]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[2]}} \\
+	&:=\\
 \end{align}
 
 
-<!--
-## Input Normalization
-
-I provided *reasonable* ranges for values in the previous code example. For example, temperature values on Earth are typically in the range $[-20, 40]$ °C and illuminance in the range $[0, 1e6]$ Lux.
+## Neuron Batch Gradient Descent
 
 
-An NN can work with with values in these ranges, but it makes learning easier when you first scale values into the same range, typically $[-1, 1]$. TODO: why?
+m4code([[Source/Code/Python/05-01-TwoLayerNeuralNetwork.py]])
 
 
-## Why "Deep" Neural Networks?
+## Automatic Differentiation
 
-- Universal approximation theorem
-
-## The Role of an Activation Function
-
-- what if we remove activation functions? -> linear model only
-- hidden neurons
-    + default to relu
-    + try/create others to solve/investigate specific issues
-- output neurons
-    + default to sigmoid for binary classification
-    + default to softmax for multi-class classification
-    + default to no activation for regression
-
-## Parameter Initialization
-
-TODO: why can we start b at 0 by not \mathbf{w}?
-
-## Vanishing and Exploding Gradients
-
-https://nbviewer.jupyter.org/gist/joshfp/85d96f07aaa5f4d2c9eb47956ccdcc88/lesson2-sgd-in-action.ipynb
-
-
-
-Autodiff
+<!-- Autodiff
 - symbolic (apply a sequence of of rules)
 - [Numerical differentiation - Wikipedia](https://en.wikipedia.org/wiki/Numerical_differentiation "Numerical differentiation - Wikipedia")
 - [Computer algebra - Wikipedia](https://en.wikipedia.org/wiki/Computer_algebra "Computer algebra - Wikipedia")
@@ -231,4 +269,21 @@ Autodiff
 - forward mode
 - reverse mode
 - Wengert list
--->
+ -->
+
+## Why "Deep" Neural Networks?
+
+<!-- - Universal approximation theorem -->
+
+## The Role of an Activation Function
+
+<!-- - what if we remove activation functions? -> linear model only
+- hidden neurons
+    + default to relu
+    + try/create others to solve/investigate specific issues
+- output neurons
+    + default to sigmoid for binary classification
+    + default to softmax for multi-class classification
+    + default to no activation for regression -->
+
+
