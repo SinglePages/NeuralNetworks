@@ -137,7 +137,7 @@ These two equations share the first two terms. In fact, we'll see these again fo
 
 \begin{align}
 \frac{∂ ℒ}{∂ A^{[2]}} &=
-	-\frac{∂}{∂ A^{[2]}} (Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1 - A^{[2]})})\\
+	-\frac{∂}{∂ A^{[2]}} \text{mean}_0\left(Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1 - A^{[2]})}\right)\\
 	&= \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\\[20pt]
 
 \frac{∂ A^{[2]}}{∂ Z^{[2]}} &=

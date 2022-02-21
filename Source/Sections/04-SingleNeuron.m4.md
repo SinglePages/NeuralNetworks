@@ -166,9 +166,14 @@ m4question([[Why might we compute the half-MSE instead of MSE or sum-square-erro
 
 The standard choice when performing classification with a neuron is **binary cross-entropy** (BCE):
 
-$$
-ℒ(\vyhat, \vy) = \vbce
-$$
+\begin{align}
+ℒ(\vyhat, \vy) &= \vbce
+  &= -\text{mean}_0\left(\vy \cdot \log{\vyhat} + (1 - \vy) \cdot \log{(1 - \vyhat)}\right)
+\end{align}
+
+
+In the vectorized version of BCE I've used the non-standard $\text{mean}_0$ notation to indicate that we're taking the average across the rows, dimension zero.
+
 
 m4question([[Take some time to examine this loss function. What happens for various values of $\yhat\i$, $y\i$?]], [[
 

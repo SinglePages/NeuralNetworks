@@ -42,7 +42,7 @@ def model(A0):
     A1 = torch.sigmoid(Z1)
     Z2 = A1 @ W2.T + b2
     A2 = torch.sigmoid(Z2)
-    return Z1, A1, Z2, A2
+    return Z1, A1, Z2, A2.squeeze()
 
 
 # Batch gradient descent hyper-parameters
@@ -53,3 +53,5 @@ learning_rate = 0.01
 _, _, _, valid_preds = model(valid_X)
 valid_accuracy = compute_accuracy(valid_preds, valid_y)
 print(f"Accuracy before training: {valid_accuracy:.2f}")
+print(valid_preds.shape)
+print(valid_y.shape)
