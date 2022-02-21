@@ -275,6 +275,21 @@ Advanced Topics</a></li>
 <li><a href="#sec:terms">Terminology</a></li>
 </ul>
 </nav>
+<p><span class="math display">\[
+    \def\i{{^{(i)}}}
+    \def\vx{{\mathbf{x}}}
+    \def\vy{{\mathbf{y}}}
+    \def\vw{{\mathbf{w}}}
+    \def\vb{{\mathbf{b}}}
+    \def\vz{{\mathbf{z}}}
+    \def\va{{\mathbf{a}}}
+    \def\yhat{{\hat y}}
+    \def\vyhat{{\mathbf{\hat y}}}
+    \def\mae{{||\vyhat - \vy||_1}}
+    \def\vhmse{{\frac{1}{2N} ||(\vyhat - \vy)^2||_1}}
+    \def\vbce{{-\frac{1}{N}\sum_{i=1}^N (y\i \log{\yhat\i} + (1 -
+y\i)\log{(1-\yhat\i)})}}
+\]</span></p>
 <section id="sec:intro" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span>
 Introduction</h1>
@@ -537,15 +552,14 @@ training, validation, and evaluation. We’ll discuss these terms near the
 end of this section.</p>
 <p><span class="math inline">\(X\)</span> is a matrix (indicated by
 capitalization) containing all features of all input examples. A single
-input example <span class="math inline">\(\mathbf{x}^{(i)}\)</span> is
-often represented as a <em>column</em> vector (indicated by
-boldface):</p>
-<p><span class="math display">\[\mathbf{x}^{(i)} =
+input example <span class="math inline">\(\vx\i\)</span> is often
+represented as a <em>column</em> vector (indicated by boldface):</p>
+<p><span class="math display">\[\vx\i =
 \begin{bmatrix}
-    x^{(i)}_{1} \\
-    x^{(i)}_{2} \\
+    x\i_{1} \\
+    x\i_{2} \\
     \vdots \\
-    x^{(i)}_{n_x} \\
+    x\i_{n_x} \\
 \end{bmatrix}
 \]</span></p>
 <p>where subscripts denote the feature index, <span
@@ -560,10 +574,10 @@ all <span class="math inline">\(N\)</span> examples on top of each other
 (first transposing them into row vectors), you end up with:</p>
 <p><span class="math display">\[X =
 \begin{bmatrix}
-    \rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
-    \rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(2)T}\rule[.5ex]{1em}{0.4pt} \\
+    \rule[.5ex]{1em}{0.4pt}\vx^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
+    \rule[.5ex]{1em}{0.4pt}\vx^{(2)T}\rule[.5ex]{1em}{0.4pt} \\
     \vdots \\
-    \rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(N)T}\rule[.5ex]{1em}{0.4pt} \\
+    \rule[.5ex]{1em}{0.4pt}\vx^{(N)T}\rule[.5ex]{1em}{0.4pt} \\
 \end{bmatrix}
 =
 \begin{bmatrix}
@@ -574,12 +588,12 @@ all <span class="math inline">\(N\)</span> examples on top of each other
 \end{bmatrix}
 \]</span></p>
 <p>We transpose each example column vector (i.e., <span
-class="math inline">\(\mathbf{x}^{(i)T}\)</span>) into a row vector so
-that the first dimension of <span class="math inline">\(X\)</span>
-corresponds to the number of examples <span
-class="math inline">\(N\)</span> and the second dimension is the number
-of features <span class="math inline">\(n_x\)</span>. Compare the column
-vector above to each row in the matrix.</p>
+class="math inline">\(\vx^{(i)T}\)</span>) into a row vector so that the
+first dimension of <span class="math inline">\(X\)</span> corresponds to
+the number of examples <span class="math inline">\(N\)</span> and the
+second dimension is the number of features <span
+class="math inline">\(n_x\)</span>. Compare the column vector above to
+each row in the matrix.</p>
 <p>Let’s denote matrix dimensions with <span class="math inline">\((r
 \times c)\)</span> (the number of rows <span
 class="math inline">\(r\)</span> by the number of columns <span
@@ -591,33 +605,32 @@ code, refer to matrix dimensions as the “shape” of the matrix.</p>
 class="math inline">\(X\)</span>?
 </summary>
 <div class="answer">
-<strong>Answer:</strong> We say that <span
-class="math inline">\(\mathbf{x}^{(i)} \in \mathcal{R}^{n_x}\)</span>
-(each input example is <span class="math inline">\(n_x\)</span> real
-values) and <span class="math inline">\(X \in \mathcal{R}^{N \times
-n_x}\)</span>. Therefore, the shape of <span
-class="math inline">\(X\)</span> is <span class="math inline">\((N
-\times n_x)\)</span>.
+<strong>Answer:</strong> We say that <span class="math inline">\(\vx\i
+\in \mathcal{R}^{n_x}\)</span> (each input example is <span
+class="math inline">\(n_x\)</span> real values) and <span
+class="math inline">\(X \in \mathcal{R}^{N \times n_x}\)</span>.
+Therefore, the shape of <span class="math inline">\(X\)</span> is <span
+class="math inline">\((N \times n_x)\)</span>.
 </div>
 </details>
 <p><span class="math inline">\(Y\)</span> contains the targets (also
 referred to as labels or the true/correct/actual/expected output
 values). Here is a single target column vector:</p>
-<p><span class="math display">\[\mathbf{y}^{(i)} =
+<p><span class="math display">\[\vy\i =
 \begin{bmatrix}
-    y^{(i)}_{1} \\
-    y^{(i)}_{2} \\
+    y\i_{1} \\
+    y\i_{2} \\
     \vdots \\
-    y^{(i)}_{n_y} \\
+    y\i_{n_y} \\
 \end{bmatrix}
 \]</span></p>
 <p>And here is the entire target matrix including all examples:</p>
 <p><span class="math display">\[Y =
 \begin{bmatrix}
-    \rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
-    \rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(2)T}\rule[.5ex]{1em}{0.4pt} \\
+    \rule[.5ex]{1em}{0.4pt}\vy^{(1)T}\rule[.5ex]{1em}{0.4pt} \\
+    \rule[.5ex]{1em}{0.4pt}\vy^{(2)T}\rule[.5ex]{1em}{0.4pt} \\
     \vdots \\
-    \rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(N)T}\rule[.5ex]{1em}{0.4pt} \\
+    \rule[.5ex]{1em}{0.4pt}\vy^{(N)T}\rule[.5ex]{1em}{0.4pt} \\
 \end{bmatrix}
 =
 \begin{bmatrix}
@@ -831,10 +844,10 @@ in guessing digits if you were guessing at random?
 </summary>
 <div class="answer">
 <strong>Answer:</strong> If you are equally likely to guess any of the
-ten digits, then you would be right around 10% of the time (<span
-class="math inline">\(\frac{1}{10}\)</span>). How might this change if
-you were to always guess the same thing? How about if the dataset has
-mostly ones and sevens?
+ten digits, then you would be right around 10% of the time <span
+class="math inline">\(\left(\frac{1}{10}\right)\)</span>. How might this
+change if you were to always guess the same thing? How about if the
+dataset has mostly ones and sevens?
 </div>
 </details>
 <p>And now some code for finding the most similar digit.</p>
@@ -950,28 +963,28 @@ linear and activation computations.</figcaption>
 the parenthesis superscript from the diagram to make it a bit easier to
 read):</p>
 <p><span class="math display">\[\begin{align}
-z^{(i)} &amp;= \sum_{k=1}^{n_x} x_k^{(i)} w_k + b\\
-a^{(i)} &amp;= g(z^{(i)})
+z\i &amp;= \sum_{k=1}^{n_x} x_k\i w_k + b\\
+a\i &amp;= g(z\i)
 \end{align}\]</span></p>
 <p>For these two equations:</p>
 <ul>
-<li><span class="math inline">\(x_k^{(i)}\)</span> are the input
-features for the <span class="math inline">\(i^{th}\)</span> example
-(e.g., <span class="math inline">\(k=76\)</span> and <span
+<li><span class="math inline">\(x_k\i\)</span> are the input features
+for the <span class="math inline">\(i^{th}\)</span> example (e.g., <span
+class="math inline">\(k=76\)</span> and <span
 class="math inline">\(i=7436\)</span> would denote pixel 76 of 784 for
 image 7436 of 60000)</li>
 <li><span class="math inline">\(w_k\)</span> (weights) and <span
 class="math inline">\(b\)</span> (bias) are the <strong>learned</strong>
 parameters</li>
-<li><span class="math inline">\(z^{(i)}\)</span> is a weighted sum of
-the input features plus the additional bias term</li>
-<li><span class="math inline">\(a^{(i)}\)</span> is the output of a
+<li><span class="math inline">\(z\i\)</span> is a weighted sum of the
+input features plus the additional bias term</li>
+<li><span class="math inline">\(a\i\)</span> is the output of a
 non-linear activation function <span
 class="math inline">\(g(\mathord{\cdot})\)</span> applied to <span
-class="math inline">\(z^{(i)}\)</span></li>
-<li><span class="math inline">\(\hat y^{(i)}\)</span> (pronounced <em>“y
+class="math inline">\(z\i\)</span></li>
+<li><span class="math inline">\(\yhat\i\)</span> (pronounced <em>“y
 hat”</em>) is the label we often give to the output (<span
-class="math inline">\(a^{(i)} = \hat y^{(i)}\)</span>)</li>
+class="math inline">\(a\i = \yhat\i\)</span>)</li>
 </ul>
 <details class="question">
 <summary>
@@ -983,16 +996,16 @@ class="math inline">\(b\)</span> not have superscripts?
 <strong>Answer:</strong> The parameters <span
 class="math inline">\(w_k\)</span> and <span
 class="math inline">\(b\)</span> do not change as the input <span
-class="math inline">\(x_k^{(i)}\)</span> changes. These parameters
+class="math inline">\(x_k\i\)</span> changes. These parameters
 <strong>are</strong> the neuron, and they are used to produce the output
-<span class="math inline">\(\hat y^{(i)}\)</span> for any given input;
-we use the same parameter values regardless of input.
+<span class="math inline">\(\yhat\i\)</span> for any given input; we use
+the same parameter values regardless of input.
 </div>
 </details>
 <p><strong>For this model, we want to find parameters <span
 class="math inline">\(w_k\)</span> and <span
 class="math inline">\(b\)</span> such that the neuron outputs <span
-class="math inline">\(\hat y^{(i)} \approx y^{(i)}\)</span> for any
+class="math inline">\(\yhat\i \approx y\i\)</span> for any
 input.</strong> Before we discuss optimization we should take a moment
 to code up this single neuron model.</p>
 <p>(Below is a more common representation of a neuron model. The image
@@ -1091,28 +1104,65 @@ is a more commonly used activation function for hidden layer neurons.
 <section id="the-dot-product" class="level2" data-number="4.3">
 <h2 data-number="4.3"><span class="header-section-number">4.3</span> The
 Dot-Product</h2>
-<p>We compute <span class="math inline">\(z^{(i)}\)</span> using a
+<p>We compute <span class="math inline">\(z\i\)</span> using a
 summation, but we can express this same bit of math using the
 dot-product from linear algebra.</p>
 <p><span class="math display">\[
-z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T}
-\mathbf{w} + b
+z\i = \sum_{k=1}^{n_x} x_k\i w_k + b = \vx^{(i)T} \vw + b
 \]</span></p>
-<p>The <span class="math inline">\(\mathbf{x}^{(i)T} \mathbf{w}\)</span>
-part of the equation computes the dot-product between <span
-class="math inline">\(\mathbf{x}^{(i)T}\)</span> and <span
-class="math inline">\(\mathbf{w}\)</span>. We need to transpose <span
-class="math inline">\(\mathbf{x}^{(i)}\)</span> to make the dimensions
-work (i.e., we need to multiply a row vector by a column vector).</p>
+<p>The <span class="math inline">\(\vx^{(i)T} \vw\)</span> part of the
+equation computes the dot-product between <span
+class="math inline">\(\vx^{(i)T}\)</span> and <span
+class="math inline">\(\vw\)</span>. We need to transpose <span
+class="math inline">\(\vx\i\)</span> to make the dimensions work (i.e.,
+we need to multiply a row vector by a column vector).</p>
 <p>This not only turns out to be easier to write/type, but it is more
 efficiently computed by a neural network library. The code listing below
 uses <a href="https://pytorch.org/">PyTorch</a> to compute <span
-class="math inline">\(z^{(i)}\)</span> (<code>zi</code>). Libraries like
+class="math inline">\(z\i\)</span> (<code>zi</code>). Libraries like
 PyTorch and Tensorflow make use of both vectorized CPU instructions and
 graphics cards (GPUs) to quickly compute the output of matrix
 multiplications.</p>
 <div class="code-highlight">
 <pre>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 1  </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 1  </span><span style="color:#0000ee;">│</span><span style="color:#75715e;">#!/usr/bin/env python</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 2  </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 2  </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 3  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">from</span><span style="color:#f8f8f2;background-color:#a61719;"> math </span><span style="color:#f92672;background-color:#a61719;">import</span><span style="color:#f8f8f2;background-color:#a61719;"> exp</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 4  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">from</span><span style="color:#f8f8f2;background-color:#a61719;"> random </span><span style="color:#f92672;background-color:#a61719;">import</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 5  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 6  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 7  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">def</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#a6e22e;background-color:#a61719;">sigmoid</span><span style="color:#f8f8f2;background-color:#a61719;">(</span><span style="color:#fd971f;background-color:#a61719;">z</span><span style="color:#f8f8f2;background-color:#a61719;">: </span><span style="color:#a6e22e;background-color:#a61719;">float</span><span style="color:#f8f8f2;background-color:#a61719;">) -&gt; </span><span style="color:#a6e22e;background-color:#a61719;">float</span><span style="color:#f8f8f2;background-color:#a61719;">:</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 8  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">    </span><span style="color:#75715e;background-color:#a61719;">&quot;&quot;&quot;The sigmoid/logistic activation function.&quot;&quot;&quot;</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 9  </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">    </span><span style="color:#f92672;background-color:#a61719;">return</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">/</span><span style="color:#f8f8f2;background-color:#a61719;"> (</span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> exp(</span><span style="color:#f92672;background-color:#a61719;">-</span><span style="color:#f8f8f2;background-color:#a61719;">z))</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 3  </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#22a322;">import</span><span style="color:#f8f8f2;background-color:#22a322;"> torch</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 10 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 4  </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 11 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 5  </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 12 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 6  </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># The number of examples in our dataset</span>
+
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 14 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 8  </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 15 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 9  </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># Randomly generate some input data</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 10 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;">nx </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> </span><span style="color:#be84ff;">4</span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">x1 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> [gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">) </span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#ffffff;background-color:#a61719;">_</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">range</span><span style="color:#f8f8f2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 18 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">x2 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> [gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">) </span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#ffffff;background-color:#a61719;">_</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">range</span><span style="color:#f8f8f2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 19 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">x3 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> [gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">) </span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#ffffff;background-color:#a61719;">_</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">range</span><span style="color:#f8f8f2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">x4 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> [gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">) </span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#ffffff;background-color:#a61719;">_</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">range</span><span style="color:#f8f8f2;background-color:#a61719;">(N)]</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 11 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#22a322;">X </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> torch.randn(N, nx)</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 21 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 12 </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 22 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 13 </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># Generate random neuron parameters</span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 23 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">w1 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 24 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">w2 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 25 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">w3 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 26 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">w4 </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> gauss(</span><span style="color:#be84ff;background-color:#a61719;">0</span><span style="color:#f8f8f2;background-color:#a61719;">, </span><span style="color:#be84ff;background-color:#a61719;">1</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 14 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#22a322;">w </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> torch.randn(nx)</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 27 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 15 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;">b </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> </span><span style="color:#be84ff;">0</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 28 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 29 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># Compute neuron output for each of the N examples</span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 30 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> x1i, x2i, x3i, x4i </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#66d9ef;background-color:#a61719;">zip</span><span style="color:#f8f8f2;background-color:#a61719;">(x1, x2, x3, x4):</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 31 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">    zi </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> w1 </span><span style="color:#f92672;background-color:#a61719;">*</span><span style="color:#f8f8f2;background-color:#a61719;"> x1i </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> w2 </span><span style="color:#f92672;background-color:#a61719;">*</span><span style="color:#f8f8f2;background-color:#a61719;"> x2i </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> w3 </span><span style="color:#f92672;background-color:#a61719;">*</span><span style="color:#f8f8f2;background-color:#a61719;"> x3i </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> w4 </span><span style="color:#f92672;background-color:#a61719;">*</span><span style="color:#f8f8f2;background-color:#a61719;"> x4i </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> b</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 32 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#a61719;">    ai </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> sigmoid(zi)</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 18 </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#22a322;">for</span><span style="color:#f8f8f2;background-color:#22a322;"> xi </span><span style="color:#f92672;background-color:#22a322;">in</span><span style="color:#f8f8f2;background-color:#22a322;"> X:</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 19 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#22a322;">    zi </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> xi </span><span style="color:#f92672;background-color:#22a322;">&#64;</span><span style="color:#f8f8f2;background-color:#22a322;"> w </span><span style="color:#f92672;background-color:#22a322;">+</span><span style="color:#f8f8f2;background-color:#22a322;"> b</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;background-color:#22a322;">    ai </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> </span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">torch.</span><span style="color:#f8f8f2;background-color:#22a322;">sigmoid(zi)</span><span style="background-color:#22a322;"></span>
 </pre>
 <div class="code-caption">
 <a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-02-NeuronDot.py">Link
@@ -1139,11 +1189,19 @@ that computes the output of the network for all examples at once. A
 neural network library can turn this into highly efficient CPU or GPU
 operations.</p>
 <p><span class="math display">\[\begin{align}
-\mathbf{z} &amp;= X \mathbf{w} + \mathbf{1} b \\
-\mathbf{a} &amp;= g(\mathbf{z})
+\vz &amp;= X \vw + \mathbf{1} b \\
+\va &amp;= g(\vz)
 \end{align}\]</span></p>
 <div class="code-highlight">
 <pre>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 15 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 15 </span><span style="color:#0000ee;">│</span><span style="color:#f8f8f2;">b </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> </span><span style="color:#be84ff;">0</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 16 </span><span style="color:#0000ee;">│</span>
+<span style="color:#0000ee;"></span><span style="color:#444444;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#444444;"> 17 </span><span style="color:#0000ee;">│</span><span style="color:#75715e;"># Compute neuron output for each of the N examples</span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 18 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="color:#f92672;background-color:#a61719;">for</span><span style="color:#f8f8f2;background-color:#a61719;"> xi </span><span style="color:#f92672;background-color:#a61719;">in</span><span style="color:#f8f8f2;background-color:#a61719;"> X:</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 19 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#f8f8f2;background-color:#901011;">    zi </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="font-weight:bold;color:#7f7f7f;background-color:#901011;">xi</span><span style="color:#f8f8f2;background-color:#a61719;"> </span><span style="color:#f92672;background-color:#a61719;">&#64;</span><span style="color:#f8f8f2;background-color:#a61719;"> w </span><span style="color:#f92672;background-color:#a61719;">+</span><span style="color:#f8f8f2;background-color:#a61719;"> b</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;"> 20 </span><span style="color:#0000ee;">│</span><span style="color:#008700;">    </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#f8f8f2;background-color:#901011;">    ai </span><span style="color:#f92672;background-color:#a61719;">=</span><span style="color:#f8f8f2;background-color:#a61719;"> torch.sigmoid(</span><span style="font-weight:bold;color:#7f7f7f;background-color:#901011;">zi</span><span style="color:#f8f8f2;background-color:#a61719;">)</span><span style="background-color:#a61719;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 18 </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#f8f8f2;background-color:#006000;">z </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> </span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">X</span><span style="color:#f8f8f2;background-color:#22a322;"> </span><span style="color:#f92672;background-color:#22a322;">&#64;</span><span style="color:#f8f8f2;background-color:#22a322;"> w </span><span style="color:#f92672;background-color:#22a322;">+</span><span style="color:#f8f8f2;background-color:#22a322;"> b</span><span style="background-color:#22a322;"></span>
+<span style="color:#0000ee;"></span><span style="color:#870000;">    </span><span style="color:#0000ee;">│</span><span style="color:#008700;"> 19 </span><span style="color:#0000ee;">│</span><span style="font-weight:bold;color:#f8f8f2;background-color:#006000;">yhat </span><span style="color:#f92672;background-color:#22a322;">=</span><span style="color:#f8f8f2;background-color:#22a322;"> torch.sigmoid(</span><span style="font-weight:bold;color:#7f7f7f;background-color:#006000;">z</span><span style="color:#f8f8f2;background-color:#22a322;">)</span><span style="background-color:#22a322;"></span>
 </pre>
 <div class="code-caption">
 <a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-03-NeuronVectorized.py">Link
@@ -1153,9 +1211,9 @@ to code.</a>
 <details class="question">
 <summary>
 <strong>Question:</strong> What are the dimensions of <span
-class="math inline">\(\mathbf{z}\)</span> and <span
-class="math inline">\(\mathbf{a}\)</span> (aka, <span
-class="math inline">\(\mathbf{\hat y}\)</span>)?
+class="math inline">\(\vz\)</span> and <span
+class="math inline">\(\va\)</span> (aka, <span
+class="math inline">\(\vyhat\)</span>)?
 </summary>
 <div class="answer">
 <p><strong>Answer:</strong> We are computing a single output value for
@@ -1163,15 +1221,15 @@ each input, so, the shape of these vectors are <span
 class="math inline">\((N \times 1)\)</span>. PyTorch will treat these as
 arrays with <span class="math inline">\(N\)</span> elements instead of
 as column vectors. <span class="math display">\[\begin{align}
-\mathbf{z} &amp;=
+\vz &amp;=
 \begin{bmatrix}
-    \mathbf{x}^{(1)T} \mathbf{w} + b \\
-    \mathbf{x}^{(2)T} \mathbf{w} + b \\
+    \vx^{(1)T} \vw + b \\
+    \vx^{(2)T} \vw + b \\
     \vdots \\
-    \mathbf{x}^{(N)T} \mathbf{w} + b \\
+    \vx^{(N)T} \vw + b \\
 \end{bmatrix}
 \\
-\mathbf{a} &amp;=
+\va &amp;=
 \begin{bmatrix}
     g(z^{(1)}) \\
     g(z^{(2)}) \\
@@ -1188,14 +1246,14 @@ element-wise multiplications). A key to understanding matrix math is to
 examine the shapes of all matrices involved. Above, <span
 class="math inline">\(X\)</span> has a shape of <span
 class="math inline">\((N \times n_x)\)</span>, <span
-class="math inline">\(\mathbf{w}\)</span> has a shape of <span
+class="math inline">\(\vw\)</span> has a shape of <span
 class="math inline">\((n_x \times 1)\)</span>, and <span
 class="math inline">\(b\)</span> is a scalar multiplied by an
 appropriately-shaped matrix of all ones (so that we can add <span
 class="math inline">\(b\)</span> to each element of the <span
-class="math inline">\(X\mathbf{w}\)</span> result). Inner dimensions
-(the last dimension of the left matrix and the first dimension of the
-right matrix) must be the same for any valid matrix multiplication.</p>
+class="math inline">\(X\vw\)</span> result). Inner dimensions (the last
+dimension of the left matrix and the first dimension of the right
+matrix) must be the same for any valid matrix multiplication.</p>
 <p>In the code snippet, the scalar <span
 class="math inline">\(b\)</span> is added element-wise to every element
 in the final matrix due to <a
@@ -1211,19 +1269,19 @@ data-number="4.5">
 <h2 data-number="4.5"><span class="header-section-number">4.5</span>
 Optimization with Batch Gradient Descent</h2>
 <p>We must find values for parameters <span
-class="math inline">\(\mathbf{w}\)</span> and <span
+class="math inline">\(\vw\)</span> and <span
 class="math inline">\(b\)</span> to make <span
-class="math inline">\(\hat y^{(i)} \approx y^{(i)}\)</span>. As you
-might expect from the title of this subsection, we are going to use
-gradient descent to optimize the parameters. This means that we are
-going to need an objective function (something to minimize) and to
-compute some derivatives.</p>
+class="math inline">\(\yhat\i \approx y\i\)</span>. As you might expect
+from the title of this subsection, we are going to use gradient descent
+to optimize the parameters. This means that we are going to need an
+objective function (something to minimize) and to compute some
+derivatives.</p>
 <p>But what is an appropriate objective function (I’ll refer to this as
 the <em>loss</em> function going forward)? How about the
 <strong>mean-difference</strong>?</p>
-<p><span class="math display">\[ℒ(\mathbf{\hat{y}}, \mathbf{y}) =
-\sum_{i=1}^N (\hat y^{(i)} - y^{(i)}) \quad \color{red}{\text{Don&#39;t
-use this loss function.}}\]</span></p>
+<p><span class="math display">\[ℒ(\vyhat, \vy) = \sum_{i=1}^N (\yhat\i -
+y\i) \quad \color{red}{\text{Don&#39;t use this loss
+function.}}\]</span></p>
 <details class="question">
 <summary>
 <strong>Question:</strong> What is problematic about this loss function?
@@ -1235,10 +1293,10 @@ values of the inputs.</p>
 <table>
 <thead>
 <tr class="header">
-<th style="text-align: center;"><span class="math inline">\(\hat
-y^{(i)}\)</span></th>
 <th style="text-align: center;"><span
-class="math inline">\(y^{(i)}\)</span></th>
+class="math inline">\(\yhat\i\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(y\i\)</span></th>
 <th style="text-align: center;">ℒ</th>
 </tr>
 </thead>
@@ -1275,9 +1333,8 @@ see shortly, we will use the sign of the derivative.
 <p>A quick “fix” for the above loss function is to change it into the
 <strong>mean-absolute-error</strong> (MAE):</p>
 <p><span class="math display">\[\begin{align}
-ℒ(\mathbf{\hat{y}}, \mathbf{y}) &amp;= \sum_{i=1}^N |\hat y^{(i)} -
-y^{(i)}|\\
-&amp;= ||\mathbf{\hat{y}} - \mathbf{y}||_1
+ℒ(\vyhat, \vy) &amp;= \sum_{i=1}^N |\yhat\i - y\i|\\
+  &amp;= \mae
 \end{align}\]</span></p>
 <p>The second line shows a vectorized version using the L1-norm, which
 is the sum of the absolute values of the given vector. MAE is a good
@@ -1287,16 +1344,15 @@ correct answer.</p>
 <p>A common choice for a loss function when training a regression model
 is <strong>Half mean-square-error</strong> (Half-MSE):</p>
 <p><span class="math display">\[\begin{align}
-ℒ(\mathbf{\hat{y}}, \mathbf{y}) &amp;= \frac{1}{2N} \sum_{i=1}^N (\hat
-y^{(i)} - y^{(i)})^2\\
-&amp;= \frac{1}{2N} ||(\mathbf{\hat{y}} - \mathbf{y})^2||_1
+ℒ(\vyhat, \vy) &amp;= \frac{1}{2N} \sum_{i=1}^N (\yhat\i - y\i)^2\\
+  &amp;= \vhmse
 \end{align}\]</span></p>
 <p>We are again using the L1-norm, but this time the vector we are
 norming is the element-wise squared values of the difference between the
-vectors <span class="math inline">\(\mathbf{\hat y}\)</span> and <span
-class="math inline">\(\mathbf{y}\)</span>. Interpreting Half-MSE is a
-bit harder than MAE—you should multiply the result by two and then take
-the square-root.</p>
+vectors <span class="math inline">\(\vyhat\)</span> and <span
+class="math inline">\(\vy\)</span>. Interpreting Half-MSE is a bit
+harder than MAE—you should multiply the result by two and then take the
+square-root.</p>
 <details class="question">
 <summary>
 <strong>Question:</strong> Why might we compute the half-MSE instead of
@@ -1311,34 +1367,29 @@ effect we want.
 </details>
 <p>The standard choice when performing classification with a neuron is
 <strong>binary cross-entropy</strong> (BCE):</p>
-<p><span class="math display">\[\begin{align}
-ℒ(\mathbf{\hat{y}}, \mathbf{y}) &amp;= - \sum_{i=1}^N (y^{(i)} \log{\hat
-y^{(i)}} + (1 - y^{(i)})\log{(1-\hat y^{(i)})})\\
-&amp;= -||\mathbf{y} \cdot \log{ \mathbf{\hat y}} + (1 - \mathbf{y})
-\cdot \log{(1- \mathbf{\hat y})}||_1
-\end{align}\]</span></p>
-<p>In the vectorized version, a “<span
-class="math inline">\(\cdot\)</span>” denotes an element-wise
-multiplication.</p>
+<p><span class="math display">\[
+ℒ(\vyhat, \vy) = \vbce
+\]</span></p>
 <details class="question">
 <summary>
 <strong>Question:</strong> Take some time to examine this loss function.
-What happens for various values of <span class="math inline">\(\hat
-y^{(i)}\)</span>, <span class="math inline">\(y^{(i)}\)</span>?
+What happens for various values of <span
+class="math inline">\(\yhat\i\)</span>, <span
+class="math inline">\(y\i\)</span>?
 </summary>
 <div class="answer">
 <p><strong>Answer:</strong></p>
 <table>
 <thead>
 <tr class="header">
-<th style="text-align: center;"><span class="math inline">\(\hat
-y^{(i)}\)</span></th>
 <th style="text-align: center;"><span
-class="math inline">\(y^{(i)}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(\log{\hat
-y^{(i)}}\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(\log{(1-\hat
-y^{(i)})}\)</span></th>
+class="math inline">\(\yhat\i\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(y\i\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(\log{\yhat\i}\)</span></th>
+<th style="text-align: center;"><span
+class="math inline">\(\log{(1-\yhat\i)}\)</span></th>
 <th style="text-align: center;">ℒ</th>
 </tr>
 </thead>
@@ -1374,9 +1425,9 @@ y^{(i)})}\)</span></th>
 </tbody>
 </table>
 <p>The tables shows that a larger difference between <span
-class="math inline">\(\hat y^{(i)}\)</span> and <span
-class="math inline">\(y^{(i)}\)</span> (rows 2 and 3) results in a
-larger loss, which is exactly what we’d like to see.</p>
+class="math inline">\(\yhat\i\)</span> and <span
+class="math inline">\(y\i\)</span> (rows 2 and 3) results in a larger
+loss, which is exactly what we’d like to see.</p>
 </div>
 </details>
 <p>Let’s move forward using binary cross-entropy loss and the sigmoid
@@ -1412,41 +1463,37 @@ analytical solution?
 to zero, and then solve the set of linear equations. Here is an example
 using linear regression, which is very similar to our single neuron.
 Here is our model:</p>
-<p><span class="math display">\[\mathbf{\hat y} = X
-\mathbf{\theta},\]</span></p>
-<p>where <span class="math inline">\(\theta\)</span> is our vector of
+<p><span class="math display">\[\vyhat = X \mathbf{θ},\]</span></p>
+<p>where <span class="math inline">\(θ\)</span> is our vector of
 parameters. Here is our loss function (half-SSE):</p>
-<p><span class="math display">\[ℒ(\mathbf{\hat{y}}, \mathbf{y}) =
-\frac{1}{2} ||(\mathbf{\hat{y}} - \mathbf{y})^2||_1.\]</span></p>
+<p><span class="math display">\[ℒ(\vyhat, \vy) = \frac{1}{2} ||(\vyhat -
+\vy)^2||_1.\]</span></p>
 <p>Now we can take the partial derivative of loss with respect to
-parameters <span class="math inline">\(\theta\)</span>. (Note that I
-substitute for <span class="math inline">\(\mathbf{\hat y}\)</span> on
-the third line.)</p>
+parameters <span class="math inline">\(θ\)</span>. (Note that I
+substitute for <span class="math inline">\(\vyhat\)</span> on the third
+line.)</p>
 <p><span class="math display">\[\begin{align}
-\frac{∂ ℒ}{∂ \mathbf{\theta}} &amp;=
-  \frac{∂ ||\frac{1}{2} (\mathbf{\hat{y}} - \mathbf{y})^2||_1}{∂
-\mathbf{\theta}} \\
-&amp;= ||\mathbf{\hat{y}} - \mathbf{y}||_1 \frac{∂ \mathbf{\hat y}}{∂
-\mathbf{\theta}} \\
-&amp;= ||X \mathbf{\theta} - \mathbf{y}||_1 \frac{∂ X \mathbf{\theta}}{∂
-\mathbf{\theta}} \\
-&amp;= ||X \mathbf{\theta} - \mathbf{y}||_1 X \\
-&amp;= X^T X \mathbf{\theta} - X^T \mathbf{y}
+\frac{∂ ℒ}{∂ \mathbf{θ}} &amp;=
+  \frac{∂ ||\frac{1}{2} (\vyhat - \vy)^2||_1}{∂ \mathbf{θ}} \\
+&amp;= ||\vyhat - \vy||_1 \frac{∂ \vyhat}{∂ \mathbf{θ}} \\
+&amp;= ||X \mathbf{θ} - \vy||_1 \frac{∂ X \mathbf{θ}}{∂ \mathbf{θ}} \\
+&amp;= ||X \mathbf{θ} - \vy||_1 X \\
+&amp;= X^T X \mathbf{θ} - X^T \vy
 \end{align}\]</span></p>
 <p>We can now set this derivative to zero and solve for <span
-class="math inline">\(\mathbf{\theta}\)</span>.</p>
+class="math inline">\(\mathbf{θ}\)</span>.</p>
 <p><span class="math display">\[\begin{align}
-\frac{∂ ℒ}{∂ \mathbf{\theta}} &amp;= 0 \\
-X^T X \mathbf{\theta} - X^T \mathbf{y} &amp;= 0 \\
-X^T X \mathbf{\theta} &amp;= X^T \mathbf{y}
+\frac{∂ ℒ}{∂ \mathbf{θ}} &amp;= 0 \\
+X^T X \mathbf{θ} - X^T \vy &amp;= 0 \\
+X^T X \mathbf{θ} &amp;= X^T \vy
 \end{align}\]</span></p>
 <p>And now assuming that <span class="math inline">\(X^T X\)</span> is
 invertible (that the columns are linearly independent).</p>
-<p><span class="math display">\[\mathbf{\theta}^* = (X^T X)^{-1} X^T
-\mathbf{y}\]</span></p>
+<p><span class="math display">\[\mathbf{θ}^* = (X^T X)^{-1} X^T
+\vy\]</span></p>
 <p>We now have an optimal solution (called <span
-class="math inline">\(\mathbf{\theta}^*\)</span>) that minimizes loss.
-(See <a href="https://en.wikipedia.org/wiki/Ordinary_least_squares"
+class="math inline">\(\mathbf{θ}^*\)</span>) that minimizes loss. (See
+<a href="https://en.wikipedia.org/wiki/Ordinary_least_squares"
 title="Ordinary least squares - Wikipedia">Ordinary least squares -
 Wikipedia</a> for more details.)</p>
 </div>
@@ -1464,17 +1511,20 @@ derivative of loss with respect to each parameter. Taking the single
 neuron, binary cross-entropy loss, and the sigmoid activation function
 the chain rule in matrix form is as follows.</p>
 <p><span class="math display">\[\begin{align}
-\frac{∂ ℒ}{∂ \mathbf{w}} &amp;=
-    \frac{∂ ℒ}{∂ \mathbf{\hat{y}}}
-    \frac{∂ \mathbf{\hat{y}}}{∂ \mathbf{z}}
-    \frac{∂ \mathbf{z}}{∂ \mathbf{w}} \\
-&amp;= \frac{1}{N}||\mathbf{\hat{y}} - \mathbf{y}||_1X\\[20pt]
+\frac{∂ ℒ}{∂ \vw} &amp;=
+  \frac{∂ ℒ}{∂ \vyhat}
+  \frac{∂ \vyhat}{∂ \vz}
+  \frac{∂ \vz}{∂ \vw} \\
+  &amp;= \frac{1}{N} X^T (\vyhat - \vy)\\[20pt]
 \frac{∂ ℒ}{∂ b} &amp;=
-    \frac{∂ ℒ}{∂ \mathbf{\hat{y}}}
-    \frac{∂ \mathbf{\hat{y}}}{∂ \mathbf{z}}
-    \frac{∂ \mathbf{z}}{∂ b} \\
-&amp;= \frac{1}{N}\sum_{i=1}^N (\hat y^{(i)} - y^{(i)})
+  \frac{∂ ℒ}{∂ \vyhat}
+  \frac{∂ \vyhat}{∂ \vz}
+  \frac{∂ \vz}{∂ b} \\
+  &amp;= \frac{1}{N} \sum_{i=1}^N (\yhat\i - y\i)
 \end{align}\]</span></p>
+<p>Don’t worry too much about the derivations or notation at this stage.
+We’ll go into more details when we follow the same process for a full
+neural network in the next section.</p>
 <details class="question">
 <summary>
 <strong>Question:</strong> Why is it necessary to apply the chain rule?
@@ -1483,37 +1533,35 @@ And why did the chain rule appear as it does above?
 <div class="answer">
 <p><strong>Answer:</strong> First, we cannot directly compute the
 partial derivative of <span class="math inline">\(ℒ\)</span> with
-respect to <span class="math inline">\(\mathbf{w}\)</span> (or <span
+respect to <span class="math inline">\(\vw\)</span> (or <span
 class="math inline">\(b\)</span>). Second, we only apply the chain rule
 to equations that have some form of dependency on the term in the first
-denominator (<span class="math inline">\(\mathbf{w}\)</span> and <span
+denominator (<span class="math inline">\(\vw\)</span> and <span
 class="math inline">\(b\)</span>). It is useful to look at the loss
 function when we substitute in values for <span
-class="math inline">\(\mathbf{\hat y}\)</span> and <span
-class="math inline">\(\mathbf{z}\)</span>.</p>
-<p><span class="math display">\[ℒ(\mathbf{\hat{y}}, \mathbf{y}) =
--||\mathbf{y} \cdot \log{σ(X \mathbf{w} + \mathbf{1} b)} + (1 -
-\mathbf{y}) \cdot \log{(1-σ(X \mathbf{w} + \mathbf{1}
-b))}||_1\]</span></p>
+class="math inline">\(\yhat\)</span> and then <span
+class="math inline">\(z\)</span>.</p>
+<p><span class="math display">\[ℒ(\vyhat, \vy) =
+-\frac{1}{N}\sum_{i=1}^N (y\i \log{σ(\vx^{(i)T}\vw\i + b)} + (1 -
+y\i)\log{(1-σ(\vx^{(i)T}\vw\i + b))})\]</span></p>
 <p>In the above equation we can more easily see how the chain-rule comes
-into play. The parameter <span class="math inline">\(\mathbf{w}\)</span>
-is nested within a call to <span class="math inline">\(σ\)</span> which
-is nested within a call to <span class="math inline">\(\log\)</span>
-when computing <span class="math inline">\(\frac{∂ ℒ}{∂
-\mathbf{w}}\)</span>.</p>
+into play. The parameter <span class="math inline">\(\vw\)</span> is
+nested within a call to <span class="math inline">\(σ\)</span> which is
+nested within a call to <span class="math inline">\(\log\)</span> when
+computing <span class="math inline">\(\frac{∂ ℒ}{∂ \vw}\)</span>.</p>
 </div>
 </details>
 <details class="question">
 <summary>
 <strong>Question:</strong> What do we do with the partial derivatives
-<span class="math inline">\(\frac{∂ ℒ}{∂ \mathbf{w}}\)</span> and <span
+<span class="math inline">\(\frac{∂ ℒ}{∂ \vw}\)</span> and <span
 class="math inline">\(\frac{∂ ℒ}{∂ b}\)</span>?
 </summary>
 <div class="answer">
 <p><strong>Answer:</strong> We use these terms to update model
 parameters.</p>
 <p><span class="math display">\[\begin{align}
-\mathbf{w} &amp;:= \mathbf{w} - \alpha \frac{∂ ℒ}{∂ \mathbf{w}} \\
+\vw &amp;:= \vw - \alpha \frac{∂ ℒ}{∂ \vw} \\
 b &amp;:= b - \alpha \frac{∂ ℒ}{∂ b}
 \end{align}\]</span></p>
 </div>
@@ -1562,65 +1610,67 @@ function, but you can find that <a
 href="https://github.com/SinglePages/NeuralNetworks/blob/767c4a3e357ba757b2e39767b489d7c51d1688c7/Source/Code/Python/utilities.py#L69">code
 in the repository for this guide</a>.</p>
 <div class="code-highlight">
-<pre><span style="color:#39424e;">   1</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">utilities</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">format_duration_with_prefix</span>
-<span style="color:#39424e;">   2</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timeit</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">default_timer</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timer</span>
-<span style="color:#39424e;">   3</span> <span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span>
-<span style="color:#39424e;">   4</span> 
-<span style="color:#39424e;">   5</span> 
-<span style="color:#39424e;">   6</span> <span style="color:#ffa759;">def</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">y</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
-<span style="color:#39424e;">   7</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_N</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">y</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">]</span>
-<span style="color:#39424e;">   8</span> <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">round</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">y</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">abs</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sum</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">/</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_N</span>
-<span style="color:#39424e;">   9</span> 
-<span style="color:#39424e;">  10</span> 
-<span style="color:#39424e;">  11</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Get training and validation data loaders for classes A and B</span>
-<span style="color:#39424e;">  12</span> <span style="color:#ccc9c2;">data_dir</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">../../Data</span><span style="color:#bae67e;">&quot;</span>
-<span style="color:#39424e;">  13</span> <span style="color:#ccc9c2;">classA</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">classB</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">7</span>
-<span style="color:#39424e;">  14</span> <span style="color:#ccc9c2;">flatten</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">True</span>
-<span style="color:#39424e;">  15</span> <span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">(</span>
-<span style="color:#39424e;">  16</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">data_dir</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">classA</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">classB</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">flatten</span>
-<span style="color:#39424e;">  17</span> <span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  18</span> 
-<span style="color:#39424e;">  19</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Neuron parameters</span>
-<span style="color:#39424e;">  20</span> <span style="color:#ccc9c2;">nx</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">28</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">28</span>
-<span style="color:#39424e;">  21</span> <span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">nx</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">.</span><span style="color:#ffcc66;">01</span>
-<span style="color:#39424e;">  22</span> <span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">zeros</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  23</span> 
-<span style="color:#39424e;">  24</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Batch gradient descent hyper-parameters</span>
-<span style="color:#39424e;">  25</span> <span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">4</span>
-<span style="color:#39424e;">  26</span> <span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">.</span><span style="color:#ffcc66;">01</span>
-<span style="color:#39424e;">  27</span> 
-<span style="color:#39424e;">  28</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute initial accuracy (should be around 50%)</span>
-<span style="color:#39424e;">  29</span> <span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  30</span> <span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  31</span> <span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">Accuracy before training: </span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  32</span> 
-<span style="color:#39424e;">  33</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Learn values for w and b that minimize loss</span>
-<span style="color:#39424e;">  34</span> <span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">epoch</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
-<span style="color:#39424e;">  35</span> 
-<span style="color:#39424e;">  36</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">start</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">timer</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
+<pre><span style="color:#39424e;">   1</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;">!/usr/bin/env python</span>
+<span style="color:#39424e;">   2</span> 
+<span style="color:#39424e;">   3</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">utilities</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">format_duration_with_prefix</span>
+<span style="color:#39424e;">   4</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timeit</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">default_timer</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timer</span>
+<span style="color:#39424e;">   5</span> <span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span>
+<span style="color:#39424e;">   6</span> 
+<span style="color:#39424e;">   7</span> 
+<span style="color:#39424e;">   8</span> <span style="color:#ffa759;">def</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">y</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
+<span style="color:#39424e;">   9</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_N</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">y</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">]</span>
+<span style="color:#39424e;">  10</span> <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">round</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">y</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">abs</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sum</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">/</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_N</span>
+<span style="color:#39424e;">  11</span> 
+<span style="color:#39424e;">  12</span> 
+<span style="color:#39424e;">  13</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Get training and validation data loaders for classes A and B</span>
+<span style="color:#39424e;">  14</span> <span style="color:#ccc9c2;">data_dir</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">../../Data</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  15</span> <span style="color:#ccc9c2;">classA</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">classB</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">7</span>
+<span style="color:#39424e;">  16</span> <span style="color:#ccc9c2;">flatten</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">True</span>
+<span style="color:#39424e;">  17</span> <span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">(</span>
+<span style="color:#39424e;">  18</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">data_dir</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">classA</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">classB</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">flatten</span>
+<span style="color:#39424e;">  19</span> <span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  20</span> 
+<span style="color:#39424e;">  21</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Neuron parameters</span>
+<span style="color:#39424e;">  22</span> <span style="color:#ccc9c2;">nx</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">28</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">28</span>
+<span style="color:#39424e;">  23</span> <span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">nx</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">.</span><span style="color:#ffcc66;">01</span>
+<span style="color:#39424e;">  24</span> <span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">zeros</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  25</span> 
+<span style="color:#39424e;">  26</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Batch gradient descent hyper-parameters</span>
+<span style="color:#39424e;">  27</span> <span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">4</span>
+<span style="color:#39424e;">  28</span> <span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">.</span><span style="color:#ffcc66;">01</span>
+<span style="color:#39424e;">  29</span> 
+<span style="color:#39424e;">  30</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute initial accuracy (should be around 50%)</span>
+<span style="color:#39424e;">  31</span> <span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  32</span> <span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  33</span> <span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">Accuracy before training: </span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  34</span> 
+<span style="color:#39424e;">  35</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Learn values for w and b that minimize loss</span>
+<span style="color:#39424e;">  36</span> <span style="color:#ffa759;">for</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">epoch</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">in</span><span style="color:#ccc9c2;"> </span><span style="color:#f28779;">range</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
 <span style="color:#39424e;">  37</span> 
-<span style="color:#39424e;">  38</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Make predictions given current paramters and then compute loss</span>
-<span style="color:#39424e;">  39</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  40</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">loss</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  41</span> 
-<span style="color:#39424e;">  42</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute derivatives for w and b (dz is common to both derivatives)</span>
-<span style="color:#39424e;">  43</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">dz</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span>
-<span style="color:#39424e;">  44</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">dw</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">/</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">dz</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  45</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">db</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">dz</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  46</span> 
-<span style="color:#39424e;">  47</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Update parameters</span>
-<span style="color:#39424e;">  48</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">dw</span>
-<span style="color:#39424e;">  49</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">db</span>
-<span style="color:#39424e;">  50</span> 
-<span style="color:#39424e;">  51</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Report on progress</span>
-<span style="color:#39424e;">  52</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  53</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  54</span> 
-<span style="color:#39424e;">  55</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">epoch</span><span style="color:#f29e74;">+</span><span style="color:#ffcc66;">1</span><span style="color:#ffcc66;">:&gt;2</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">/</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
-<span style="color:#39424e;">  56</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Cost=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">loss</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ffcc66;">:0.1f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
-<span style="color:#39424e;">  57</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Accuracy=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
-<span style="color:#39424e;">  58</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Time=</span><span style="color:#ccc9c2;">{</span><span style="color:#ffd580;">format_duration_with_prefix</span><span style="color:#ccc9c2;">(</span><span style="color:#ffd580;">timer</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">start</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
-<span style="color:#39424e;">  59</span> <span style="color:#ccc9c2;">    </span><span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  38</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">start</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">timer</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  39</span> 
+<span style="color:#39424e;">  40</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Make predictions given current paramters and then compute loss</span>
+<span style="color:#39424e;">  41</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  42</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">loss</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  43</span> 
+<span style="color:#39424e;">  44</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute derivatives for w and b (dz is common to both derivatives)</span>
+<span style="color:#39424e;">  45</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">dz</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span>
+<span style="color:#39424e;">  46</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">dw</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">/</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">]</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">dz</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  47</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">db</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">dz</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  48</span> 
+<span style="color:#39424e;">  49</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Update parameters</span>
+<span style="color:#39424e;">  50</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">dw</span>
+<span style="color:#39424e;">  51</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">db</span>
+<span style="color:#39424e;">  52</span> 
+<span style="color:#39424e;">  53</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Report on progress</span>
+<span style="color:#39424e;">  54</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  55</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  56</span> 
+<span style="color:#39424e;">  57</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">epoch</span><span style="color:#f29e74;">+</span><span style="color:#ffcc66;">1</span><span style="color:#ffcc66;">:&gt;2</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">/</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  58</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Cost=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">loss</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ffcc66;">:0.1f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  59</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Accuracy=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  60</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Time=</span><span style="color:#ccc9c2;">{</span><span style="color:#ffd580;">format_duration_with_prefix</span><span style="color:#ccc9c2;">(</span><span style="color:#ffd580;">timer</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">start</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  61</span> <span style="color:#ccc9c2;">    </span><span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;">)</span>
 </pre>
 <div class="code-caption">
 <a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/04-04-NeuronMNIST.py">Link
@@ -1630,11 +1680,11 @@ to code.</a>
 <details class="question">
 <summary>
 <strong>Question:</strong> Which lines of code correspond to <span
-class="math inline">\(\frac{∂ ℒ}{∂ \mathbf{w}}\)</span> and <span
+class="math inline">\(\frac{∂ ℒ}{∂ \vw}\)</span> and <span
 class="math inline">\(\frac{∂ ℒ}{∂ b}\)</span>?
 </summary>
 <div class="answer">
-<strong>Answer:</strong> Lines 44 and 45.
+<strong>Answer:</strong> Lines 46 and 47.
 </div>
 </details>
 <details class="question">
@@ -1739,7 +1789,7 @@ W^{[l]} &amp;=
 &amp;  w_{n_l,n_{l-1}}^{[l]}
 \end{bmatrix}
 \\
-\mathbf{b}^{[l]} &amp;=
+\vb^{[l]} &amp;=
 \begin{bmatrix}
     b_{1}^{[l]} \\
     b_{2}^{[l]} \\
@@ -1750,17 +1800,17 @@ W^{[l]} &amp;=
 <p>Compare these equations to the diagram above. Notice how the top
 neuron in layer 1 would have its associated parameters in the first row
 of <span class="math inline">\(W^{[1]}\)</span> and the first value in
-<span class="math inline">\(\mathbf{b}^{[1]}\)</span>.</p>
+<span class="math inline">\(\vb^{[1]}\)</span>.</p>
 <p>Next we have the vectorized linear and activation equations for each
 neuron in a layer (these are for all training examples):</p>
 <p><span class="math display">\[\begin{align}
-Z^{[l]} &amp;= A^{[l-1]} W^{[l]T} + \mathbf{1} \mathbf{b}^{[l]T}\\
+Z^{[l]} &amp;= A^{[l-1]} W^{[l]T} + \mathbf{1} \vb^{[l]T}\\
 A^{[l]} &amp;= g^{[l]}(Z^{[l]})
 \end{align}\]</span></p>
 <details class="question">
 <summary>
 <strong>Question:</strong> Why do we have <span
-class="math inline">\(\mathbf{1} \mathbf{b}^{[l]T}\)</span>?
+class="math inline">\(\mathbf{1} \vb^{[l]T}\)</span>?
 </summary>
 <div class="answer">
 <p><strong>Answer:</strong> This ensures that the dimensions are correct
@@ -1837,27 +1887,21 @@ A^{[l]} &amp;=
 \\
 &amp;=
 \begin{bmatrix}
-    g_{1}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{1}^{[l]T} +
-b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](1)}
-\mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots
-&amp;  g_{n_l}^{[l]}(\mathbf{a}^{[l-1](1)} \mathbf{w}_{n_l}^{[l]T} +
-b_{n_l}^{[l]}) \\
-    g_{1}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{1}^{[l]T} +
-b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](2)}
-\mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots
-&amp;  g_{n_l}^{[l]}(\mathbf{a}^{[l-1](2)} \mathbf{w}_{n_l}^{[l]T} +
-b_{n_l}^{[l]}) \\
+    g_{1}^{[l]}(\va^{[l-1](1)} \vw_{1}^{[l]T} + b_{1}^{[l]}) &amp;
+g_{2}^{[l]}(\va^{[l-1](1)} \vw_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots
+&amp;  g_{n_l}^{[l]}(\va^{[l-1](1)} \vw_{n_l}^{[l]T} + b_{n_l}^{[l]}) \\
+    g_{1}^{[l]}(\va^{[l-1](2)} \vw_{1}^{[l]T} + b_{1}^{[l]}) &amp;
+g_{2}^{[l]}(\va^{[l-1](2)} \vw_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots
+&amp;  g_{n_l}^{[l]}(\va^{[l-1](2)} \vw_{n_l}^{[l]T} + b_{n_l}^{[l]}) \\
     \vdots &amp; \vdots &amp; \ddots &amp; \vdots  \\
-    g_{1}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{1}^{[l]T} +
-b_{1}^{[l]}) &amp; g_{2}^{[l]}(\mathbf{a}^{[l-1](N)}
-\mathbf{w}_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots
-&amp;  g_{n_l}^{[l]}(\mathbf{a}^{[l-1](N)} \mathbf{w}_{n_l}^{[l]T} +
-b_{n_l}^{[l]})
+    g_{1}^{[l]}(\va^{[l-1](N)} \vw_{1}^{[l]T} + b_{1}^{[l]}) &amp;
+g_{2}^{[l]}(\va^{[l-1](N)} \vw_{2}^{[l]T} + b_{2}^{[l]}) &amp; \cdots
+&amp;  g_{n_l}^{[l]}(\va^{[l-1](N)} \vw_{n_l}^{[l]T} + b_{n_l}^{[l]})
 \end{bmatrix}
 \end{align}\]</span></p>
 <p>You should also think about the shapes of <span
-class="math inline">\(\mathbf{a}^{[l-1](i)}\)</span> and <span
-class="math inline">\(\mathbf{w}_{j}^{[l]}\)</span>.</p>
+class="math inline">\(\va^{[l-1](i)}\)</span> and <span
+class="math inline">\(\vw_{j}^{[l]}\)</span>.</p>
 </div>
 </details>
 </section>
@@ -1866,7 +1910,7 @@ class="math inline">\(\mathbf{w}_{j}^{[l]}\)</span>.</p>
 Backpropagation</h2>
 <p>Just like for the single neuron, we want to find values for <span
 class="math inline">\(W^{[l]}\)</span> and <span
-class="math inline">\(\mathbf{b}^{[l]}\)</span> (for <span
+class="math inline">\(\vb^{[l]}\)</span> (for <span
 class="math inline">\(l = 1, 2, ..., L\)</span>) such that <span
 class="math inline">\(A^{[L]} \approx Y\)</span> (<span
 class="math inline">\(A^{[L]}\)</span> is another name for <span
@@ -1887,13 +1931,13 @@ class="math inline">\(n_y=n_2=3\)</span>),</li>
 For this network, we need to compute these partial derivatives:</p>
 <p><span class="math display">\[
 \frac{∂ℒ}{∂ W^{[1]}}^①,
-\frac{∂ℒ}{∂ \mathbf{b}^{[1]}}^②,
+\frac{∂ℒ}{∂ \vb^{[1]}}^②,
 \frac{∂ℒ}{∂ W^{[2]}}^③,
-\frac{∂ℒ}{∂ \mathbf{b}^{[2]}}^④
+\frac{∂ℒ}{∂ \vb^{[2]}}^④
 \]</span></p>
 <p>We are going to start at layer 2 and work backward through the
 network to layer 1. As we compute these derivatives answer for yourself
-“why do we work backward through the network?”</p>
+<strong>“why do we work backward through the network?”</strong></p>
 <p>This process of computing derivatives backward through the network is
 why this process if referred to as backpropagation–we’ll compute values
 and propagate them backward to earlier layers in the network. This is
@@ -1904,98 +1948,74 @@ alt="Compute graph for two-layer network." />
 <figcaption aria-hidden="true">Compute graph for two-layer
 network.</figcaption>
 </figure>
-<p>Notice how the input flows forward from top-to-bottom, but gradients
-flow backward (from bottom-to-top). This image corresponds to the
-network above if you rotate it 90 degrees anti-clockwise. Let’s start
-with the term labeled ④ above. The chain-rule requires us to derive
-three components.</p>
-<p><span class="math display">\[
-\frac{∂ ℒ}{∂ \mathbf{b}^{[2]}}^④ =
+<p>Notice how the input flows forward from top-to-bottom in the compute
+graph, but gradients flow backward (from bottom-to-top). This image
+corresponds to the network above if you rotate it 90 degrees
+anti-clockwise (mostly just so we I had space for the image on this
+page).</p>
+<section id="layer-2-parameters" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1"><span class="header-section-number">5.2.1</span>
+Layer 2 Parameters</h3>
+<p>Let’s start with the terms labeled ③ and ④ above. The chain-rule
+requires us to derive three components.</p>
+<p><span class="math display">\[\begin{align}
+\frac{∂ℒ}{∂ W^{[2]}}^③ &amp;=
     \frac{∂ ℒ}{∂ A^{[2]}}
     \frac{∂ A^{[2]}}{∂ Z^{[2]}}
-    \frac{∂ Z^{[2]}}{∂ \mathbf{b}^{[2]}}
-\]</span></p>
-<p>Here are the derivations.</p>
+    \frac{∂ Z^{[2]}}{∂ W^{[2]}}\\
+\frac{∂ ℒ}{∂ \vb^{[2]}}^④ &amp;=
+    \frac{∂ ℒ}{∂ A^{[2]}}
+    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ \vb^{[2]}}
+\end{align}\]</span></p>
+<p>These two equations share the first two terms. In fact, we’ll see
+these again for the first layer; so, it makes sense to give them their
+own symbol, <span class="math inline">\(∂_{Z^{[2]}}=\frac{∂ ℒ}{∂
+A^{[2]}}\frac{∂ A^{[2]}}{∂ Z^{[2]}}\)</span>.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ ℒ}{∂ A^{[2]}} &amp;=
-    \frac{-∂}{∂ A^{[2]}} ||Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1
-- A^{[2]})}||_1\\
+    -\frac{∂}{∂ A^{[2]}} (Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1
+- A^{[2]})})\\
     &amp;= \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\\[20pt]
 
 \frac{∂ A^{[2]}}{∂ Z^{[2]}} &amp;=
     \frac{∂}{∂ Z^{[2]}} σ(Z^{[2]})\\
-    &amp;= σ(Z^{[2]})(1 - σ(Z^{[2]}))\\
-    &amp;= A^{[2]}(1 - A^{[2]})\\[20pt]
-
-\frac{∂ Z^{[2]}}{∂ \mathbf{b}^{[2]}} &amp;=
-    \frac{∂}{∂ \mathbf{b}^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1}
-\mathbf{b}^{[2]T}\\
-    &amp;= \mathbf{1}
+    &amp;= σ(Z^{[2]}) \cdot (1 - σ(Z^{[2]}))\\
+    &amp;= A^{[2]} \cdot (1 - A^{[2]})
 \end{align}\]</span></p>
-<p>Substituting back in.</p>
+<p>Now substituting to solve for <span
+class="math inline">\(∂_{Z^{[2]}}\)</span>.</p>
 <p><span class="math display">\[\begin{align}
-\frac{∂ ℒ}{∂ \mathbf{b}^{[2]}}^④ &amp;=
-    \left(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\right)
-    A^{[2]}(1 - A^{[2]})
-    \mathbf{1}\\
-&amp;= (1-Y)A^{[2]} - Y(1 - A^{[2]})\\
-&amp;= A^{[2]} - YA^{[2]} - Y + YA^{[2]}\\
-&amp;= A^{[2]} - Y
+∂_{Z^{[2]}} &amp;=
+    \left(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\right)\\
+    &amp;= A^{[2]} \cdot (1 - A^{[2]})\\
+    &amp;= (1-Y) \cdot A^{[2]} - Y \cdot (1 - A^{[2]})\\
+    &amp;= A^{[2]} - Y \cdot A^{[2]} - Y + Y \cdot A^{[2]}\\
+    &amp;= A^{[2]} - Y
 \end{align}\]</span></p>
-<p>Similarly, for ③ we have:</p>
-<p><span class="math display">\[
-\frac{∂ ℒ}{∂ W^{[2]}}^③ =
-    \frac{∂ ℒ}{∂ A^{[2]}}
-    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
-    \frac{∂ Z^{[2]}}{∂ W^{[2]}}
-\]</span></p>
-<p>The first two terms are identical to our previous derivation. In
-fact, we’ll see these again for the first layer; so, it makes sense to
-give them their own symbol, <span
-class="math inline">\(∂_{Z^{[2]}}=\frac{∂ ℒ}{∂ A^{[2]}}\frac{∂
-A^{[2]}}{∂ Z^{[2]}}\)</span>. We do still need to derive the third
-term.</p>
+<p>Next we can solve the third terms in equations ③ and ④.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ Z^{[2]}}{∂ W^{[2]}} &amp;=
-    \frac{∂}{∂ W^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1}
-\mathbf{b}^{[2]T}\\
-    &amp;= A^{[1]}
+    \frac{∂}{∂ W^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1} \vb^{[2]T}\\
+    &amp;= A^{[1]}\\[20pt]
+\frac{∂ Z^{[2]}}{∂ \vb^{[2]}} &amp;=
+    \frac{∂}{∂ \vb^{[2]}} A^{[1]} W^{[2]T} + \mathbf{1} \vb^{[2]T}\\
+    &amp;= \mathbf{1}
 \end{align}\]</span></p>
-<p>TODO:</p>
-<ul>
-<li>dw2, db2 (using dz)</li>
-<li>dw1, db1</li>
-<li>color code?</li>
-</ul>
+<p>And that leaves us with the following partial derivatives for ③ and
+④.</p>
 <p><span class="math display">\[\begin{align}
-\frac{∂ ℒ}{∂ \mathbf{b}^{[1]}}^② &amp;=
-    \frac{∂ ℒ}{∂ A^{[2]}}
-    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
-    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
-    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
-    \frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}}\\
-&amp;= ∂_{Z^{[2]}}
-    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
-    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
-    \frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}}
+\frac{∂ℒ}{∂ W^{[2]}}^③ &amp;= \frac{1}{N} ∂_{Z^{[2]}}^T A^{[1]}\\
+\frac{∂ ℒ}{∂ \vb^{[2]}}^④ &amp;= \sum_{i=1}^N ∂_{\vz^{[2](i)}}
 \end{align}\]</span></p>
+</section>
+<section id="layer-1-parameters" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2"><span class="header-section-number">5.2.2</span>
+Layer 1 Parameters</h3>
+<p>Now we can continue to layer 1 and derive equations for terms ① and
+②.</p>
 <p><span class="math display">\[\begin{align}
-\frac{∂ Z^{[2]}}{∂ A^{[1]}} &amp;=
-    \frac{∂}{A^{[1]}} A^{[1]} W^{[2]T} + \mathbf{1} \mathbf{b}^{[2]T}\\
-    &amp;= W^{[2]}\\[20pt]
-
-\frac{∂ A^{[1]}}{∂ Z^{[1]}} &amp;= \frac{∂}{Z^{[1]}}\\
-    &amp;= σ(Z^{[1]})\\
-    &amp;= σ(Z^{[1]})(1-σ(Z^{[1]})\\
-    &amp;= A^{[1]}(1-A^{[1]})\\[20pt]
-
-\frac{∂ Z^{[1]}}{∂ \mathbf{b}^{[1]}} &amp;=
-    \frac{∂}{\mathbf{b}^{[1]}} A^{[0]} W^{[1]T} + \mathbf{1}
-\mathbf{b}^{[1]T}\\
-    &amp;= \mathbf{1}\\[20pt]
-\end{align}\]</span></p>
-<p><span class="math display">\[\begin{align}
-\frac{∂ ℒ}{∂ W^{[1]}}^② &amp;=
+\frac{∂ ℒ}{∂ W^{[1]}}^① &amp;=
     \frac{∂ ℒ}{∂ A^{[2]}}
     \frac{∂ A^{[2]}}{∂ Z^{[2]}}
     \frac{∂ Z^{[2]}}{∂ A^{[1]}}
@@ -2004,32 +2024,155 @@ term.</p>
 &amp;= ∂_{Z^{[2]}}
     \frac{∂ Z^{[2]}}{∂ A^{[1]}}
     \frac{∂ A^{[1]}}{∂ Z^{[1]}}
-    \frac{∂ Z^{[1]}}{∂ W^{[1]}}
+    \frac{∂ Z^{[1]}}{∂ W^{[1]}}\\[20pt]
+
+\frac{∂ ℒ}{∂ \vb^{[1]}}^② &amp;=
+    \frac{∂ ℒ}{∂ A^{[2]}}
+    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
+    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \frac{∂ Z^{[1]}}{∂ \vb^{[1]}}\\
+&amp;= ∂_{Z^{[2]}}
+    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
+    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \frac{∂ Z^{[1]}}{∂ \vb^{[1]}}
 \end{align}\]</span></p>
-<p>Blah blah is <span
+<p>All four derivations share the first two terms in common, <span
+class="math inline">\(∂_{Z^{[2]}}\)</span>. The first layer parameters
+additional share the next two terms. We’ll group the first four terms
+together just like we did for layer 2: <span
 class="math inline">\(∂_{Z^{[1]}}=∂_{Z^{[2]}}\frac{∂ Z^{[2]}}{∂
-A^{[1]}}\frac{∂ A^{[1]}}{∂ Z^{[1]}}\)</span></p>
+A^{[1]}}\frac{∂ A^{[1]}}{∂ Z^{[1]}}\)</span>.</p>
+<p>Let’s start by deriving this shared term.</p>
+<p><span class="math display">\[\begin{align}
+\frac{∂ Z^{[2]}}{∂ A^{[1]}} &amp;=
+    \frac{∂}{A^{[1]}} A^{[1]} W^{[2]T} + \mathbf{1} \vb^{[2]T}\\
+    &amp;= W^{[2]}\\[20pt]
+
+\frac{∂ A^{[1]}}{∂ Z^{[1]}} &amp;= \frac{∂}{Z^{[1]}}\\
+    &amp;= σ(Z^{[1]})\\
+    &amp;= σ(Z^{[1]})(1-σ(Z^{[1]})\\
+    &amp;= A^{[1]} \cdot (1-A^{[1]})
+\end{align}\]</span></p>
+<p>Now substituting to solve for <span
+class="math inline">\(∂_{Z^{[1]}}\)</span>.</p>
+<p><span class="math display">\[∂_{Z^{[1]}} = ∂_{Z^{[2]}} W^{[2]} \cdot
+A^{[1]} \cdot (1 - A^{[1]})\]</span></p>
+<p>We still have one term remaining for each of ① and ②.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ Z^{[1]}}{∂ W^{[1]}} &amp;=
-    \frac{∂}{∂ W^{[1]}} A^{[0]} W^{[1]T} + \mathbf{1}
-\mathbf{b}^{[1]T}\\
-    &amp;= A^{[0]}
+    \frac{∂}{∂ W^{[1]}} A^{[0]} W^{[1]T} + \mathbf{1} \vb^{[1]T}\\
+    &amp;= A^{[0]}\\[20pt]
+\frac{∂ Z^{[1]}}{∂ \vb^{[1]}} &amp;=
+    \frac{∂}{\vb^{[1]}} A^{[0]} W^{[1]T} + \mathbf{1} \vb^{[1]T}\\
+    &amp;= \mathbf{1}\\[20pt]
 \end{align}\]</span></p>
+<p>And that leaves us with the following partial derivatives for ① and
+②.</p>
+<p><span class="math display">\[\begin{align}
+\frac{∂ℒ}{∂ W^{[1]}}^① &amp;= \frac{1}{N} ∂_{Z^{[1]}}^T A^{[0]}\\
+\frac{∂ ℒ}{∂ \vb^{[1]}}^② &amp;= \sum_{i=1}^N ∂_{\vz^{[1](i)}}
+\end{align}\]</span></p>
+</section>
+<section id="parameter-update-equations" class="level3"
+data-number="5.2.3">
+<h3 data-number="5.2.3"><span class="header-section-number">5.2.3</span>
+Parameter Update Equations</h3>
 <p>We can now write our update equations for all network parameters.</p>
 <p><span class="math display">\[\begin{align}
-W^{[1]} &amp;:=
-    W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
-    &amp;:=\\[20pt]
-\mathbf{b}^{[1]} &amp;:=
-    \mathbf{b}^{[1]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[1]}} \\
-    &amp;:=\\[20pt]
-W^{[2]} &amp;:=
-    W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
-    &amp;:=\\[20pt]
-\mathbf{b}^{[2]} &amp;:=
-    \mathbf{b}^{[2]} - α\frac{∂ℒ}{∂ \mathbf{b}^{[2]}} \\
-    &amp;:=\\
+W^{[1]} &amp;:= W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
+    &amp;:= W^{[1]} - \frac{α}{N} ∂_{Z^{[1]}}^T A^{[0]} \\[20pt]
+\vb^{[1]} &amp;:= \vb^{[1]} - α\frac{∂ℒ}{∂ \vb^{[1]}} \\
+    &amp;:= \vb^{[1]} - α\sum_{i=1}^N ∂_{\vz^{[1](i)}} \\[20pt]
+W^{[2]} &amp;:= W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
+    &amp;:= W^{[2]} - \frac{α}{N} ∂_{Z^{[2]}}^T A^{[1]}\\[20pt]
+\vb^{[2]} &amp;:= \vb^{[2]} - α\frac{∂ℒ}{∂ \vb^{[2]}} \\
+    &amp;:= \vb^{[2]} - α\sum_{i=1}^N ∂_{\vz^{[2](i)}}
 \end{align}\]</span></p>
+</section>
+</section>
+<section id="neuron-batch-gradient-descent-1" class="level2"
+data-number="5.3">
+<h2 data-number="5.3"><span class="header-section-number">5.3</span>
+Neuron Batch Gradient Descent</h2>
+<p>Let’s put this together into an example similar to that shown in the
+single neuron.</p>
+<div class="code-highlight">
+<pre><span style="color:#39424e;">   1</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;">!/usr/bin/env python</span>
+<span style="color:#39424e;">   2</span> 
+<span style="color:#39424e;">   3</span> <span style="color:#5c6773;">&quot;&quot;&quot;</span>
+<span style="color:#39424e;">   4</span> <span style="color:#5c6773;">TODO(AJC): </span>
+<span style="color:#39424e;">   5</span> <span style="color:#5c6773;">- Change X,y</span>
+<span style="color:#39424e;">   6</span> <span style="color:#5c6773;">&quot;&quot;&quot;</span>
+<span style="color:#39424e;">   7</span> 
+<span style="color:#39424e;">   8</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timeit</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">default_timer</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">as</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">timer</span>
+<span style="color:#39424e;">   9</span> 
+<span style="color:#39424e;">  10</span> <span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span>
+<span style="color:#39424e;">  11</span> 
+<span style="color:#39424e;">  12</span> <span style="color:#ffa759;">from</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">utilities</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">format_duration_with_prefix</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">get_binary_mnist_one_batch</span>
+<span style="color:#39424e;">  13</span> 
+<span style="color:#39424e;">  14</span> 
+<span style="color:#39424e;">  15</span> <span style="color:#ffa759;">def</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">prediction</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">target</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
+<span style="color:#39424e;">  16</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_N</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">target</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">[</span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">]</span>
+<span style="color:#39424e;">  17</span> <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">round</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">prediction</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">target</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">abs</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sum</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">/</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_N</span>
+<span style="color:#39424e;">  18</span> 
+<span style="color:#39424e;">  19</span> 
+<span style="color:#39424e;">  20</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Get training and validation data loaders for classes A and B</span>
+<span style="color:#39424e;">  21</span> <span style="color:#ccc9c2;">data_dir</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">../../Data</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  22</span> <span style="color:#ccc9c2;">classA</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">classB</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">7</span>
+<span style="color:#39424e;">  23</span> <span style="color:#ccc9c2;">flatten</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">True</span>
+<span style="color:#39424e;">  24</span> <span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">get_binary_mnist_one_batch</span><span style="color:#ccc9c2;">(</span>
+<span style="color:#39424e;">  25</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">data_dir</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">classA</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">classB</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">flatten</span>
+<span style="color:#39424e;">  26</span> <span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  27</span> 
+<span style="color:#39424e;">  28</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Neural network layer sizes for MNIST</span>
+<span style="color:#39424e;">  29</span> <span style="color:#ccc9c2;">n0</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">28</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">28</span>
+<span style="color:#39424e;">  30</span> <span style="color:#ccc9c2;">n1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">2</span>
+<span style="color:#39424e;">  31</span> <span style="color:#ccc9c2;">n2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">1</span>
+<span style="color:#39424e;">  32</span> 
+<span style="color:#39424e;">  33</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Network parameters</span>
+<span style="color:#39424e;">  34</span> <span style="color:#ccc9c2;">W1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">n1</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">n0</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  35</span> <span style="color:#ccc9c2;">b1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">n1</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  36</span> <span style="color:#ccc9c2;">W2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">n2</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">n1</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  37</span> <span style="color:#ccc9c2;">b2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">n2</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  38</span> 
+<span style="color:#39424e;">  39</span> 
+<span style="color:#39424e;">  40</span> <span style="color:#ffa759;">def</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">model</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">A0</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">:</span>
+<span style="color:#39424e;">  41</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">Z1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">A0</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">W1</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">T</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b1</span>
+<span style="color:#39424e;">  42</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">Z1</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  43</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">W2</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">T</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b2</span>
+<span style="color:#39424e;">  44</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">A2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  45</span> <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">Z1</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">A2</span>
+<span style="color:#39424e;">  46</span> 
+<span style="color:#39424e;">  47</span> 
+<span style="color:#39424e;">  48</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Batch gradient descent hyper-parameters</span>
+<span style="color:#39424e;">  49</span> <span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">4</span>
+<span style="color:#39424e;">  50</span> <span style="color:#ccc9c2;">learning_rate</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">0</span><span style="color:#ccc9c2;">.</span><span style="color:#ffcc66;">01</span>
+<span style="color:#39424e;">  51</span> 
+<span style="color:#39424e;">  52</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute initial accuracy (should be around 50%)</span>
+<span style="color:#39424e;">  53</span> <span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;">, </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;">, </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_preds</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">model</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  54</span> <span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_preds</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  55</span> <span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">Accuracy before training: </span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">)</span>
+</pre>
+<div class="code-caption">
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/05-01-TwoLayerNeuralNetworkMNIST.py">Link
+to code.</a>
+</div>
+</div>
+</section>
+<section id="automatic-differentiation" class="level2"
+data-number="5.4">
+<h2 data-number="5.4"><span class="header-section-number">5.4</span>
+Automatic Differentiation</h2>
+</section>
+<section id="why-deep-neural-networks" class="level2" data-number="5.5">
+<h2 data-number="5.5"><span class="header-section-number">5.5</span> Why
+“Deep” Neural Networks?</h2>
+</section>
+<section id="the-role-of-an-activation-function" class="level2"
+data-number="5.6">
+<h2 data-number="5.6"><span class="header-section-number">5.6</span> The
+Role of an Activation Function</h2>
 </section>
 </section>
 <section id="stochastic-gradient-descent" class="level1"

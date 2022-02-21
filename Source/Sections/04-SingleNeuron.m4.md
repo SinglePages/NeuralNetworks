@@ -23,23 +23,23 @@ Here is a diagram representing a single neuron (as we'll see later, some neural 
 The diagram represents the following equations (note that I removed the parenthesis superscript from the diagram to make it a bit easier to read):
 
 \begin{align}
-z^{(i)} &= \sum_{k=1}^{n_x} x_k^{(i)} w_k + b\\
-a^{(i)} &= g(z^{(i)})
+z\i &= \sum_{k=1}^{n_x} x_k\i w_k + b\\
+a\i &= g(z\i)
 \end{align}
 
 For these two equations:
 
-- $x_k^{(i)}$ are the input features for the $i^{th}$ example (e.g., $k=76$ and $i=7436$ would denote pixel 76 of 784 for image 7436 of 60000)
+- $x_k\i$ are the input features for the $i^{th}$ example (e.g., $k=76$ and $i=7436$ would denote pixel 76 of 784 for image 7436 of 60000)
 - $w_k$ (weights) and $b$ (bias) are the **learned** parameters
-- $z^{(i)}$ is a weighted sum of the input features plus the additional bias term
-- $a^{(i)}$ is the output of a non-linear activation function $g(\mathord{\cdot})$ applied to $z^{(i)}$
-- $\hat y^{(i)}$ (pronounced *"y hat"*) is the label we often give to the output ($a^{(i)} = \hat y^{(i)}$)
+- $z\i$ is a weighted sum of the input features plus the additional bias term
+- $a\i$ is the output of a non-linear activation function $g(\mathord{\cdot})$ applied to $z\i$
+- $\yhat\i$ (pronounced *"y hat"*) is the label we often give to the output ($a\i = \yhat\i$)
 
 
-m4question([[Why do $w_k$ and $b$ not have superscripts?]], [[The parameters $w_k$ and $b$ do not change as the input $x_k^{(i)}$ changes. These parameters **are** the neuron, and they are used to produce the output $\hat y^{(i)}$ for any given input; we use the same parameter values regardless of input.]])
+m4question([[Why do $w_k$ and $b$ not have superscripts?]], [[The parameters $w_k$ and $b$ do not change as the input $x_k\i$ changes. These parameters **are** the neuron, and they are used to produce the output $\yhat\i$ for any given input; we use the same parameter values regardless of input.]])
 
 
-**For this model, we want to find parameters $w_k$ and $b$ such that the neuron outputs $\hat y^{(i)} \approx y^{(i)}$ for any input.** Before we discuss optimization we should take a moment to code up this single neuron model.
+**For this model, we want to find parameters $w_k$ and $b$ such that the neuron outputs $\yhat\i \approx y\i$ for any input.** Before we discuss optimization we should take a moment to code up this single neuron model.
 
 (Below is a more common representation of a neuron model. The image above separates the linear and activation components into distinct nodes, but it is more common to show them together as below.)
 
@@ -74,17 +74,17 @@ m4question([[Can you think of any downsides for this function (hint: look at the
 
 ## The Dot-Product
 
-We compute $z^{(i)}$ using a summation, but we can express this same bit of math using the dot-product from linear algebra.
+We compute $z\i$ using a summation, but we can express this same bit of math using the dot-product from linear algebra.
 
 
 $$
-z^{(i)} = \sum_{k=1}^{n_x} x_k^{(i)} w_k + b = \mathbf{x}^{(i)T} \mathbf{w} + b
+z\i = \sum_{k=1}^{n_x} x_k\i w_k + b = \vx^{(i)T} \vw + b
 $$
 
 
-The $\mathbf{x}^{(i)T} \mathbf{w}$ part of the equation computes the dot-product between $\mathbf{x}^{(i)T}$ and $\mathbf{w}$. We need to transpose $\mathbf{x}^{(i)}$ to make the dimensions work (i.e., we need to multiply a row vector by a column vector).
+The $\vx^{(i)T} \vw$ part of the equation computes the dot-product between $\vx^{(i)T}$ and $\vw$. We need to transpose $\vx\i$ to make the dimensions work (i.e., we need to multiply a row vector by a column vector).
 
-This not only turns out to be easier to write/type, but it is more efficiently computed by a neural network library. The code listing below uses [PyTorch](https://pytorch.org/) to compute $z^{(i)}$ (`zi`). Libraries like PyTorch and Tensorflow make use of both vectorized CPU instructions and graphics cards (GPUs) to quickly compute the output of matrix multiplications.
+This not only turns out to be easier to write/type, but it is more efficiently computed by a neural network library. The code listing below uses [PyTorch](https://pytorch.org/) to compute $z\i$ (`zi`). Libraries like PyTorch and Tensorflow make use of both vectorized CPU instructions and graphics cards (GPUs) to quickly compute the output of matrix multiplications.
 
 
 m4diff([[Source/Code/Python/04-01-NeuronLoop.py]], [[Source/Code/Python/04-02-NeuronDot.py]])
@@ -100,23 +100,23 @@ In addition to using a dot-product in place of a summation, we can use a matrix 
 
 
 \begin{align}
-\mathbf{z} &= X \mathbf{w} + \mathbf{1} b \\
-\mathbf{a} &= g(\mathbf{z})
+\vz &= X \vw + \mathbf{1} b \\
+\va &= g(\vz)
 \end{align}
 
 
 m4diff([[Source/Code/Python/04-02-NeuronDot.py]], [[Source/Code/Python/04-03-NeuronVectorized.py]])
 
 
-m4question([[What are the dimensions of $\mathbf{z}$ and $\mathbf{a}$ (aka, $\mathbf{\hat y}$)?]], [[We are computing a single output value for each input, so, the shape of these vectors are $(N \times 1)$. PyTorch will treat these as arrays with $N$ elements instead of as column vectors.
+m4question([[What are the dimensions of $\vz$ and $\va$ (aka, $\vyhat$)?]], [[We are computing a single output value for each input, so, the shape of these vectors are $(N \times 1)$. PyTorch will treat these as arrays with $N$ elements instead of as column vectors.
 \begin{align}
-\mathbf{z} &= m4colvec("\mathbf{x}^{(row)T} \mathbf{w} + b", "N") \\
-\mathbf{a} &= m4colvec("g(z^{(row)})", "N")
+\vz &= m4colvec("\vx^{(row)T} \vw + b", "N") \\
+\va &= m4colvec("g(z^{(row)})", "N")
 \end{align}
 ]])
 
 
-In the code snippet above, a matrix multiplication is indicated in PyTorch using the `@` symbol (a `*` is used for element-wise multiplications). A key to understanding matrix math is to examine the shapes of all matrices involved. Above, $X$ has a shape of $(N \times n_x)$, $\mathbf{w}$ has a shape of $(n_x \times 1)$, and $b$ is a scalar multiplied by an appropriately-shaped matrix of all ones (so that we can add $b$ to each element of the $X\mathbf{w}$ result). Inner dimensions (the last dimension of the left matrix and the first dimension of the right matrix) must be the same for any valid matrix multiplication.
+In the code snippet above, a matrix multiplication is indicated in PyTorch using the `@` symbol (a `*` is used for element-wise multiplications). A key to understanding matrix math is to examine the shapes of all matrices involved. Above, $X$ has a shape of $(N \times n_x)$, $\vw$ has a shape of $(n_x \times 1)$, and $b$ is a scalar multiplied by an appropriately-shaped matrix of all ones (so that we can add $b$ to each element of the $X\vw$ result). Inner dimensions (the last dimension of the left matrix and the first dimension of the right matrix) must be the same for any valid matrix multiplication.
 
 In the code snippet, the scalar $b$ is added element-wise to every element in the final matrix due to [broadcasting](https://pytorch.org/docs/stable/notes/broadcasting.html) (this is a common library feature, not necessarily standard linear algebra).
 
@@ -124,17 +124,17 @@ So far, we have random parameters and we ignore the output. But what if we want 
 
 ## Optimization with Batch Gradient Descent
 
-We must find values for parameters $\mathbf{w}$ and $b$ to make $\hat y^{(i)} \approx y^{(i)}$. As you might expect from the title of this subsection, we are going to use gradient descent to optimize the parameters. This means that we are going to need an objective function (something to minimize) and to compute some derivatives.
+We must find values for parameters $\vw$ and $b$ to make $\yhat\i \approx y\i$. As you might expect from the title of this subsection, we are going to use gradient descent to optimize the parameters. This means that we are going to need an objective function (something to minimize) and to compute some derivatives.
 
 But what is an appropriate objective function (I'll refer to this as the *loss* function going forward)? How about the **mean-difference**?
 
-$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = \sum_{i=1}^N (\hat y^{(i)} - y^{(i)}) \quad \color{red}{\text{Don't use this loss function.}}$$
+$$ℒ(\vyhat, \vy) = \sum_{i=1}^N (\yhat\i - y\i) \quad \color{red}{\text{Don't use this loss function.}}$$
 
 m4question([[What is problematic about this loss function?]], [[
 
 Let's start by looking at the output of the function for different values of the inputs.
 
- $\hat y^{(i)}$   $y^{(i)}$     ℒ
+ $\yhat\i$           $y\i$      ℒ
 ---------------- ----------- -------
    0.1                 0        0.1
    0.1                 1       -0.9
@@ -146,8 +146,8 @@ The table indicates that loss can be positive or negative. But how should we int
 A quick "fix" for the above loss function is to change it into the **mean-absolute-error** (MAE):
 
 \begin{align}
-ℒ(\mathbf{\hat{y}}, \mathbf{y}) &= \sum_{i=1}^N |\hat y^{(i)} - y^{(i)}|\\
-&= ||\mathbf{\hat{y}} - \mathbf{y}||_1
+ℒ(\vyhat, \vy) &= \sum_{i=1}^N |\yhat\i - y\i|\\
+  &= \mae
 \end{align}
 
 The second line shows a vectorized version using the L1-norm, which is the sum of the absolute values of the given vector. MAE is a good choice if your dataset includes outliers. MAE is also simple to interpret: it is the average deviation between your models guess and the correct answer.
@@ -155,34 +155,31 @@ The second line shows a vectorized version using the L1-norm, which is the sum o
 A common choice for a loss function when training a regression model is **Half mean-square-error** (Half-MSE):
 
 \begin{align}
-ℒ(\mathbf{\hat{y}}, \mathbf{y}) &= \frac{1}{2N} \sum_{i=1}^N (\hat y^{(i)} - y^{(i)})^2\\
-&= \frac{1}{2N} ||(\mathbf{\hat{y}} - \mathbf{y})^2||_1
+ℒ(\vyhat, \vy) &= \frac{1}{2N} \sum_{i=1}^N (\yhat\i - y\i)^2\\
+  &= \vhmse
 \end{align}
 
-We are again using the L1-norm, but this time the vector we are norming is the element-wise squared values of the difference between the vectors $\mathbf{\hat y}$ and $\mathbf{y}$. Interpreting Half-MSE is a bit harder than MAE---you should multiply the result by two and then take the square-root.
+We are again using the L1-norm, but this time the vector we are norming is the element-wise squared values of the difference between the vectors $\vyhat$ and $\vy$. Interpreting Half-MSE is a bit harder than MAE---you should multiply the result by two and then take the square-root.
 
 m4question([[Why might we compute the half-MSE instead of MSE or sum-square-error (SSE)?]], [[The \frac{1}{2} factor cancels out when we take the derivative. This scaling factor is unimportant since we will later multiply it by a learning rate, and can use that to achieve whatever effect we want.]])
 
 
 The standard choice when performing classification with a neuron is **binary cross-entropy** (BCE):
 
-\begin{align}
-ℒ(\mathbf{\hat{y}}, \mathbf{y}) &= - \sum_{i=1}^N (y^{(i)} \log{\hat y^{(i)}} + (1 - y^{(i)})\log{(1-\hat y^{(i)})})\\
-&= -||\mathbf{y} \cdot \log{ \mathbf{\hat y}} + (1 - \mathbf{y}) \cdot \log{(1- \mathbf{\hat y})}||_1
-\end{align}
+$$
+ℒ(\vyhat, \vy) = \vbce
+$$
 
-In the vectorized version, a "$\cdot$" denotes an element-wise multiplication.
+m4question([[Take some time to examine this loss function. What happens for various values of $\yhat\i$, $y\i$?]], [[
 
-m4question([[Take some time to examine this loss function. What happens for various values of $\hat y^{(i)}$, $y^{(i)}$?]], [[
-
- $\hat y^{(i)}$   $y^{(i)}$   $\log{\hat y^{(i)}}$   $\log{(1-\hat y^{(i)})}$     ℒ
+ $\yhat\i$           $y\i$      $\log{\yhat\i}$        $\log{(1-\yhat\i)}$        ℒ
 ---------------- ----------- ---------------------- -------------------------- -------
    0.1                 0           -2.3                   -0.1                   0.1
    0.1                 1           -2.3                   -0.1                   2.3
    0.9                 0           -0.1                   -2.3                   2.3
    0.9                 1           -0.1                   -2.3                   0.1
 
-The tables shows that a larger difference between $\hat y^{(i)}$ and $y^{(i)}$ (rows 2 and 3) results in a larger loss, which is exactly what we'd like to see.
+The tables shows that a larger difference between $\yhat\i$ and $y\i$ (rows 2 and 3) results in a larger loss, which is exactly what we'd like to see.
 ]])
 
 
@@ -197,36 +194,36 @@ The diagram above shows a curve for loss as a function of a single parameter, $w
 
 m4question([[What should we do if we wanted to **minimize** loss with respect to the parameter using an analytical solution?]], [[We should take the derivative, set it equal to zero, and then solve the set of linear equations. Here is an example using linear regression, which is very similar to our single neuron. Here is our model:
 
-$$\mathbf{\hat y} = X \mathbf{\theta},$$
+$$\vyhat = X \mathbf{θ},$$
 
-where $\theta$ is our vector of parameters. Here is our loss function (half-SSE):
+where $θ$ is our vector of parameters. Here is our loss function (half-SSE):
 
-$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = \frac{1}{2} ||(\mathbf{\hat{y}} - \mathbf{y})^2||_1.$$
+$$ℒ(\vyhat, \vy) = \frac{1}{2} ||(\vyhat - \vy)^2||_1.$$
 
-Now we can take the partial derivative of loss with respect to parameters $\theta$. (Note that I substitute for $\mathbf{\hat y}$ on the third line.)
+Now we can take the partial derivative of loss with respect to parameters $θ$. (Note that I substitute for $\vyhat$ on the third line.)
 
 \begin{align}
-\frac{∂ ℒ}{∂ \mathbf{\theta}} &=
-  \frac{∂ ||\frac{1}{2} (\mathbf{\hat{y}} - \mathbf{y})^2||_1}{∂ \mathbf{\theta}} \\
-&= ||\mathbf{\hat{y}} - \mathbf{y}||_1 \frac{∂ \mathbf{\hat y}}{∂ \mathbf{\theta}} \\
-&= ||X \mathbf{\theta} - \mathbf{y}||_1 \frac{∂ X \mathbf{\theta}}{∂ \mathbf{\theta}} \\
-&= ||X \mathbf{\theta} - \mathbf{y}||_1 X \\
-&= X^T X \mathbf{\theta} - X^T \mathbf{y}
+\frac{∂ ℒ}{∂ \mathbf{θ}} &=
+  \frac{∂ ||\frac{1}{2} (\vyhat - \vy)^2||_1}{∂ \mathbf{θ}} \\
+&= ||\vyhat - \vy||_1 \frac{∂ \vyhat}{∂ \mathbf{θ}} \\
+&= ||X \mathbf{θ} - \vy||_1 \frac{∂ X \mathbf{θ}}{∂ \mathbf{θ}} \\
+&= ||X \mathbf{θ} - \vy||_1 X \\
+&= X^T X \mathbf{θ} - X^T \vy
 \end{align}
 
-We can now set this derivative to zero and solve for $\mathbf{\theta}$.
+We can now set this derivative to zero and solve for $\mathbf{θ}$.
 
 \begin{align}
-\frac{∂ ℒ}{∂ \mathbf{\theta}} &= 0 \\
-X^T X \mathbf{\theta} - X^T \mathbf{y} &= 0 \\
-X^T X \mathbf{\theta} &= X^T \mathbf{y}
+\frac{∂ ℒ}{∂ \mathbf{θ}} &= 0 \\
+X^T X \mathbf{θ} - X^T \vy &= 0 \\
+X^T X \mathbf{θ} &= X^T \vy
 \end{align}
 
 And now assuming that $X^T X$ is invertible (that the columns are linearly independent).
 
-$$\mathbf{\theta}^* = (X^T X)^{-1} X^T \mathbf{y}$$
+$$\mathbf{θ}^* = (X^T X)^{-1} X^T \vy$$
 
-We now have an optimal solution (called $\mathbf{\theta}^*$) that minimizes loss. (See [Ordinary least squares - Wikipedia](https://en.wikipedia.org/wiki/Ordinary_least_squares "Ordinary least squares - Wikipedia") for more details.)
+We now have an optimal solution (called $\mathbf{θ}^*$) that minimizes loss. (See [Ordinary least squares - Wikipedia](https://en.wikipedia.org/wiki/Ordinary_least_squares "Ordinary least squares - Wikipedia") for more details.)
 ]])
 
 For complex models, such as a neural network, analytical solutions are sometimes too slow or complicated to compute. Instead, we use an iterative (aka numerical) solution. You can think of numerical solutions as finding a good enough approximate solution as opposed to the exact correct solution. Surprisingly, the numerical solution is often more general than the exact solution---we'll discuss this in later sections.
@@ -234,34 +231,32 @@ For complex models, such as a neural network, analytical solutions are sometimes
 To determine **how** we should adjust parameters, we start the same way as finding the exact location and take the partial derivative of loss with respect to each parameter. Taking the single neuron, binary cross-entropy loss, and the sigmoid activation function the chain rule in matrix form is as follows.
 
 \begin{align}
-\frac{∂ ℒ}{∂ \mathbf{w}} &=
-    \frac{∂ ℒ}{∂ \mathbf{\hat{y}}}
-    \frac{∂ \mathbf{\hat{y}}}{∂ \mathbf{z}}
-    \frac{∂ \mathbf{z}}{∂ \mathbf{w}} \\
-&= \frac{1}{N}||\mathbf{\hat{y}} - \mathbf{y}||_1X\\[20pt]
+\frac{∂ ℒ}{∂ \vw} &=
+  \frac{∂ ℒ}{∂ \vyhat}
+  \frac{∂ \vyhat}{∂ \vz}
+  \frac{∂ \vz}{∂ \vw} \\
+  &= \frac{1}{N} X^T (\vyhat - \vy)\\[20pt]
 \frac{∂ ℒ}{∂ b} &=
-    \frac{∂ ℒ}{∂ \mathbf{\hat{y}}}
-    \frac{∂ \mathbf{\hat{y}}}{∂ \mathbf{z}}
-    \frac{∂ \mathbf{z}}{∂ b} \\
-&= \frac{1}{N}\sum_{i=1}^N (\hat y^{(i)} - y^{(i)})
+  \frac{∂ ℒ}{∂ \vyhat}
+  \frac{∂ \vyhat}{∂ \vz}
+  \frac{∂ \vz}{∂ b} \\
+  &= \frac{1}{N} \sum_{i=1}^N (\yhat\i - y\i)
 \end{align}
 
+Don't worry too much about the derivations or notation at this stage. We'll go into more details when we follow the same process for a full neural network in the next section.
 
-m4question([[Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?]], [[First, we cannot directly compute the partial derivative of $ℒ$ with respect to $\mathbf{w}$ (or $b$). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator ($\mathbf{w}$ and $b$). It is useful to look at the loss function when we substitute in values for $\mathbf{\hat y}$ and $\mathbf{z}$.
+m4question([[Why is it necessary to apply the chain rule? And why did the chain rule appear as it does above?]], [[First, we cannot directly compute the partial derivative of $ℒ$ with respect to $\vw$ (or $b$). Second, we only apply the chain rule to equations that have some form of dependency on the term in the first denominator ($\vw$ and $b$). It is useful to look at the loss function when we substitute in values for $\yhat$ and then $z$.
 
-$$ℒ(\mathbf{\hat{y}}, \mathbf{y}) = -||\mathbf{y} \cdot \log{σ(X \mathbf{w} + \mathbf{1} b)} + (1 - \mathbf{y}) \cdot \log{(1-σ(X \mathbf{w} + \mathbf{1} b))}||_1$$
+$$ℒ(\vyhat, \vy) = -\frac{1}{N}\sum_{i=1}^N (y\i \log{σ(\vx^{(i)T}\vw\i + b)} + (1 - y\i)\log{(1-σ(\vx^{(i)T}\vw\i + b))})$$
 
-
-
-
-In the above equation we can more easily see how the chain-rule comes into play. The parameter $\mathbf{w}$ is nested within a call to $σ$ which is nested within a call to $\log$ when computing $\frac{∂ ℒ}{∂ \mathbf{w}}$.
+In the above equation we can more easily see how the chain-rule comes into play. The parameter $\vw$ is nested within a call to $σ$ which is nested within a call to $\log$ when computing $\frac{∂ ℒ}{∂ \vw}$.
 ]])
 
 
-m4question([[What do we do with the partial derivatives $\frac{∂ ℒ}{∂ \mathbf{w}}$ and $\frac{∂ ℒ}{∂ b}$?]], [[We use these terms to update model parameters.
+m4question([[What do we do with the partial derivatives $\frac{∂ ℒ}{∂ \vw}$ and $\frac{∂ ℒ}{∂ b}$?]], [[We use these terms to update model parameters.
 
 \begin{align}
-\mathbf{w} &:= \mathbf{w} - \alpha \frac{∂ ℒ}{∂ \mathbf{w}} \\
+\vw &:= \vw - \alpha \frac{∂ ℒ}{∂ \vw} \\
 b &:= b - \alpha \frac{∂ ℒ}{∂ b}
 \end{align}
 
@@ -296,7 +291,7 @@ Here is a complete example in which we train a neuron to classify images as eith
 m4code([[Source/Code/Python/04-04-NeuronMNIST.py]])
 
 
-m4question([[Which lines of code correspond to $\frac{∂ ℒ}{∂ \mathbf{w}}$ and $\frac{∂ ℒ}{∂ b}$?]], [[Lines 44 and 45.]])
+m4question([[Which lines of code correspond to $\frac{∂ ℒ}{∂ \vw}$ and $\frac{∂ ℒ}{∂ b}$?]], [[Lines 46 and 47.]])
 
 
 m4question([[What is an epoch?]], [[It turns out that we might need to update our weights more than once to get useful results. Each time we update parameters based on all training examples we mark the end of an epoch. In the code above we iterate through four epochs.]])

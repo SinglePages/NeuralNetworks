@@ -13,10 +13,10 @@ denote a dataset comprising input *features* $X$ and output *targets* $Y$. Altho
 
 We will frequently take a dataset and split it into examples used for training, validation, and evaluation. We'll discuss these terms near the end of this section.
 
-$X$ is a matrix (indicated by capitalization) containing all features of all input examples. A single input example $\mathbf{x}^{(i)}$ is often represented as a *column* vector (indicated by boldface):
+$X$ is a matrix (indicated by capitalization) containing all features of all input examples. A single input example $\vx\i$ is often represented as a *column* vector (indicated by boldface):
 
 
-$$\mathbf{x}^{(i)} = m4colvec("x^{(i)}_{row}", "n_x")$$
+$$\vx\i = m4colvec("x\i_{row}", "n_x")$$
 
 
 where subscripts denote the feature index, $n_x$ is the number of features, and the superscript $i$ denotes that this is the $i^{\mathit{th}}$ training example. We do not always put the input features into a column vector (see [@sec:cnns] for more information), but it is fairly standard.
@@ -24,27 +24,27 @@ where subscripts denote the feature index, $n_x$ is the number of features, and 
 Each row in $X$ is a single input example (also referred to as an instance or sample), and when you stack all $N$ examples on top of each other (first transposing them into row vectors), you end up with:
 
 
-$$X = m4colvec("\rule[.5ex]{1em}{0.4pt}\mathbf{x}^{(row)T}\rule[.5ex]{1em}{0.4pt}", "N") = m4matrix("x^{(row)}_{col}", "N", "n_x")$$
+$$X = m4colvec("\rule[.5ex]{1em}{0.4pt}\vx^{(row)T}\rule[.5ex]{1em}{0.4pt}", "N") = m4matrix("x^{(row)}_{col}", "N", "n_x")$$
 
 
-We transpose each example column vector (i.e., $\mathbf{x}^{(i)T}$) into a row vector so that the first dimension of $X$ corresponds to the number of examples $N$ and the second dimension is the number of features $n_x$. Compare the column vector above to each row in the matrix.
+We transpose each example column vector (i.e., $\vx^{(i)T}$) into a row vector so that the first dimension of $X$ corresponds to the number of examples $N$ and the second dimension is the number of features $n_x$. Compare the column vector above to each row in the matrix.
 
 Let's denote matrix dimensions with $(r \times c)$ (the number of rows $r$ by the number of columns $c$ in the matrix). I will, in text and in code, refer to matrix dimensions as the "shape" of the matrix.
 
 
-m4question([[What is the shape of $X$?]], [[We say that $\mathbf{x}^{(i)} \in \mathcal{R}^{n_x}$ (each input example is $n_x$ real values) and $X \in \mathcal{R}^{N \times n_x}$. Therefore, the shape of $X$ is $(N \times n_x)$.]])
+m4question([[What is the shape of $X$?]], [[We say that $\vx\i \in \mathcal{R}^{n_x}$ (each input example is $n_x$ real values) and $X \in \mathcal{R}^{N \times n_x}$. Therefore, the shape of $X$ is $(N \times n_x)$.]])
 
 
 $Y$ contains the targets (also referred to as labels or the true/correct/actual/expected output values). Here is a single target column vector:
 
 
-$$\mathbf{y}^{(i)} = m4colvec("y^{(i)}_{row}", "n_y")$$
+$$\vy\i = m4colvec("y\i_{row}", "n_y")$$
 
 
 And here is the entire target matrix including all examples:
 
 
-$$Y = m4colvec("\rule[.5ex]{1em}{0.4pt}\mathbf{y}^{(row)T}\rule[.5ex]{1em}{0.4pt}", "N") = m4matrix("y^{(row)}_{col}", "N", "n_y")$$
+$$Y = m4colvec("\rule[.5ex]{1em}{0.4pt}\vy^{(row)T}\rule[.5ex]{1em}{0.4pt}", "N") = m4matrix("y^{(row)}_{col}", "N", "n_y")$$
 
 
 m4question([[What is the shape of $Y$?]], [[The shape of $Y$ is $(N \times n_y)$.]])
@@ -107,7 +107,7 @@ For reference, here is what the "average" looks like for each of the ten digits.
 
 Before we show a solution, however, we should take a guess at how well a random guesser might perform.
 
-m4question([[What percent of the time would you be correct in guessing digits if you were guessing at random?]], [[If you are equally likely to guess any of the ten digits, then you would be right around 10% of the time ($\frac{1}{10}$). How might this change if you were to always guess the same thing? How about if the dataset has mostly ones and sevens?]])
+m4question([[What percent of the time would you be correct in guessing digits if you were guessing at random?]], [[If you are equally likely to guess any of the ten digits, then you would be right around 10% of the time $\left(\frac{1}{10}\right)$. How might this change if you were to always guess the same thing? How about if the dataset has mostly ones and sevens?]])
 
 And now some code for finding the most similar digit.
 

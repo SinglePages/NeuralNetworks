@@ -1,3 +1,18 @@
+$$
+	\def\i{{^{(i)}}}
+	\def\vx{{\mathbf{x}}}
+	\def\vy{{\mathbf{y}}}
+	\def\vw{{\mathbf{w}}}
+	\def\vb{{\mathbf{b}}}
+	\def\vz{{\mathbf{z}}}
+	\def\va{{\mathbf{a}}}
+	\def\yhat{{\hat y}}
+	\def\vyhat{{\mathbf{\hat y}}}
+	\def\mae{{||\vyhat - \vy||_1}}
+	\def\vhmse{{\frac{1}{2N} ||(\vyhat - \vy)^2||_1}}
+	\def\vbce{{-\frac{1}{N}\sum_{i=1}^N (y\i \log{\yhat\i} + (1 - y\i)\log{(1-\yhat\i)})}}
+$$
+
 # Introduction {#sec:intro}
 
 > Any sufficiently advanced technology is indistinguishable from magic.
