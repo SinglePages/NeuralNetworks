@@ -8,7 +8,7 @@
 
 
 
-## Machine Learning
+**Machine Learning**
 
 *Artificial Intelligence* (AI): computer systems that are capable of completing tasks that typically require a human. This is a moving bar--as something becomes easier for a computer, we tend to stop considering it as AI (how long until deep learning is not AI?).
 
@@ -46,7 +46,7 @@
 
 *Hyperparameter* (learning rate, number of epochs, architecture, etc.): any value that affects training results but is not directly learned during training.
 
-## Neural Network Terms
+**Neural Network Terms**
 
 *Neural Network* (NN): (multi-layer perceptron (MLP), artificial NN (ANN)) a machine learning model (very loosely) based on biological nervous systems.
 
@@ -86,7 +86,7 @@
 
 *Long Short-Term Memory* (LSTM): a common type of RNN developed in part to deal with the vanishing gradient problem (see [Understanding LSTM Networks](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) and [Recurrent Neural Networks (RNN) and Long Short-Term Memory (LSTM) (YouTube)](https://www.youtube.com/watch?v=WCUNPb-5EYI)).
 
-## Learning Terms
+**Learning Terms**
 
 *Loss*: (loss function) a function that we minimize during learning. We take the gradient of loss with respect to each parameter and then move down the slope. Loss is frequently defined as the error for a single example in supervised learning.
 
@@ -106,7 +106,7 @@
 
 *Embedding*: a vector representation of a discrete variable (e.g., a method for representing an English language word as an input feature).
 
-## Activation Terms
+**Activation Terms**
 
 *Affine*: (affine layer, affine transformation) the combination of a linear transformation and a translation (this results in a linear transformation).
 
@@ -130,7 +130,7 @@
 
 *Softmax*: (softmax function, softargmax, log loss) is a standard activation function for the last layer of a multi-class NN classifier. It turns the outputs of several nodes into a probability distribution (see [The Softmax function and its derivative](https://eli.thegreenplace.net/2016/the-softmax-function-and-its-derivative/)).
 
-## Learning Techniques
+**Learning Techniques**
 
 *Data Augmentation*: the process of altering inputs each epoch thereby *increasing* the effective training set size.
 
@@ -144,7 +144,7 @@
 
 *Attention*: (attention mechanism, neural attention) is a technique that enables a NN to focus on a subset of the input data (see [Attention in Neural Networks and How to Use It](https://akosiorek.github.io/ml/2017/10/14/visual-attention.html)).
 
-## Optimization
+**Optimization**
 
 *Gradient Descent* (GD): (batch GD (BGD), stochastic GD (SGD), mini-batch GD) a first-order optimization algorithm that can be used to learn parameters for a model.
 
