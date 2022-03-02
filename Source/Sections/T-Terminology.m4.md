@@ -114,19 +114,19 @@
 
 *Sigmoid*: (sigmoid curve, logistic curve/function) a common activation function that is mostly used in the output layer of a binary classifier. Gradient is small whenever the input value is too far from 0.
 
-![Sigmoid Activation Function](img/sigmoid.png)
+![Sigmoid Activation Function](img/Sigmoid.png)
 
 *Hyperbolic Tangent*: (tanh) another (formerly) common activation funtcion (better than sigmoid, but typically worse than ReLu). Gradient is small whenever the input value is too far from zero.
 
-![Hyperbolic Tangent  Activation Function](img/tanh.png)
+![Hyperbolic Tangent  Activation Function](img/Tanh.png)
 
 *ReLU*: (rectified linear unit, rectifier) the most widely used activation function.
 
-![ReLU Activation Function](img/relu.png)
+![ReLU Activation Function](img/ReLU.png)
 
 *Leaky ReLU*: a slightly modified version of ReLU where there is a non-zero derivative when the input is less than zero.
 
-![Leaky ReLU Activation Function](img/leaky-relu.png)
+![Leaky ReLU Activation Function](img/LeakyReLU.png)
 
 *Softmax*: (softmax function, softargmax, log loss) is a standard activation function for the last layer of a multi-class NN classifier. It turns the outputs of several nodes into a probability distribution (see [The Softmax function and its derivative](https://eli.thegreenplace.net/2016/the-softmax-function-and-its-derivative/)).
 
