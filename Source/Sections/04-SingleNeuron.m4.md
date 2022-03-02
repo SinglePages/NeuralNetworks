@@ -8,10 +8,9 @@
 When our model is a single neuron we can only produce a single output. So, $n_y=1$ for this section. Sticking to our MNSIT digits example from above, we could train a single neuron to distinguish between two different classes of digits (e.g., "1" vs "7", "0" vs "non-zero", etc.).
 
 <!--
-m4aside
+TODO: 
 
-perceptron, regression
-
+m4aside: perceptron, regression
  -->
 
 ## Notation and Diagram
@@ -167,12 +166,12 @@ m4question([[Why might we compute the half-MSE instead of MSE or sum-square-erro
 The standard choice when performing classification with a neuron is **binary cross-entropy** (BCE):
 
 \begin{align}
-ℒ(\vyhat, \vy) &= \vbce
+ℒ(\vyhat, \vy) &= \vbce\\
   &= -\text{mean}_0\left(\vy \cdot \log{\vyhat} + (1 - \vy) \cdot \log{(1 - \vyhat)}\right)
 \end{align}
 
 
-In the vectorized version of BCE I've used the non-standard $\text{mean}_0$ notation to indicate that we're taking the average across the rows, dimension zero.
+In the vectorized version of BCE, I've used the non-standard $\text{mean}_0$ notation to indicate that we're taking the average across the rows, dimension zero. This is closer to the code that you'll actually write. Very rarely will you want to put a summation loop in your code.
 
 
 m4question([[Take some time to examine this loss function. What happens for various values of $\yhat\i$, $y\i$?]], [[
@@ -261,8 +260,8 @@ In the above equation we can more easily see how the chain-rule comes into play.
 m4question([[What do we do with the partial derivatives $\frac{∂ ℒ}{∂ \vw}$ and $\frac{∂ ℒ}{∂ b}$?]], [[We use these terms to update model parameters.
 
 \begin{align}
-\vw &:= \vw - \alpha \frac{∂ ℒ}{∂ \vw} \\
-b &:= b - \alpha \frac{∂ ℒ}{∂ b}
+\vw &:= \vw - η \frac{∂ ℒ}{∂ \vw} \\
+b &:= b - η \frac{∂ ℒ}{∂ b}
 \end{align}
 
 ]])
@@ -286,7 +285,7 @@ m4question([[What is the derivative of the sigmoid function, $σ$?]], [[
 ]])
 
 
-With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of $\alpha$ (i.e., the "learning rate"). This factor enables us to tune how fast or slow we learn. If $\alpha$ is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly. We will go into more details on optimization in [@sec:opti].
+With the two update equations shown in the previous answer we have everything we need to train our neuron model. Looking at these two equations you might wonder about the purpose of $η$ (i.e., the "learning rate"). This factor enables us to tune how fast or slow we learn. If $η$ is set too high we might not be able to learn, and it it is set too low we might learn prohibitively slowly. We will go into more details on optimization in [@sec:opti].
 
 ## Neuron Batch Gradient Descent
 
@@ -306,9 +305,9 @@ m4question([[What do you expect to see for the output?]], [[
 
 <pre class="code-block">
 Accuracy before training: 0.54
- 1/4, Cost=0.7, Accuracy=0.97, Time=5.5 ms
- 2/4, Cost=0.5, Accuracy=0.96, Time=4.8 ms
- 3/4, Cost=0.4, Accuracy=0.96, Time=4.6 ms
- 4/4, Cost=0.3, Accuracy=0.96, Time=4.4 ms
+ 1/4, Loss=0.7, Accuracy=0.97, Time=5.5 ms
+ 2/4, Loss=0.5, Accuracy=0.96, Time=4.8 ms
+ 3/4, Loss=0.4, Accuracy=0.96, Time=4.6 ms
+ 4/4, Loss=0.3, Accuracy=0.96, Time=4.4 ms
 </pre>
 ]])

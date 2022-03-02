@@ -1,15 +1,23 @@
 # Optimization Techniques {#sec:opti}
 
-*Being revised*
+## Momentum
+
+### Nesterov's Accelerated Gradients
+
+## RMSProp
+
+
+## Adam
+
+
+## AMSGrad
+
+
 
 <!--
 
 ## Initialization
 ## Normalization
-## Momentum
-## RMSProp
-## Adam
-## Advanced
 
 
 

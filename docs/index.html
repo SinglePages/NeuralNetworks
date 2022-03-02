@@ -257,8 +257,8 @@ Single Neuron</a></li>
 <li><a href="#neural-networks-and-backpropagation"><span
 class="toc-section-number">5</span> Neural Networks and
 Backpropagation</a></li>
-<li><a href="#stochastic-gradient-descent"><span
-class="toc-section-number">6</span> Stochastic Gradient Descent</a></li>
+<li><a href="#gradient-descent"><span
+class="toc-section-number">6</span> Gradient Descent</a></li>
 <li><a href="#sec:opti"><span class="toc-section-number">7</span>
 Optimization Techniques</a></li>
 <li><a href="#sec:generalization"><span
@@ -1367,9 +1367,16 @@ effect we want.
 </details>
 <p>The standard choice when performing classification with a neuron is
 <strong>binary cross-entropy</strong> (BCE):</p>
-<p><span class="math display">\[
-ℒ(\vyhat, \vy) = \vbce
-\]</span></p>
+<p><span class="math display">\[\begin{align}
+ℒ(\vyhat, \vy) &amp;= \vbce\\
+  &amp;= -\text{mean}_0\left(\vy \cdot \log{\vyhat} + (1 - \vy) \cdot
+\log{(1 - \vyhat)}\right)
+\end{align}\]</span></p>
+<p>In the vectorized version of BCE, I’ve used the non-standard <span
+class="math inline">\(\text{mean}_0\)</span> notation to indicate that
+we’re taking the average across the rows, dimension zero. This is closer
+to the code that you’ll actually write. Very rarely will you want to put
+a summation loop in your code.</p>
 <details class="question">
 <summary>
 <strong>Question:</strong> Take some time to examine this loss function.
@@ -1561,8 +1568,8 @@ class="math inline">\(\frac{∂ ℒ}{∂ b}\)</span>?
 <p><strong>Answer:</strong> We use these terms to update model
 parameters.</p>
 <p><span class="math display">\[\begin{align}
-\vw &amp;:= \vw - \alpha \frac{∂ ℒ}{∂ \vw} \\
-b &amp;:= b - \alpha \frac{∂ ℒ}{∂ b}
+\vw &amp;:= \vw - η \frac{∂ ℒ}{∂ \vw} \\
+b &amp;:= b - η \frac{∂ ℒ}{∂ b}
 \end{align}\]</span></p>
 </div>
 </details>
@@ -1593,11 +1600,11 @@ e^{-z}}  \\
 <p>With the two update equations shown in the previous answer we have
 everything we need to train our neuron model. Looking at these two
 equations you might wonder about the purpose of <span
-class="math inline">\(\alpha\)</span> (i.e., the “learning rate”). This
+class="math inline">\(η\)</span> (i.e., the “learning rate”). This
 factor enables us to tune how fast or slow we learn. If <span
-class="math inline">\(\alpha\)</span> is set too high we might not be
-able to learn, and it it is set too low we might learn prohibitively
-slowly. We will go into more details on optimization in sec. 7.</p>
+class="math inline">\(η\)</span> is set too high we might not be able to
+learn, and it it is set too low we might learn prohibitively slowly. We
+will go into more details on optimization in sec. 7.</p>
 </section>
 <section id="neuron-batch-gradient-descent" class="level2"
 data-number="4.6">
@@ -1651,7 +1658,7 @@ in the repository for this guide</a>.</p>
 <span style="color:#39424e;">  39</span> 
 <span style="color:#39424e;">  40</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Make predictions given current paramters and then compute loss</span>
 <span style="color:#39424e;">  41</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_X</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">w</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  42</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">loss</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  42</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">losses</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">log</span><span style="color:#ccc9c2;">(</span><span style="color:#ffcc66;">1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">)</span>
 <span style="color:#39424e;">  43</span> 
 <span style="color:#39424e;">  44</span> <span style="color:#ccc9c2;">    </span><span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Compute derivatives for w and b (dz is common to both derivatives)</span>
 <span style="color:#39424e;">  45</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">dz</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">yhat</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">train_y</span>
@@ -1667,7 +1674,7 @@ in the repository for this guide</a>.</p>
 <span style="color:#39424e;">  55</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_yhat</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
 <span style="color:#39424e;">  56</span> 
 <span style="color:#39424e;">  57</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">epoch</span><span style="color:#f29e74;">+</span><span style="color:#ffcc66;">1</span><span style="color:#ffcc66;">:&gt;2</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">/</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">num_epochs</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
-<span style="color:#39424e;">  58</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Cost=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">loss</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ffcc66;">:0.1f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
+<span style="color:#39424e;">  58</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Loss=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">losses</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#ffcc66;">:0.1f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
 <span style="color:#39424e;">  59</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Accuracy=</span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
 <span style="color:#39424e;">  60</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">, Time=</span><span style="color:#ccc9c2;">{</span><span style="color:#ffd580;">format_duration_with_prefix</span><span style="color:#ccc9c2;">(</span><span style="color:#ffd580;">timer</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;">start</span><span style="color:#ccc9c2;">)</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span>
 <span style="color:#39424e;">  61</span> <span style="color:#ccc9c2;">    </span><span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">info</span><span style="color:#ccc9c2;">)</span>
@@ -1706,10 +1713,10 @@ In the code above we iterate through four epochs.
 <p><strong>Answer:</strong></p>
 <pre class="code-block">
 Accuracy before training: 0.54
- 1/4, Cost=0.7, Accuracy=0.97, Time=5.5 ms
- 2/4, Cost=0.5, Accuracy=0.96, Time=4.8 ms
- 3/4, Cost=0.4, Accuracy=0.96, Time=4.6 ms
- 4/4, Cost=0.3, Accuracy=0.96, Time=4.4 ms
+ 1/4, Loss=0.7, Accuracy=0.97, Time=5.5 ms
+ 2/4, Loss=0.5, Accuracy=0.96, Time=4.8 ms
+ 3/4, Loss=0.4, Accuracy=0.96, Time=4.6 ms
+ 4/4, Loss=0.3, Accuracy=0.96, Time=4.4 ms
 </pre>
 </div>
 </details>
@@ -1725,8 +1732,8 @@ able to do a particular task by just showing it a whole lot of
 examples.</p>
 <p>– Geoffrey Hinton</p>
 </blockquote>
-<p>Below is our first neural network (aka multi-layer perceptron). We’ll
-start by using this diagram to formulate terminology and
+<p>Below is our first neural network (aka multi-layer perceptron, MLP).
+We’ll start by using this diagram to formulate terminology and
 conventions.</p>
 <figure>
 <img src="img/2LayerNetwork.svg" alt="A two-layer neural network." />
@@ -1941,7 +1948,9 @@ network to layer 1. As we compute these derivatives answer for yourself
 <p>This process of computing derivatives backward through the network is
 why this process if referred to as backpropagation–we’ll compute values
 and propagate them backward to earlier layers in the network. This is
-easier to see when viewing the compute graph.</p>
+easier to see when viewing the compute graph. A compute graph depicts
+the flow of activations (during the forward pass) and gradients (during
+the backward pass) through the network.</p>
 <figure>
 <img src="img/ComputeGraph.svg"
 alt="Compute graph for two-layer network." />
@@ -1956,29 +1965,35 @@ page).</p>
 <section id="layer-2-parameters" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1"><span class="header-section-number">5.2.1</span>
 Layer 2 Parameters</h3>
-<p>Let’s start with the terms labeled ③ and ④ above. The chain-rule
-requires us to derive three components.</p>
+<p>Let’s start with the terms labeled ③ and ④ above, which correspond to
+layer 2. The chain-rule requires us to derive three components.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ℒ}{∂ W^{[2]}}^③ &amp;=
-    \frac{∂ ℒ}{∂ A^{[2]}}
-    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
+    \textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}}
+    \textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}
     \frac{∂ Z^{[2]}}{∂ W^{[2]}}\\
 \frac{∂ ℒ}{∂ \vb^{[2]}}^④ &amp;=
-    \frac{∂ ℒ}{∂ A^{[2]}}
-    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
+    \textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}}
+    \textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}
     \frac{∂ Z^{[2]}}{∂ \vb^{[2]}}
 \end{align}\]</span></p>
-<p>These two equations share the first two terms. In fact, we’ll see
-these again for the first layer; so, it makes sense to give them their
-own symbol, <span class="math inline">\(∂_{Z^{[2]}}=\frac{∂ ℒ}{∂
-A^{[2]}}\frac{∂ A^{[2]}}{∂ Z^{[2]}}\)</span>.</p>
+<p>These equations share the first two terms. In fact, we’ll see these
+again for the first layer; so, it makes sense to give them their own
+symbol, <span
+class="math inline">\(∂_{Z^{[2]}}=\textcolor{blue}{{\frac{∂ ℒ}{∂
+A^{[2]}}}}\textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}\)</span>. (You
+might notice that I am leaving out the <span
+class="math inline">\(\text{mean}_0\)</span> operation from BCE; this is
+intentional as it will be handled below using a matrix multiplication
+for one of the partial derivatives below.)</p>
 <p><span class="math display">\[\begin{align}
-\frac{∂ ℒ}{∂ A^{[2]}} &amp;=
-    -\frac{∂}{∂ A^{[2]}} (Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1
-- A^{[2]})})\\
-    &amp;= \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\\[20pt]
+\textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}} &amp;=
+    -\frac{∂}{∂ A^{[2]}} \left(Y \cdot \log{A^{[2]}} + (1 - Y) \cdot
+\log{\left(1 - A^{[2]}\right)}\right)\\
+    &amp;= \left( \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}
+\right)\\[20pt]
 
-\frac{∂ A^{[2]}}{∂ Z^{[2]}} &amp;=
+\textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}} &amp;=
     \frac{∂}{∂ Z^{[2]}} σ(Z^{[2]})\\
     &amp;= σ(Z^{[2]}) \cdot (1 - σ(Z^{[2]}))\\
     &amp;= A^{[2]} \cdot (1 - A^{[2]})
@@ -1987,8 +2002,8 @@ A^{[2]}}\frac{∂ A^{[2]}}{∂ Z^{[2]}}\)</span>.</p>
 class="math inline">\(∂_{Z^{[2]}}\)</span>.</p>
 <p><span class="math display">\[\begin{align}
 ∂_{Z^{[2]}} &amp;=
-    \left(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\right)\\
-    &amp;= A^{[2]} \cdot (1 - A^{[2]})\\
+    \left(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\right) A^{[2]} \cdot
+(1 - A^{[2]})\\
     &amp;= (1-Y) \cdot A^{[2]} - Y \cdot (1 - A^{[2]})\\
     &amp;= A^{[2]} - Y \cdot A^{[2]} - Y + Y \cdot A^{[2]}\\
     &amp;= A^{[2]} - Y
@@ -2006,7 +2021,7 @@ class="math inline">\(∂_{Z^{[2]}}\)</span>.</p>
 ④.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ℒ}{∂ W^{[2]}}^③ &amp;= \frac{1}{N} ∂_{Z^{[2]}}^T A^{[1]}\\
-\frac{∂ ℒ}{∂ \vb^{[2]}}^④ &amp;= \sum_{i=1}^N ∂_{\vz^{[2](i)}}
+\frac{∂ ℒ}{∂ \vb^{[2]}}^④ &amp;= \text{mean}_0 (∂_{\vz^{[2]}})
 \end{align}\]</span></p>
 </section>
 <section id="layer-1-parameters" class="level3" data-number="5.2.2">
@@ -2016,10 +2031,10 @@ Layer 1 Parameters</h3>
 ②.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ ℒ}{∂ W^{[1]}}^① &amp;=
-    \frac{∂ ℒ}{∂ A^{[2]}}
-    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
-    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
-    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}}
+    \textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}
+    \textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}}
+    \textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}}
     \frac{∂ Z^{[1]}}{∂ W^{[1]}}\\
 &amp;= ∂_{Z^{[2]}}
     \frac{∂ Z^{[2]}}{∂ A^{[1]}}
@@ -2027,31 +2042,32 @@ Layer 1 Parameters</h3>
     \frac{∂ Z^{[1]}}{∂ W^{[1]}}\\[20pt]
 
 \frac{∂ ℒ}{∂ \vb^{[1]}}^② &amp;=
-    \frac{∂ ℒ}{∂ A^{[2]}}
-    \frac{∂ A^{[2]}}{∂ Z^{[2]}}
-    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
-    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}}
+    \textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}
+    \textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}}
+    \textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}}
     \frac{∂ Z^{[1]}}{∂ \vb^{[1]}}\\
 &amp;= ∂_{Z^{[2]}}
-    \frac{∂ Z^{[2]}}{∂ A^{[1]}}
-    \frac{∂ A^{[1]}}{∂ Z^{[1]}}
+    \textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}}
+    \textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}}
     \frac{∂ Z^{[1]}}{∂ \vb^{[1]}}
 \end{align}\]</span></p>
 <p>All four derivations share the first two terms in common, <span
 class="math inline">\(∂_{Z^{[2]}}\)</span>. The first layer parameters
 additional share the next two terms. We’ll group the first four terms
 together just like we did for layer 2: <span
-class="math inline">\(∂_{Z^{[1]}}=∂_{Z^{[2]}}\frac{∂ Z^{[2]}}{∂
-A^{[1]}}\frac{∂ A^{[1]}}{∂ Z^{[1]}}\)</span>.</p>
+class="math inline">\(∂_{Z^{[1]}}=∂_{Z^{[2]}}\textcolor{cyan}{\frac{∂
+Z^{[2]}}{∂ A^{[1]}}}\textcolor{lime}{\frac{∂ A^{[1]}}{∂
+Z^{[1]}}}\)</span>.</p>
 <p>Let’s start by deriving this shared term.</p>
 <p><span class="math display">\[\begin{align}
-\frac{∂ Z^{[2]}}{∂ A^{[1]}} &amp;=
-    \frac{∂}{A^{[1]}} A^{[1]} W^{[2]T} + \mathbf{1} \vb^{[2]T}\\
+\textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}} &amp;=
+    \frac{∂}{A^{[1]}} (A^{[1]} W^{[2]T} + \mathbf{1} \vb^{[2]T})\\
     &amp;= W^{[2]}\\[20pt]
 
-\frac{∂ A^{[1]}}{∂ Z^{[1]}} &amp;= \frac{∂}{Z^{[1]}}\\
+\textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}} &amp;= \frac{∂}{Z^{[1]}}\\
     &amp;= σ(Z^{[1]})\\
-    &amp;= σ(Z^{[1]})(1-σ(Z^{[1]})\\
+    &amp;= σ(Z^{[1]}) \cdot (1 - σ(Z^{[1]})\\
     &amp;= A^{[1]} \cdot (1-A^{[1]})
 \end{align}\]</span></p>
 <p>Now substituting to solve for <span
@@ -2071,7 +2087,7 @@ A^{[1]} \cdot (1 - A^{[1]})\]</span></p>
 ②.</p>
 <p><span class="math display">\[\begin{align}
 \frac{∂ℒ}{∂ W^{[1]}}^① &amp;= \frac{1}{N} ∂_{Z^{[1]}}^T A^{[0]}\\
-\frac{∂ ℒ}{∂ \vb^{[1]}}^② &amp;= \sum_{i=1}^N ∂_{\vz^{[1](i)}}
+\frac{∂ ℒ}{∂ \vb^{[1]}}^② &amp;= \text{mean}_0 (∂_{\vz^{[1](i)}})
 \end{align}\]</span></p>
 </section>
 <section id="parameter-update-equations" class="level3"
@@ -2080,15 +2096,26 @@ data-number="5.2.3">
 Parameter Update Equations</h3>
 <p>We can now write our update equations for all network parameters.</p>
 <p><span class="math display">\[\begin{align}
-W^{[1]} &amp;:= W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
-    &amp;:= W^{[1]} - \frac{α}{N} ∂_{Z^{[1]}}^T A^{[0]} \\[20pt]
-\vb^{[1]} &amp;:= \vb^{[1]} - α\frac{∂ℒ}{∂ \vb^{[1]}} \\
-    &amp;:= \vb^{[1]} - α\sum_{i=1}^N ∂_{\vz^{[1](i)}} \\[20pt]
-W^{[2]} &amp;:= W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
-    &amp;:= W^{[2]} - \frac{α}{N} ∂_{Z^{[2]}}^T A^{[1]}\\[20pt]
-\vb^{[2]} &amp;:= \vb^{[2]} - α\frac{∂ℒ}{∂ \vb^{[2]}} \\
-    &amp;:= \vb^{[2]} - α\sum_{i=1}^N ∂_{\vz^{[2](i)}}
+W^{[1]} &amp;:= W^{[1]} - η \frac{∂ℒ}{∂ W^{[1]}} \\
+    &amp;:= W^{[1]} - η \frac{1}{N} ∂_{Z^{[1]}}^T A^{[0]} \\[20pt]
+\vb^{[1]} &amp;:= \vb^{[1]} - η \frac{∂ℒ}{∂ \vb^{[1]}} \\
+    &amp;:= \vb^{[1]} - η\;\text{mean}_0 (∂_{\vz^{[1](i)}}) \\[20pt]
+W^{[2]} &amp;:= W^{[2]} - η \frac{∂ℒ}{∂ W^{[2]}} \\
+    &amp;:= W^{[2]} - η \frac{1}{N} ∂_{Z^{[2]}}^T A^{[1]}\\[20pt]
+\vb^{[2]} &amp;:= \vb^{[2]} - η \frac{∂ℒ}{∂ \vb^{[2]}} \\
+    &amp;:= \vb^{[2]} - η\;\text{mean}_0 (∂_{\vz^{[2](i)}})
 \end{align}\]</span></p>
+<details class="question">
+<summary>
+<strong>Question:</strong> Do these update equations need to be altered
+if we want to change the loss function, activation functions, or network
+architecture?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> Yes. Each of these factors play a part in the
+derivations above.
+</div>
+</details>
 </section>
 </section>
 <section id="neuron-batch-gradient-descent-1" class="level2"
@@ -2142,7 +2169,7 @@ single neuron.</p>
 <span style="color:#39424e;">  42</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">Z1</span><span style="color:#ccc9c2;">)</span>
 <span style="color:#39424e;">  43</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">W2</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">T</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b2</span>
 <span style="color:#39424e;">  44</span> <span style="color:#ccc9c2;">    </span><span style="color:#ccc9c2;">A2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;">)</span>
-<span style="color:#39424e;">  45</span> <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">Z1</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">A2</span>
+<span style="color:#39424e;">  45</span> <span style="color:#ccc9c2;">    </span><span style="color:#ffa759;">return</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">Z1</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">A2</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">squeeze</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
 <span style="color:#39424e;">  46</span> 
 <span style="color:#39424e;">  47</span> 
 <span style="color:#39424e;">  48</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Batch gradient descent hyper-parameters</span>
@@ -2153,6 +2180,8 @@ single neuron.</p>
 <span style="color:#39424e;">  53</span> <span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;">, </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;">, </span><span style="color:#5ccfe6;">_</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">valid_preds</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">model</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_X</span><span style="color:#ccc9c2;">)</span>
 <span style="color:#39424e;">  54</span> <span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffd580;">compute_accuracy</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_preds</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">valid_y</span><span style="color:#ccc9c2;">)</span>
 <span style="color:#39424e;">  55</span> <span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ffa759;">f</span><span style="color:#bae67e;">&quot;</span><span style="color:#bae67e;">Accuracy before training: </span><span style="color:#ccc9c2;">{</span><span style="color:#ccc9c2;">valid_accuracy</span><span style="color:#ffcc66;">:.2f</span><span style="color:#ccc9c2;">}</span><span style="color:#bae67e;">&quot;</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  56</span> <span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_preds</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  57</span> <span style="color:#f28779;">print</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">valid_y</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">shape</span><span style="color:#ccc9c2;">)</span>
 </pre>
 <div class="code-caption">
 <a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/05-01-TwoLayerNeuralNetworkMNIST.py">Link
@@ -2164,6 +2193,95 @@ to code.</a>
 data-number="5.4">
 <h2 data-number="5.4"><span class="header-section-number">5.4</span>
 Automatic Differentiation</h2>
+<p>Let’s agree we should avoid computing those derivatives by hand. The
+process is time consuming and error prone. Instead let’s rely on a
+technique known as <em>automatic differentiation</em>, which is built-in
+to PyTorch and most machine learning frameworks.</p>
+<p>An automatic differentiation library:</p>
+<ol type="1">
+<li>Creates a compute graph from your tensor operations.</li>
+<li>Performs a topological sort on the compute graph.</li>
+<li>Compute gradients and back propagates them to all matrices.</li>
+</ol>
+<p>Let’s take a look at an example.</p>
+<div class="code-highlight">
+<pre><span style="color:#39424e;">   1</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;">!/usr/bin/env python3</span>
+<span style="color:#39424e;">   2</span> 
+<span style="color:#39424e;">   3</span> <span style="color:#ffa759;">import</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span>
+<span style="color:#39424e;">   4</span> 
+<span style="color:#39424e;">   5</span> <span style="color:#ccc9c2;">N</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">n0</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">n1</span><span style="color:#ccc9c2;">, </span><span style="color:#ccc9c2;">n2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">20</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">10</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">7</span><span style="color:#ccc9c2;">, </span><span style="color:#ffcc66;">13</span>
+<span style="color:#39424e;">   6</span> 
+<span style="color:#39424e;">   7</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Some fake input</span>
+<span style="color:#39424e;">   8</span> <span style="color:#ccc9c2;">A0</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">N</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">n0</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">   9</span> <span style="color:#ccc9c2;">Y</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">N</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">n2</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  10</span> 
+<span style="color:#39424e;">  11</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Layer 1</span>
+<span style="color:#39424e;">  12</span> <span style="color:#ccc9c2;">W1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">n1</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">n0</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">requires_grad</span><span style="color:#f29e74;">=</span><span style="color:#ffcc66;">True</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  13</span> <span style="color:#ccc9c2;">b1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">n1</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">requires_grad</span><span style="color:#f29e74;">=</span><span style="color:#ffcc66;">True</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  14</span> <span style="color:#ccc9c2;">temp1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">A0</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">W1</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">T</span>
+<span style="color:#39424e;">  15</span> <span style="color:#ccc9c2;">Z1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">temp1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b1</span>
+<span style="color:#39424e;">  16</span> <span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">Z1</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  17</span> 
+<span style="color:#39424e;">  18</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Layer 2</span>
+<span style="color:#39424e;">  19</span> <span style="color:#ccc9c2;">W2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">n2</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">n1</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">requires_grad</span><span style="color:#f29e74;">=</span><span style="color:#ffcc66;">True</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  20</span> <span style="color:#ccc9c2;">b2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">randn</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">n2</span><span style="color:#ccc9c2;">,</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">requires_grad</span><span style="color:#f29e74;">=</span><span style="color:#ffcc66;">True</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  21</span> <span style="color:#ccc9c2;">temp2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">A1</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">&#64;</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">W2</span><span style="color:#f29e74;">.</span><span style="color:#ccc9c2;">T</span>
+<span style="color:#39424e;">  22</span> <span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">temp2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">+</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">b2</span>
+<span style="color:#39424e;">  23</span> <span style="color:#ccc9c2;">A2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">torch</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">sigmoid</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">Z2</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  24</span> 
+<span style="color:#39424e;">  25</span> <span style="color:#5c6773;">#</span><span style="color:#5c6773;"> Loss and backward propagation</span>
+<span style="color:#39424e;">  26</span> <span style="color:#ccc9c2;">temp3</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">A2</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">-</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">Y</span>
+<span style="color:#39424e;">  27</span> <span style="color:#ccc9c2;">temp4</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">temp3</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">*</span><span style="color:#f29e74;">*</span><span style="color:#ccc9c2;"> </span><span style="color:#ffcc66;">2</span>
+<span style="color:#39424e;">  28</span> <span style="color:#ccc9c2;">loss</span><span style="color:#ccc9c2;"> </span><span style="color:#f29e74;">=</span><span style="color:#ccc9c2;"> </span><span style="color:#ccc9c2;">temp4</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">mean</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
+<span style="color:#39424e;">  29</span> <span style="color:#ccc9c2;">loss</span><span style="color:#f29e74;">.</span><span style="color:#ffd580;">backward</span><span style="color:#ccc9c2;">(</span><span style="color:#ccc9c2;">)</span>
+</pre>
+<div class="code-caption">
+<a href="https://github.com/SinglePages/NeuralNetworks/blob/main/Source/Code/Python/05-02-AutomaticDifferentiation.py">Link
+to code.</a>
+</div>
+</div>
+<p>Two key points from the listing above, (1)
+<code>requires_grad=True</code> tells PyTorch to create the compute
+graph and compute partial derivatives with respect to the given tensor,
+and (2) I’ve ensured that each line of code contains a single operation,
+which makes it easier to match with the diagram below (I’ve provided
+this one in a bit more detail).</p>
+<figure>
+<img src="img/AutoDiffComputeGraph.svg"
+alt="Compute graph for two-layer network." />
+<figcaption aria-hidden="true">Compute graph for two-layer
+network.</figcaption>
+</figure>
+<p>This diagram is (often) constructed dynamically as operations are
+performed. Edges indicate the flow of gradients in the backward
+direction. We start at graph source nodes (e.g., the “loss” node) and
+compute partial derivatives with respect to their inputs until we reach
+graph sinks (e.g., parameters). This diagram (and the corresponding
+code) map directly to the hand-computed derivatives from the previous
+section. Take some time and see if you can see how they map to one
+another.</p>
+<p>If you’d like to see <em>how</em> an automatic differentiation
+library is coded, please take a look at my simple <a
+href="https://github.com/anthonyjclark/match">Match</a> library, which
+tries to closely mimic the PyTorch interface.</p>
+<section id="alternatives" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1"><span class="header-section-number">5.4.1</span>
+Alternatives</h3>
+<p>In addition to the technique above known as reverse mode automatic
+differentiation, you might also hear about</p>
+<ul>
+<li><a href="https://mostafa-samir.github.io/auto-diff-pt1/">forward
+mode automatic differentiation with dual numbers</a>,</li>
+<li><a
+href="https://en.wikipedia.org/wiki/Numerical_differentiation">numerical
+differentiation (Wikipedia)</a>, and</li>
+<li><a href="https://en.wikipedia.org/wiki/Computer_algebra">symbolic
+differentiation (Wikipedia)</a>.</li>
+</ul>
+<p>These techniques are similar and have various deficiences and
+advantages. Most modern libraries implement reverse mode automatic
+differentiation.</p>
+</section>
 </section>
 <section id="why-deep-neural-networks" class="level2" data-number="5.5">
 <h2 data-number="5.5"><span class="header-section-number">5.5</span> Why
@@ -2175,16 +2293,126 @@ data-number="5.6">
 Role of an Activation Function</h2>
 </section>
 </section>
-<section id="stochastic-gradient-descent" class="level1"
-data-number="6">
+<section id="gradient-descent" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span>
-Stochastic Gradient Descent</h1>
-<p><em>Being revised</em> </p>
+Gradient Descent</h1>
+<p>Optimizing a neural network follows this process:</p>
+<ol type="1">
+<li>prepare dataset(s) (e.g., proxy, training, validation, evaluation,
+etc.),</li>
+<li>set hyperparameters (e.g., learning rate, number of epochs,
+etc.),</li>
+<li>create the model, and</li>
+<li>train the model.</li>
+</ol>
+<p>We’ve discussed each of these areas in general, but now we’ll go into
+more details starting with the final step, training the model.</p>
+<section id="batch-gradient-descent" class="level2" data-number="6.1">
+<h2 data-number="6.1"><span class="header-section-number">6.1</span>
+Batch Gradient Descent</h2>
+<p>All examples thus far have used batch gradient descent (BGD). All
+gradient descent methods are iterative, meaning we continually make
+small changes to the parameters until we are satisfied or run out of
+time. BGD looks something like this:</p>
+<pre class="text"><code>for each epoch
+    1. compute gradient with respect to all examples
+    2. average gradients across all examples
+    3. update parameters using averaged gradients</code></pre>
+<p>In all variants of gradient descent, an epoch refers to the process
+by which we update the parameters with respect to all training examples.
+In batch gradient descent, we compute all gradients at once and average
+them across all examples, resulting in the parameters being updated a
+single time each epoch. This has the advantage of smoothing out the
+affect of any outliers and leveraging the parallel nature of modern CPUs
+and GPUs. On the other hand, it can be a waste of resources (mainly
+time) to only update the parameters once each epoch.</p>
+</section>
+<section id="stochastic-gradient-descent" class="level2"
+data-number="6.2">
+<h2 data-number="6.2"><span class="header-section-number">6.2</span>
+Stochastic Gradient Descent</h2>
+<p>In stochastic Gradient Descent (SGD) we update parameter <span
+class="math inline">\(N\)</span> times per epoch—once per example. This
+means that we update parameters more frequently than in BGD.</p>
+<p>The <strong>stochastic</strong> part of SGD refers to a random
+shuffling of the example each epoch. This tends to reduce loss “cycling”
+where some sequence of repeated example increases and then decreases
+loss.</p>
+<pre class="text"><code>for each epoch
+    randomly shuffle all examples
+    for each example
+        1. compute gradient with respect to single example
+        2. update parameters using gradient</code></pre>
+<p>Although we update the parameters more frequently, not all updates
+are <em>good</em>. Outliers will make the model perform worse in the
+general case. Moreover, SGD does not take advantage of parallel
+computations.</p>
+</section>
+<section id="mini-batch-stochastic-gradient-descent" class="level2"
+data-number="6.3">
+<h2 data-number="6.3"><span class="header-section-number">6.3</span>
+Mini-Batch Stochastic Gradient Descent</h2>
+<p>Mini-Batch SGD provides a middle ground. We chunk the input into some
+number of batches and take the average gradient over each batch.</p>
+<pre class="text"><code>for each epoch
+    randomly distribute examples into batches
+    for each batch
+        1. compute gradient with respect to all examples in batch
+        2. average gradients across all examples in batch
+        3. update parameters using averaged gradients</code></pre>
+<p>This enables us to get the best of both worlds:</p>
+<ul>
+<li>less susceptible to outliers and noise,</li>
+<li>a good number of updates per epoch, and</li>
+<li>good utilization of computing resources.</li>
+</ul>
+<details class="question">
+<summary>
+<strong>Question:</strong> What batch size turns Mini-Batch SGD into
+BGD? What batch size turns Mini-Batch SGD into SGD?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> <span class="math inline">\(N\)</span> and
+<span class="math inline">\(1\)</span>, respectively.
+</div>
+</details>
+<details class="question">
+<summary>
+<strong>Question:</strong> Will all batches be the same size?
+</summary>
+<div class="answer">
+<strong>Answer:</strong> No. The last batch is frequently smaller than
+all other batches. It contains the leftovers.
+</div>
+</details>
+<p>The code-diff below shows how few changes are needed to convert our
+BGD example into Mini-Batch SGD.</p>
+</section>
 </section>
 <section id="sec:opti" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span>
 Optimization Techniques</h1>
-<p><em>Being revised</em></p>
+<section id="momentum" class="level2" data-number="7.1">
+<h2 data-number="7.1"><span class="header-section-number">7.1</span>
+Momentum</h2>
+<section id="nesterovs-accelerated-gradients" class="level3"
+data-number="7.1.1">
+<h3 data-number="7.1.1"><span class="header-section-number">7.1.1</span>
+Nesterov’s Accelerated Gradients</h3>
+</section>
+</section>
+<section id="rmsprop" class="level2" data-number="7.2">
+<h2 data-number="7.2"><span class="header-section-number">7.2</span>
+RMSProp</h2>
+</section>
+<section id="adam" class="level2" data-number="7.3">
+<h2 data-number="7.3"><span class="header-section-number">7.3</span>
+Adam</h2>
+</section>
+<section id="amsgrad" class="level2" data-number="7.4">
+<h2 data-number="7.4"><span class="header-section-number">7.4</span>
+AMSGrad</h2>
+</section>
 </section>
 <section id="sec:generalization" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span>

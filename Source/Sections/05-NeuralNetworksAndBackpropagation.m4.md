@@ -5,7 +5,7 @@
 > -- Geoffrey Hinton
 
 
-Below is our first neural network (aka multi-layer perceptron). We'll start by using this diagram to formulate terminology and conventions.
+Below is our first neural network (aka multi-layer perceptron, MLP). We'll start by using this diagram to formulate terminology and conventions.
 
 
 ![A two-layer neural network.](img/2LayerNetwork.svg)
@@ -97,8 +97,6 @@ Just like for the single neuron, we want to find values for $W^{[l]}$ and $\vb^{
 - are using sigmoid activations for all neurons, and
 - are using the binary-cross-entropy (BCE) loss function.
 
-<!-- TODO: multi-label in terms. -->
-
 You can imagine that we are performing multi-label classification. For this network, we need to compute these partial derivatives:
 
 $$
@@ -110,7 +108,7 @@ $$
 
 We are going to start at layer 2 and work backward through the network to layer 1. As we compute these derivatives answer for yourself **"why do we work backward through the network?"**
 
-This process of computing derivatives backward through the network is why this process if referred to as backpropagation--we'll compute values and propagate them backward to earlier layers in the network. This is easier to see when viewing the compute graph.
+This process of computing derivatives backward through the network is why this process if referred to as backpropagation--we'll compute values and propagate them backward to earlier layers in the network. This is easier to see when viewing the compute graph. A compute graph depicts the flow of activations (during the forward pass) and gradients (during the backward pass) through the network.
 
 
 ![Compute graph for two-layer network.](img/ComputeGraph.svg)
@@ -120,27 +118,27 @@ Notice how the input flows forward from top-to-bottom in the compute graph, but 
 
 ### Layer 2 Parameters
 
-Let's start with the terms labeled ③ and ④ above. The chain-rule requires us to derive three components.
+Let's start with the terms labeled ③ and ④ above, which correspond to layer 2. The chain-rule requires us to derive three components.
 
 \begin{align}
 \frac{∂ℒ}{∂ W^{[2]}}^③ &= 
-	\frac{∂ ℒ}{∂ A^{[2]}}
-	\frac{∂ A^{[2]}}{∂ Z^{[2]}}
+	\textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}}
+	\textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}
 	\frac{∂ Z^{[2]}}{∂ W^{[2]}}\\
 \frac{∂ ℒ}{∂ \vb^{[2]}}^④ &= 
-	\frac{∂ ℒ}{∂ A^{[2]}}
-	\frac{∂ A^{[2]}}{∂ Z^{[2]}}
+	\textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}}
+	\textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}
 	\frac{∂ Z^{[2]}}{∂ \vb^{[2]}}
 \end{align}
 
-These two equations share the first two terms. In fact, we'll see these again for the first layer; so, it makes sense to give them their own symbol, $∂_{Z^{[2]}}=\frac{∂ ℒ}{∂ A^{[2]}}\frac{∂ A^{[2]}}{∂ Z^{[2]}}$.
+These equations share the first two terms. In fact, we'll see these again for the first layer; so, it makes sense to give them their own symbol, $∂_{Z^{[2]}}=\textcolor{blue}{{\frac{∂ ℒ}{∂ A^{[2]}}}}\textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}$. (You might notice that I am leaving out the $\text{mean}_0$ operation from BCE; this is intentional as it will be handled below using a matrix multiplication for one of the partial derivatives below.)
 
 \begin{align}
-\frac{∂ ℒ}{∂ A^{[2]}} &=
-	-\frac{∂}{∂ A^{[2]}} \text{mean}_0\left(Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{(1 - A^{[2]})}\right)\\
-	&= \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\\[20pt]
+\textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}} &=
+	-\frac{∂}{∂ A^{[2]}} \left(Y \cdot \log{A^{[2]}} + (1 - Y) \cdot \log{\left(1 - A^{[2]}\right)}\right)\\
+	&= \left( \frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}} \right)\\[20pt]
 
-\frac{∂ A^{[2]}}{∂ Z^{[2]}} &=
+\textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}} &=
 	\frac{∂}{∂ Z^{[2]}} σ(Z^{[2]})\\
 	&= σ(Z^{[2]}) \cdot (1 - σ(Z^{[2]}))\\
 	&= A^{[2]} \cdot (1 - A^{[2]})
@@ -150,8 +148,7 @@ Now substituting to solve for $∂_{Z^{[2]}}$.
 
 \begin{align}
 ∂_{Z^{[2]}} &= 
-	\left(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\right)\\
-	&= A^{[2]} \cdot (1 - A^{[2]})\\
+	\left(\frac{1-Y}{1-A^{[2]}} - \frac{Y}{A^{[2]}}\right) A^{[2]} \cdot (1 - A^{[2]})\\
 	&= (1-Y) \cdot A^{[2]} - Y \cdot (1 - A^{[2]})\\
 	&= A^{[2]} - Y \cdot A^{[2]} - Y + Y \cdot A^{[2]}\\
 	&= A^{[2]} - Y
@@ -176,7 +173,7 @@ And that leaves us with the following partial derivatives for ③ and ④.
 
 \begin{align}
 \frac{∂ℒ}{∂ W^{[2]}}^③ &= \frac{1}{N} ∂_{Z^{[2]}}^T A^{[1]}\\
-\frac{∂ ℒ}{∂ \vb^{[2]}}^④ &= \sum_{i=1}^N ∂_{\vz^{[2](i)}}
+\frac{∂ ℒ}{∂ \vb^{[2]}}^④ &= \text{mean}_0 (∂_{\vz^{[2]}})
 \end{align}
 
 
@@ -186,10 +183,10 @@ Now we can continue to layer 1 and derive equations for terms ① and ②.
 
 \begin{align}
 \frac{∂ ℒ}{∂ W^{[1]}}^① &= 
-	\frac{∂ ℒ}{∂ A^{[2]}}
-	\frac{∂ A^{[2]}}{∂ Z^{[2]}}
-	\frac{∂ Z^{[2]}}{∂ A^{[1]}}
-	\frac{∂ A^{[1]}}{∂ Z^{[1]}}
+	\textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}}
+	\textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}
+	\textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}}
+	\textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}}
 	\frac{∂ Z^{[1]}}{∂ W^{[1]}}\\
 &= ∂_{Z^{[2]}}
 	\frac{∂ Z^{[2]}}{∂ A^{[1]}}
@@ -197,30 +194,30 @@ Now we can continue to layer 1 and derive equations for terms ① and ②.
 	\frac{∂ Z^{[1]}}{∂ W^{[1]}}\\[20pt]
 
 \frac{∂ ℒ}{∂ \vb^{[1]}}^② &= 
-	\frac{∂ ℒ}{∂ A^{[2]}}
-	\frac{∂ A^{[2]}}{∂ Z^{[2]}}
-	\frac{∂ Z^{[2]}}{∂ A^{[1]}}
-	\frac{∂ A^{[1]}}{∂ Z^{[1]}}
+	\textcolor{blue}{\frac{∂ ℒ}{∂ A^{[2]}}}
+	\textcolor{green}{\frac{∂ A^{[2]}}{∂ Z^{[2]}}}
+	\textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}}
+	\textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}}
 	\frac{∂ Z^{[1]}}{∂ \vb^{[1]}}\\
 &= ∂_{Z^{[2]}}
-	\frac{∂ Z^{[2]}}{∂ A^{[1]}}
-	\frac{∂ A^{[1]}}{∂ Z^{[1]}}
+	\textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}}
+	\textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}}
 	\frac{∂ Z^{[1]}}{∂ \vb^{[1]}}
 \end{align}
 
 
-All four derivations share the first two terms in common, $∂_{Z^{[2]}}$. The first layer parameters additional share the next two terms. We'll group the first four terms together just like we did for layer 2: $∂_{Z^{[1]}}=∂_{Z^{[2]}}\frac{∂ Z^{[2]}}{∂ A^{[1]}}\frac{∂ A^{[1]}}{∂ Z^{[1]}}$.
+All four derivations share the first two terms in common, $∂_{Z^{[2]}}$. The first layer parameters additional share the next two terms. We'll group the first four terms together just like we did for layer 2: $∂_{Z^{[1]}}=∂_{Z^{[2]}}\textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}}\textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}}$.
 
 Let's start by deriving this shared term.
 
 \begin{align}
-\frac{∂ Z^{[2]}}{∂ A^{[1]}} &= 
-	\frac{∂}{A^{[1]}} A^{[1]} W^{[2]T} + \mathbf{1} \vb^{[2]T}\\
+\textcolor{cyan}{\frac{∂ Z^{[2]}}{∂ A^{[1]}}} &= 
+	\frac{∂}{A^{[1]}} (A^{[1]} W^{[2]T} + \mathbf{1} \vb^{[2]T})\\
 	&= W^{[2]}\\[20pt]
 
-\frac{∂ A^{[1]}}{∂ Z^{[1]}} &= \frac{∂}{Z^{[1]}}\\
+\textcolor{lime}{\frac{∂ A^{[1]}}{∂ Z^{[1]}}} &= \frac{∂}{Z^{[1]}}\\
 	&= σ(Z^{[1]})\\
-	&= σ(Z^{[1]})(1-σ(Z^{[1]})\\
+	&= σ(Z^{[1]}) \cdot (1 - σ(Z^{[1]})\\
 	&= A^{[1]} \cdot (1-A^{[1]})
 \end{align}
 
@@ -245,7 +242,7 @@ And that leaves us with the following partial derivatives for ① and ②.
 
 \begin{align}
 \frac{∂ℒ}{∂ W^{[1]}}^① &= \frac{1}{N} ∂_{Z^{[1]}}^T A^{[0]}\\
-\frac{∂ ℒ}{∂ \vb^{[1]}}^② &= \sum_{i=1}^N ∂_{\vz^{[1](i)}}
+\frac{∂ ℒ}{∂ \vb^{[1]}}^② &= \text{mean}_0 (∂_{\vz^{[1](i)}})
 \end{align}
 
 
@@ -254,19 +251,18 @@ And that leaves us with the following partial derivatives for ① and ②.
 We can now write our update equations for all network parameters.
 
 \begin{align}
-W^{[1]} &:= W^{[1]} - α\frac{∂ℒ}{∂ W^{[1]}} \\
-	&:= W^{[1]} - \frac{α}{N} ∂_{Z^{[1]}}^T A^{[0]} \\[20pt]
-\vb^{[1]} &:= \vb^{[1]} - α\frac{∂ℒ}{∂ \vb^{[1]}} \\
-	&:= \vb^{[1]} - α\sum_{i=1}^N ∂_{\vz^{[1](i)}} \\[20pt]
-W^{[2]} &:= W^{[2]} - α\frac{∂ℒ}{∂ W^{[2]}} \\
-	&:= W^{[2]} - \frac{α}{N} ∂_{Z^{[2]}}^T A^{[1]}\\[20pt]
-\vb^{[2]} &:= \vb^{[2]} - α\frac{∂ℒ}{∂ \vb^{[2]}} \\
-	&:= \vb^{[2]} - α\sum_{i=1}^N ∂_{\vz^{[2](i)}}
+W^{[1]} &:= W^{[1]} - η \frac{∂ℒ}{∂ W^{[1]}} \\
+	&:= W^{[1]} - η \frac{1}{N} ∂_{Z^{[1]}}^T A^{[0]} \\[20pt]
+\vb^{[1]} &:= \vb^{[1]} - η \frac{∂ℒ}{∂ \vb^{[1]}} \\
+	&:= \vb^{[1]} - η\;\text{mean}_0 (∂_{\vz^{[1](i)}}) \\[20pt]
+W^{[2]} &:= W^{[2]} - η \frac{∂ℒ}{∂ W^{[2]}} \\
+	&:= W^{[2]} - η \frac{1}{N} ∂_{Z^{[2]}}^T A^{[1]}\\[20pt]
+\vb^{[2]} &:= \vb^{[2]} - η \frac{∂ℒ}{∂ \vb^{[2]}} \\
+	&:= \vb^{[2]} - η\;\text{mean}_0 (∂_{\vz^{[2](i)}})
 \end{align}
 
 
-
-<!-- - color code terms? -->
+m4question([[Do these update equations need to be altered if we want to change the loss function, activation functions, or network architecture?]], [[Yes. Each of these factors play a part in the derivations above.]])
 
 ## Neuron Batch Gradient Descent
 
@@ -277,16 +273,40 @@ m4code([[Source/Code/Python/05-01-TwoLayerNeuralNetworkMNIST.py]])
 
 ## Automatic Differentiation
 
-<!-- Autodiff
-- symbolic (apply a sequence of of rules)
-- [Numerical differentiation - Wikipedia](https://en.wikipedia.org/wiki/Numerical_differentiation "Numerical differentiation - Wikipedia")
-- [Computer algebra - Wikipedia](https://en.wikipedia.org/wiki/Computer_algebra "Computer algebra - Wikipedia")
+Let's agree we should avoid computing those derivatives by hand. The process is time consuming and error prone. Instead let's rely on a technique known as *automatic differentiation*, which is built-in to PyTorch and most machine learning frameworks.
 
-- dual numbers
-- forward mode
-- reverse mode
-- Wengert list
- -->
+An automatic differentiation library:
+
+1. Creates a compute graph from your tensor operations.
+2. Performs a topological sort on the compute graph.
+3. Compute gradients and back propagates them to all matrices.
+
+Let's take a look at an example.
+
+<!-- Wengert list -->
+
+m4code([[Source/Code/Python/05-02-AutomaticDifferentiation.py]])
+
+
+Two key points from the listing above, (1) `requires_grad=True` tells PyTorch to create the compute graph and compute partial derivatives with respect to the given tensor, and (2) I've ensured that each line of code contains a single operation, which makes it easier to match with the diagram below (I've provided this one in a bit more detail).
+
+
+![Compute graph for two-layer network.](img/AutoDiffComputeGraph.svg)
+
+
+This diagram is (often) constructed dynamically as operations are performed. Edges indicate the flow of gradients in the backward direction. We start at graph source nodes (e.g., the "loss" node) and compute partial derivatives with respect to their inputs until we reach graph sinks (e.g., parameters). This diagram (and the corresponding code) map directly to the hand-computed derivatives from the previous section. Take some time and see if you can see how they map to one another.
+
+If you'd like to see *how* an automatic differentiation library is coded, please take a look at my simple [Match](https://github.com/anthonyjclark/match) library, which tries to closely mimic the PyTorch interface.
+
+### Alternatives
+
+In addition to the technique above known as reverse mode automatic differentiation, you might also hear about
+
+- [forward mode automatic differentiation with dual numbers](https://mostafa-samir.github.io/auto-diff-pt1/),
+- [numerical differentiation (Wikipedia)](https://en.wikipedia.org/wiki/Numerical_differentiation), and
+- [symbolic differentiation (Wikipedia)](https://en.wikipedia.org/wiki/Computer_algebra).
+
+These techniques are similar and have various deficiences and advantages. Most modern libraries implement reverse mode automatic differentiation.
 
 ## Why "Deep" Neural Networks?
 

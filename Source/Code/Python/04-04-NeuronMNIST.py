@@ -39,7 +39,7 @@ for epoch in range(num_epochs):
 
     # Make predictions given current paramters and then compute loss
     yhat = torch.sigmoid(train_X @ w + b)
-    loss = -(train_y * torch.log(yhat) + (1 - train_y) * torch.log(1 - yhat))
+    losses = -(train_y * torch.log(yhat) + (1 - train_y) * torch.log(1 - yhat))
 
     # Compute derivatives for w and b (dz is common to both derivatives)
     dz = yhat - train_y
@@ -55,7 +55,7 @@ for epoch in range(num_epochs):
     valid_accuracy = compute_accuracy(valid_yhat, valid_y)
 
     info = f"{epoch+1:>2}/{num_epochs}"
-    info += f", Cost={loss.mean():0.1f}"
+    info += f", Loss={losses.mean():0.1f}"
     info += f", Accuracy={valid_accuracy:.2f}"
     info += f", Time={format_duration_with_prefix(timer()-start)}"
     print(info)
