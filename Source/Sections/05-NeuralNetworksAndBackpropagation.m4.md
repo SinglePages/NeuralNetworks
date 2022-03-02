@@ -324,3 +324,25 @@ These techniques are similar and have various deficiences and advantages. Most m
     + default to no activation for regression -->
 
 
+<!-- 
+
+
+*Sigmoid*: (sigmoid curve, logistic curve/function) a common activation function that is mostly used in the output layer of a binary classifier. Gradient is small whenever the input value is too far from 0.
+
+<img class="syllabus-terms-img" src="images/sigmoid.png">
+
+*Hyperbolic Tangent*: (tanh) another (formerly) common activation funtcion (better than sigmoid, but typically worse than ReLu). Gradient is small whenever the input value is too far from zero.
+
+<img class="syllabus-terms-img" src="images/tanh.png">
+
+*ReLu*: (rectified linear unit, rectifier) the most widely used activation function.
+
+<img class="syllabus-terms-img" src="images/relu.png">
+
+*Leaky ReLu*: a slightly modified version of ReLu where there is a non-zero derivative when the input is less than zero.
+
+<img class="syllabus-terms-img" src="images/leaky-relu.png">
+
+
+
+ -->
